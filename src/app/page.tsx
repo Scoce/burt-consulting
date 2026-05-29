@@ -22,7 +22,7 @@ const projects = [
   {
     title: 'Teach Weave',
     subtitle: 'K-12 AI-Adaptive Lesson Marketplace',
-    desc: 'An alternative to Teachers Pay Teachers offering AI-adaptive resources, state standards alignment, and direct Google Classroom pushes.',
+    desc: 'A modern alternative to Teachers Pay Teachers. It uses AI to adapt resources (like reading levels or languages) on the fly and maps them to state compliance standards.',
     icon: <GraduationCap className="w-6 h-6 text-tech-cyan" />,
     path: '/projects/teach-weave',
     liveUrl: 'https://teachweave.com',
@@ -31,7 +31,7 @@ const projects = [
   {
     title: 'Bank of Gaga',
     subtitle: 'Informal Family Loan Tracker',
-    desc: 'A family loan manager replacing spreadsheets. Lenders create loan agreements and automated payment plans, while kids learn investing.',
+    desc: 'A friendly app that replaces awkward family loan spreadsheets. Lenders get formal loan contracts and automated timelines, while kids learn investing with simulated cash.',
     icon: <PiggyBank className="w-6 h-6 text-sax-gold" />,
     path: '/projects/bank-of-gaga',
     liveUrl: 'https://bankofgaga.com',
@@ -40,7 +40,7 @@ const projects = [
   {
     title: 'Teaching Sax',
     subtitle: 'Wind Studio Management Software',
-    desc: 'Management software for woodwind teachers, featuring student progression mapping, practice assignments, and progress audio recording.',
+    desc: 'A custom teaching tool built when I restarted my virtual saxophone studio. It tracks student practice, handles scheduling, and features a low-latency video player tuned for music lessons.',
     icon: <Music className="w-6 h-6 text-sax-gold" />,
     path: '/projects/teaching-sax',
     liveUrl: 'https://teachingsax.com',
@@ -49,7 +49,7 @@ const projects = [
   {
     title: 'Truths & Lies: AI Edition',
     subtitle: 'Kids Prompt Engineering Game',
-    desc: 'A trivia game powered by the Gemini API, built collaboratively to teach prompt engineering to the founder\'s 8-year-old son.',
+    desc: 'An AI-powered trivia game I built with my 8-year-old son to teach him prompt engineering. It uses Gemini to create fun, age-friendly categories on the fly.',
     icon: <Gamepad2 className="w-6 h-6 text-tech-violet" />,
     path: '/projects/truths-and-lies',
     liveUrl: '#',
@@ -59,23 +59,23 @@ const projects = [
 
 const services = [
   {
-    title: 'AI Workflow Audits & Integration',
-    desc: 'Help organizations analyze administrative friction and design custom LLM automations—from content adapting to background standards mapping.',
+    title: 'AI Workflow Integration',
+    desc: 'Let\'s automate the boring stuff. I help analyze team friction points and design custom AI workflows—like automatic content adaptation and background document checkups.',
     icon: <Workflow className="w-5 h-5 text-tech-cyan" />
   },
   {
-    title: 'SaaS Architecture & Custom Building',
-    desc: 'Develop modern full-stack systems using Next.js 16, Neon Serverless Postgres, and Stripe subscriptions or Connect payouts.',
+    title: 'Full-Stack SaaS Development',
+    desc: 'Need an idea brought to life? I build clean, modern web apps from scratch using Next.js, Neon Serverless Postgres, and Stripe subscriptions or Connect payouts.',
     icon: <Code2 className="w-5 h-5 text-tech-violet" />
   },
   {
-    title: 'Subscription Billing & Payments Strategy',
-    desc: 'Leverage deep experience in payment networks, Stripe billing integration, and merchant acquiring to build robust recurring monetization models.',
+    title: 'Payments & Subscriptions Strategy',
+    desc: 'I help you navigate the complexity of money. With years of experience in payment processing and billing, I can help design robust subscription models and Stripe integrations.',
     icon: <Coins className="w-5 h-5 text-sax-gold" />
   },
   {
-    title: 'Solutions Consulting & Sales Alignment',
-    desc: 'Consulting on building and scaling pre-sales solutions engineering teams, mapping technical architectures, and executing enterprise sales.',
+    title: 'Solutions Consulting Strategy',
+    desc: 'I consult on building, scaling, and managing pre-sales solutions engineering teams, mapping technical architectures, and closing enterprise deals.',
     icon: <Layers className="w-5 h-5 text-slate-400" />
   }
 ];
@@ -128,10 +128,10 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-              Featured Case Studies
+              Featured Projects
             </h2>
             <p className="text-slate-400 text-base leading-relaxed">
-              Detailed write-ups of actual applications developed for personal passions and commercial validation.
+              A look at actual applications I've built for personal passions and commercial validation.
             </p>
           </div>
 
@@ -152,7 +152,7 @@ export default function Home() {
                       className="text-slate-400 hover:text-white transition-colors p-2 rounded-lg bg-white/5 border border-white/10 inline-flex items-center gap-1 text-xs font-medium"
                       aria-label={`Read case study for ${proj.title}`}
                     >
-                      Case Study <ArrowUpRight className="w-3.5 h-3.5" />
+                      Read Story <ArrowUpRight className="w-3.5 h-3.5" />
                     </Link>
                   </div>
                   
@@ -194,7 +194,7 @@ export default function Home() {
               <div className="lg:col-span-1 space-y-4">
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sax-gold/10 border border-sax-gold/20 text-xs font-semibold text-sax-gold">
                   <Cpu className="w-3 h-3" />
-                  James Burt Biography
+                  My Story
                 </div>
                 <h2 className="text-3xl font-extrabold text-white tracking-tight">
                   About the Builder
@@ -204,13 +204,13 @@ export default function Home() {
               
               <div className="lg:col-span-2 space-y-6 text-slate-300 text-sm leading-relaxed">
                 <p>
-                  I have spent the last <strong>17 years working in the technology sector</strong> across sales engineering, solutions consulting, product management, sysadmin, and technical support. Currently, I serve as the Manager of Solutions Consulting at Global Payments. My career spans subscription billing (Chargify, Maxio), embedded payment processing (Worldpay, Payrix), enterprise security training (Inspired eLearning), video surveillance (Pro-Vigil), and network hosting infrastructures (Peer 1).
+                  I've spent the last <strong>17 years building, scaling, and supporting SaaS products</strong>. My experience spans everything from sales engineering and product management to sysadmin and managing pre-sales solutions consulting teams. I've had the chance to work across diverse fields including subscription billing, embedded payment systems, cybersecurity awareness, video surveillance, and hosting infrastructure.
                 </p>
                 <p>
-                  However, before transitioning to tech, my training was in classical music. I hold a <strong>music education degree</strong> and served as a high school and middle school band director. My primary instrument is the saxophone. In many ways, building software is a return to that instructional mindset: analyzing complex, micro-level processes, finding the optimal pedagogic path, and automating structures so that students—or SaaS creators—can execute without unnecessary friction.
+                  But before my detour into the tech world, my training was in classical music. I hold a <strong>music education degree</strong> and served as a high school and middle school band director (my primary instrument is the saxophone). In many ways, building software feels just like teaching music: you're analyzing complex, micro-level processes, finding the cleanest path forward, and automating structures so that students—or users—can succeed without hitting unnecessary friction.
                 </p>
                 <p>
-                  Now based in San Antonio, Texas, I use my unique background to help organizations integrate AI workflows into their businesses, build lifestyle SaaS tools that make lives easier, and coach pre-sales engineering teams to perform at their absolute best.
+                  Now based in San Antonio, Texas, I use my unique background to help teams integrate AI workflows into their businesses, build lifestyle SaaS tools that make lives easier, and coach pre-sales engineering teams to perform at their absolute best.
                 </p>
               </div>
             </div>

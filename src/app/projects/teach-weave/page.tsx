@@ -1,11 +1,12 @@
 import React from 'react';
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import ScreenshotShowcase from '@/components/ScreenshotShowcase';
 import { ArrowLeft, ExternalLink, GraduationCap, Cpu, Zap, LayoutGrid, CheckCircle } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Teach Weave Case Study | K-12 AI Lesson Marketplace',
-  description: 'Learn about Teach Weave, a B2C SaaS marketplace for K-12 educators featuring AI-adaptive resources, state standards alignment, and LMS integrations.',
+  title: 'Teach Weave | K-12 AI Lesson Marketplace',
+  description: 'How I built Teach Weave, a B2C SaaS marketplace for K-12 educators featuring AI-adaptive resources, state standards alignment, and LMS integrations.',
   alternates: {
     canonical: 'https://burtconsulting.com/projects/teach-weave',
   },
@@ -19,16 +20,10 @@ export default function TeachWeaveProject() {
     'operatingSystem': 'Web',
     'applicationCategory': 'EducationalApplication',
     'description': 'A B2C marketplace SaaS for K-12 teachers featuring AI-adaptive resources, state standards alignment, and Google Classroom push integration.',
-    'offers': {
-      '@type': 'Offer',
-      'price': '0',
-      'priceCurrency': 'USD',
-    },
   };
 
   return (
     <article className="min-h-screen py-16 relative">
-      {/* Inject JSON-LD */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -47,18 +42,18 @@ export default function TeachWeaveProject() {
         </Link>
 
         {/* Header */}
-        <header className="space-y-6 mb-12">
+        <header className="space-y-6 mb-10">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-tech-cyan/10 border border-tech-cyan/20 text-xs font-semibold text-tech-cyan">
             <GraduationCap className="w-4 h-4" />
             Education Technology SaaS
           </div>
           
           <h1 className="text-4xl sm:text-5xl font-extrabold text-white leading-tight">
-            Teach Weave: AI-Adaptive Lesson Marketplace
+            Teach Weave: Homework That Adapts to Every Kid
           </h1>
           
           <p className="text-xl text-slate-300 leading-relaxed font-light">
-            A high-performance SaaS marketplace enabling K-12 educators to publish, adapt, and align resources to state standards dynamically.
+            A modern SaaS marketplace for K-12 teachers. Upload once, and let AI translate lessons to different reading levels, languages, and accessibility needs in one click.
           </p>
 
           <div className="flex flex-wrap items-center gap-4 pt-2">
@@ -71,10 +66,19 @@ export default function TeachWeaveProject() {
               Visit Live App <ExternalLink className="w-4 h-4" />
             </a>
             <span className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/5 text-slate-400 text-xs font-semibold">
-              Role: Architect & Sole Developer
+              Project Type: Commercial SaaS Prototype
             </span>
           </div>
         </header>
+
+        {/* Screenshot Showcase */}
+        <ScreenshotShowcase 
+          src="/images/teach-weave.png"
+          alt="Teach Weave Application Dashboard Screenshot"
+          appName="Teach Weave Dashboard"
+          icon={<Cpu className="w-12 h-12" />}
+          iconColorClass="text-tech-cyan/40"
+        />
 
         {/* Tech Stack Bar */}
         <section className="glass-panel rounded-2xl p-6 border border-white/5 mb-12">
@@ -91,74 +95,74 @@ export default function TeachWeaveProject() {
         {/* Writeup Content */}
         <div className="space-y-12 text-slate-300 leading-relaxed text-base">
           
-          {/* What I Built */}
+          {/* What We Built */}
           <section className="space-y-4">
             <h2 className="text-2xl font-bold text-white flex items-center gap-2">
               <Cpu className="w-5 h-5 text-tech-cyan" /> What I Built
             </h2>
             <p>
-              <strong>Teach Weave</strong> (originally scaffolded as <em>Teachstack</em>) is a complete B2C marketplace SaaS designed specifically for school teachers. The application provides an elegant, fast-loading marketplace interface where educators can upload educational content (lesson plan files, PDFs, etc.) and purchase content from peers.
+              Teach Weave is a full-featured lesson plan marketplace. Think of it like a next-generation alternative to Teachers Pay Teachers. It allows educators to buy and sell classroom materials, but with a massive technical upgrade: **dynamic, AI-powered document adaptation**.
             </p>
             <p>
-              The platform incorporates three distinct serverless AI engines powered by the Vercel AI SDK (with Claude/OpenAI integration) running on background workers managed by <strong>Inngest</strong>. These background workers run checks at upload, verify licensure credentials, and dynamically adapt lessons on-demand.
+              Under the hood, I integrated a background job queue using **Inngest** and the **Vercel AI SDK**. When a lesson is uploaded, background workers analyze the content, verify state standards, and prepare it so buyers can customize the material instantly.
             </p>
           </section>
 
           {/* Why I Built It */}
           <section className="space-y-4">
             <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-              <Zap className="w-5 h-5 text-tech-cyan" /> Why I Built It & The Value Proposition
+              <Zap className="w-5 h-5 text-tech-cyan" /> The Problem & The Solution
             </h2>
             <p>
-              K-12 educators spend hours modifying resources for diverse classroom needs. In the traditional marketplace (like Teachers Pay Teachers), teachers must manually format files for different reading levels, languages, and accessibility requirements.
+              Every student learns differently. In a single class, a teacher might have kids reading at a 3rd-grade level, some reading at a 6th-grade level, and others who need Spanish translations or extra step-by-step guides. Traditionally, teachers spent hours manually creating these variants.
             </p>
             <p>
-              Teach Weave completely disrupts this flow through its value propositions:
+              Teach Weave changes that completely:
             </p>
             <ul className="space-y-3.5 pl-5 list-none">
               <li className="flex items-start gap-2.5">
                 <CheckCircle className="w-5 h-5 text-tech-cyan shrink-0 mt-0.5" />
-                <span><strong>AI-Adaptive Resources:</strong> Creators upload a single resource template, and buyers can generate variations matching specific reading levels, secondary languages, scaffolding needs, or lengths on demand.</span>
+                <span><strong>AI-Adaptive Customization:</strong> Buyers click a slider to change the reading level, swap languages, or adjust content length on demand, dynamically compiling a customized document.</span>
               </li>
               <li className="flex items-start gap-2.5">
                 <CheckCircle className="w-5 h-5 text-tech-cyan shrink-0 mt-0.5" />
-                <span><strong>Standards-First Search:</strong> A custom-mapped relational standards graph cover frameworks such as Common Core, TEKS, and B.E.S.T., ensuring lessons strictly match state compliance demands.</span>
+                <span><strong>Compliance Checked Automatically:</strong> We map every document automatically to state-specific standards (like Common Core or TEKS) using automated text analysis at upload.</span>
               </li>
               <li className="flex items-start gap-2.5">
                 <CheckCircle className="w-5 h-5 text-tech-cyan shrink-0 mt-0.5" />
-                <span><strong>Creator-Centric Economics:</strong> Lower platform fees (15% vs TPT\'s 20-45%) keep more revenue with teachers. It utilizes Stripe Connect Express accounts to handle instant compliance, onboarding, and payouts.</span>
+                <span><strong>Fair Platform Economics:</strong> Traditional sites take up to 45% of teacher sales. Teach Weave keeps fees at just 15%, routing payouts directly via Stripe Connect.</span>
               </li>
             </ul>
           </section>
 
-          {/* Technical Architecture Deep Dive */}
+          {/* Technical Details */}
           <section className="space-y-4">
             <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-              <LayoutGrid className="w-5 h-5 text-tech-cyan" /> Technical Differentiators
+              <LayoutGrid className="w-5 h-5 text-tech-cyan" /> Cool Tech Under the Hood
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4">
               <div className="p-5 rounded-xl bg-white/5 border border-white/5 space-y-2">
-                <h4 className="font-bold text-white text-sm">Content Adaptation Engine</h4>
+                <h4 className="font-bold text-white text-sm">Dynamic Adaptation Pipeline</h4>
                 <p className="text-xs text-slate-400">
-                  Runs localized LLM prompting structures in serverless routes to take parent resource uploads and adapt them dynamically, caching results to minimize latency.
+                  Processes and cleans documents using customized system prompts, then caches modified assets in Supabase storage to make subsequent downloads instantaneous.
                 </p>
               </div>
               <div className="p-5 rounded-xl bg-white/5 border border-white/5 space-y-2">
-                <h4 className="font-bold text-white text-sm">Standards Alignment Worker</h4>
+                <h4 className="font-bold text-white text-sm">Standards Graph Parser</h4>
                 <p className="text-xs text-slate-400">
-                  Uses an Inngest background queue to analyze file texts at upload, verify licensing compliance, and automatically map educational codes.
+                  Matches text indices against a hierarchical standards database using fuzzy-match prompts to tag files accurately without manual labor.
                 </p>
               </div>
               <div className="p-5 rounded-xl bg-white/5 border border-white/5 space-y-2">
-                <h4 className="font-bold text-white text-sm">Supabase RLS Gating</h4>
+                <h4 className="font-bold text-white text-sm">Secure RLS Isolation</h4>
                 <p className="text-xs text-slate-400">
-                  Leverages Postgres Row-Level Security policies combined with Drizzle ORM queries, securing buyer library downloads directly at the database layer.
+                  Postgres Row-Level Security ensures that purchase tables dictate download access keys, protecting content files from direct URLs.
                 </p>
               </div>
               <div className="p-5 rounded-xl bg-white/5 border border-white/5 space-y-2">
-                <h4 className="font-bold text-white text-sm">LMS Classroom Push</h4>
+                <h4 className="font-bold text-white text-sm">Google Classroom Sync</h4>
                 <p className="text-xs text-slate-400">
-                  Enables teachers to immediately push purchased resources and their adapted variants to student classrooms with a single click.
+                  Pushes adapted files directly to the Google Classroom SDK, making distribution to students instant for the buying teacher.
                 </p>
               </div>
             </div>

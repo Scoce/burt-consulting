@@ -19,18 +19,18 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://burtconsulting.com"),
   title: {
-    default: "James Burt | Technologist, AI Consultant & Music Lover",
+    default: "James Burt | Technologist & Music Lover",
     template: "%s | James Burt",
   },
-  description: "Personal marketing website of James Burt. 17-year tech industry veteran, woodwind educator, software developer, and AI workflow integration consultant based in San Antonio, TX.",
+  description: "Personal portfolio website of James Burt. 17-year tech industry veteran, woodwind educator, and software builder based in San Antonio, TX.",
   alternates: {
     canonical: "/",
   },
   openGraph: {
     type: "website",
-    siteName: "James Burt Consulting",
-    title: "James Burt | Technologist, AI Consultant & Music Lover",
-    description: "17-year B2B tech industry veteran, solutions consulting manager, and musician helping businesses integrate AI into their product workflows.",
+    siteName: "James Burt Portfolio",
+    title: "James Burt | Technologist & Music Lover",
+    description: "17-year B2B tech industry veteran, solutions engineering leader, and musician building software products.",
     url: "https://burtconsulting.com",
     locale: "en_US",
     images: [
@@ -38,14 +38,14 @@ export const metadata: Metadata = {
         url: "/og-cover.png",
         width: 1200,
         height: 630,
-        alt: "James Burt - Technologist, AI Consultant & Music Lover",
+        alt: "James Burt - Technologist & Music Lover",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "James Burt | Technologist & AI Integration Specialist",
-    description: "Technologist, SaaS developer, and music educator helping organizations automate workflows and integrate AI safely.",
+    title: "James Burt | Technologist & Music Lover",
+    description: "17-year B2B tech industry veteran, solutions engineering leader, and musician building software products.",
     images: ["/og-cover.png"],
   },
   robots: {

@@ -60,22 +60,22 @@ const projects = [
 const services = [
   {
     title: 'AI Workflow Integration',
-    desc: 'Let\'s automate the boring stuff. I help analyze team friction points and design custom AI workflows—like automatic content adaptation and background document checkups.',
+    desc: 'Building custom AI workflows—like automatic content adaptation and background document checkups—to automate repetitive tasks and remove software friction.',
     icon: <Workflow className="w-5 h-5 text-tech-cyan" />
   },
   {
     title: 'Full-Stack SaaS Development',
-    desc: 'Need an idea brought to life? I build clean, modern web apps from scratch using Next.js, Neon Serverless Postgres, and Stripe subscriptions or Connect payouts.',
+    desc: 'Designing and building clean, modern web applications from scratch, leveraging Next.js, Neon Serverless Postgres, and Stripe integrations.',
     icon: <Code2 className="w-5 h-5 text-tech-violet" />
   },
   {
     title: 'Payments & Subscriptions Strategy',
-    desc: 'I help you navigate the complexity of money. With years of experience in payment processing and billing, I can help design robust subscription models and Stripe integrations.',
+    desc: 'Architecting robust billing systems, subscription models, payment processing pipelines, and Stripe Connect multi-party payouts.',
     icon: <Coins className="w-5 h-5 text-sax-gold" />
   },
   {
-    title: 'Solutions Consulting Strategy',
-    desc: 'I consult on building, scaling, and managing pre-sales solutions engineering teams, mapping technical architectures, and closing enterprise deals.',
+    title: 'Solutions Engineering & Architecture',
+    desc: 'Leading and scaling pre-sales solutions engineering teams, mapping technical architectures, and designing sales engineering strategies.',
     icon: <Layers className="w-5 h-5 text-slate-400" />
   }
 ];
@@ -88,16 +88,16 @@ export default function Home() {
       <DualityHero />
 
       {/* Services Section */}
-      <section id="services" className="py-20 bg-deep-blue/40 relative">
+      <section id="expertise" className="py-20 bg-deep-blue/40 relative">
         <div className="absolute inset-0 bg-grid-pattern opacity-10 pointer-events-none" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-              AI Strategy & Full-Stack Execution
+              Areas of Focus & Expertise
             </h2>
             <p className="text-slate-400 text-base leading-relaxed">
-              Applying the precision of a classical musician and the experience of a B2B tech veteran to help you design, build, and deploy high-performance software.
+              Applying the precision of a classical musician and the experience of a B2B tech veteran to designing, building, and deploying high-performance software.
             </p>
           </div>
 
@@ -227,10 +227,10 @@ export default function Home() {
               Let\'s Connect
             </div>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-              Start Integrating AI Today
+              Let's Connect
             </h2>
             <p className="text-slate-400 text-base leading-relaxed">
-              If you want to discuss custom SaaS projects, billing integrations, or how your organization can start automating tasks using AI, send an inquiry below.
+              Have a question about one of my projects, want to talk software architecture, or see some way we can work together? Send a message below.
             </p>
           </div>
 

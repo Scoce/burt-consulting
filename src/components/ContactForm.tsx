@@ -154,7 +154,7 @@ export default function ContactForm() {
             required
             rows={5}
             disabled={status === 'submitting'}
-            placeholder="Tell me about your business, product, or ideas where I can assist with AI integrations, SaaS architecture, or billing..."
+            placeholder="Let's connect! Send a message here if you want to chat about software development, music, AI, or how we might collaborate..."
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             className="w-full bg-deep-blue/50 border border-white/10 focus:border-sax-gold/40 focus:ring-1 focus:ring-sax-gold/20 rounded-xl py-3 px-4 text-white text-sm outline-none transition-all duration-300 placeholder:text-slate-600 min-h-[120px] resize-y disabled:opacity-50"

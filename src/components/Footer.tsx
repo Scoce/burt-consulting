@@ -26,7 +26,7 @@ export default function Footer() {
               </span>
             </Link>
             <p className="text-sm text-slate-400 max-w-xs leading-relaxed">
-              Technologist, music educator, and software builder based in San Antonio, TX. Helping businesses and individuals build AI-driven workflows.
+              A showcase of software projects, pedagogy experiments, and full-stack integrations.
             </p>
           </div>
 
@@ -38,7 +38,7 @@ export default function Footer() {
                 <Link href="/" className="text-sm text-slate-400 hover:text-sax-gold transition-colors">Home</Link>
               </li>
               <li>
-                <Link href="/#services" className="text-sm text-slate-400 hover:text-sax-gold transition-colors">Services</Link>
+                <Link href="/#expertise" className="text-sm text-slate-400 hover:text-sax-gold transition-colors">Expertise</Link>
               </li>
               <li>
                 <Link href="/#about" className="text-sm text-slate-400 hover:text-sax-gold transition-colors">About Me</Link>
@@ -80,7 +80,7 @@ export default function Footer() {
 
         <div className="mt-12 pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-xs text-slate-500">
-            &copy; {currentYear} Burt Consulting. All rights reserved.
+            &copy; {currentYear} James Burt. All rights reserved.
           </p>
           <p className="text-xs text-slate-500 flex items-center gap-1">
             Built with <Heart className="w-3 h-3 text-red-500 fill-red-500" /> and AI in San Antonio, Texas.

@@ -101,10 +101,10 @@ export default function Navbar() {
             </div>
 
             <Link 
-              href="/#services" 
+              href="/#expertise" 
               className="px-4 py-2 text-sm font-medium rounded-lg text-slate-300 hover:text-white hover:bg-white/5 transition-colors"
             >
-              Services
+              Expertise
             </Link>
             
             <Link 
@@ -175,11 +175,11 @@ export default function Navbar() {
           ))}
           
           <Link
-            href="/#services"
+            href="/#expertise"
             onClick={() => setIsOpen(false)}
             className="block px-3 py-2.5 rounded-lg text-base font-medium text-slate-300 hover:text-white hover:bg-white/5"
           >
-            Services
+            Expertise
           </Link>
           
           <Link

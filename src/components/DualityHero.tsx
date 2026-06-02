@@ -45,7 +45,7 @@ export default function DualityHero() {
             }`}
           >
             <Cpu className="w-4 h-4" />
-            Technologist & Consultant
+            Technologist
           </button>
           <button
             onClick={() => setTrack('music')}
@@ -67,7 +67,7 @@ export default function DualityHero() {
               {/* Tagline Badge */}
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-tech-cyan/10 border border-tech-cyan/20 text-xs font-semibold text-tech-cyan">
                 <Sparkles className="w-3 h-3" />
-                AI Strategy & B2B SaaS Architecture
+                AI Workflows & B2B SaaS Architecture
               </div>
               
               {/* Main Headline */}
@@ -84,7 +84,7 @@ export default function DualityHero() {
               {/* Highlight Bullets */}
               <div className="flex flex-wrap justify-center gap-y-2 gap-x-6 text-sm text-slate-400 py-4 max-w-lg sm:max-w-xl mx-auto">
                 <span className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-tech-cyan" /> Enterprise Solutions consulting
+                  <CheckCircle2 className="w-4 h-4 text-tech-cyan" /> Enterprise Solutions Architecture
                 </span>
                 <span className="flex items-center gap-1.5">
                   <CheckCircle2 className="w-4 h-4 text-tech-cyan" /> Subscription Billing Expert
@@ -100,7 +100,7 @@ export default function DualityHero() {
                   href="#contact"
                   className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-tech-cyan to-tech-violet hover:from-tech-cyan/90 hover:to-tech-violet/90 text-white font-semibold shadow-lg hover:shadow-tech-cyan/10 transition-all duration-300 inline-flex items-center justify-center gap-2 group"
                 >
-                  Consulting Services <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  Get in Touch <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <Link
                   href="#projects"
@@ -154,7 +154,7 @@ export default function DualityHero() {
                   href="#contact"
                   className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 text-white font-semibold transition-all duration-300 inline-flex items-center justify-center"
                 >
-                  Work With Me
+                  Contact Me
                 </Link>
               </div>
             </div>

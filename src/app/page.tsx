@@ -224,7 +224,7 @@ export default function Home() {
           <div className="text-center max-w-3xl mx-auto mb-12 space-y-4">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-tech-cyan/10 border border-tech-cyan/20 text-xs font-semibold text-tech-cyan">
               <Sparkles className="w-3 h-3" />
-              Let\'s Connect
+              {"Let's Connect"}
             </div>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
               Let's Connect

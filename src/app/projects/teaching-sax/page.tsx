@@ -116,7 +116,7 @@ export default function TeachingSaxProject() {
               <Video className="w-5 h-5 text-sax-gold" /> The Core Feature: High-Fidelity, Low-Latency Audio Video
             </h3>
             <p className="text-sm text-slate-300 leading-relaxed">
-              If you\'ve ever tried to teach music lessons over standard video platforms like Zoom or Teams, you know they are designed for voice conversation, not music. Standard noise-cancellation algorithms treat a sustained saxophone or flute note as "background noise" and instantly mute it, resulting in a frustrating, choppy experience.
+              If you&apos;ve ever tried to teach music lessons over standard video platforms like Zoom or Teams, you know they are designed for voice conversation, not music. Standard noise-cancellation algorithms treat a sustained saxophone or flute note as "background noise" and instantly mute it, resulting in a frustrating, choppy experience.
             </p>
             <p className="text-sm text-slate-300 leading-relaxed">
               To fix this, I built a custom virtual classroom integration using the **Daily.co WebRTC SDK** with uncompressed, stereo audio channels. This prevents the browser from muting instrumental sounds and ensures we can play together with clear, natural tone quality and minimal latency.
@@ -131,7 +131,7 @@ export default function TeachingSaxProject() {
             <ul className="space-y-3.5 pl-5 list-none">
               <li className="flex items-start gap-2.5">
                 <CheckCircle className="w-5 h-5 text-sax-gold shrink-0 mt-0.5" />
-                <span><strong>No-Friction Assignment Flow:</strong> I can write feedback during our video session and send it straight to the student\'s practice panel in one click—no post-lesson typing required.</span>
+                <span><strong>No-Friction Assignment Flow:</strong> I can write feedback during our video session and send it straight to the student&apos;s practice panel in one click—no post-lesson typing required.</span>
               </li>
               <li className="flex items-start gap-2.5">
                 <CheckCircle className="w-5 h-5 text-sax-gold shrink-0 mt-0.5" />
@@ -139,7 +139,7 @@ export default function TeachingSaxProject() {
               </li>
               <li className="flex items-start gap-2.5">
                 <CheckCircle className="w-5 h-5 text-sax-gold shrink-0 mt-0.5" />
-                <span><strong>Parent Portal:</strong> Parents paying for lessons get a clean, simple dashboard to see practice consistency and listen to homework recordings without surveilling the student\'s active practice space.</span>
+                <span><strong>Parent Portal:</strong> Parents paying for lessons get a clean, simple dashboard to see practice consistency and listen to homework recordings without surveilling the student&apos;s active practice space.</span>
               </li>
               <li className="flex items-start gap-2.5">
                 <CheckCircle className="w-5 h-5 text-sax-gold shrink-0 mt-0.5" />

@@ -114,7 +114,7 @@ export default function BankOfGagaProject() {
               <Users className="w-5 h-5 text-sax-gold" /> The Core Concept
             </h2>
             <p>
-              Lending money to family members is incredibly common, but it\'s usually tracked on random napkins or messy Excel sheets. This leads to forgotten balances, missed timelines, and awkward family dinner conversations.
+              Lending money to family members is incredibly common, but it&apos;s usually tracked on random napkins or messy Excel sheets. This leads to forgotten balances, missed timelines, and awkward family dinner conversations.
             </p>
             <p>
               I built Bank of Gaga to solve this using a double-sided user interface:

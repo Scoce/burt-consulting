@@ -148,7 +148,7 @@ export default function Navbar() {
             <button
               onClick={() => setIsOpen(!isOpen)}
               type="button"
-              className="inline-flex items-center justify-center p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 focus:outline-none"
+              className="inline-flex items-center justify-center p-3 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 focus:outline-none"
               aria-expanded="false"
             >
               <span className="sr-only">Open main menu</span>
@@ -177,7 +177,7 @@ export default function Navbar() {
               key={proj.name}
               href={proj.path}
               onClick={() => setIsOpen(false)}
-              className="block px-5 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5"
+              className="block px-5 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5"
             >
               {proj.name}
             </Link>

@@ -48,7 +48,7 @@ export default function TeachingSaxProject() {
             Music Pedagogy & Software
           </div>
           
-          <h1 className="text-4xl sm:text-5xl font-extrabold text-white leading-tight">
+          <h1 className="text-3xl sm:text-5xl font-extrabold text-white leading-tight">
             Teaching Sax: Video Lessons That Actually Sound Good
           </h1>
           
@@ -151,7 +151,7 @@ export default function TeachingSaxProject() {
         </div>
 
         {/* Bottom Navigation */}
-        <footer className="mt-16 pt-8 border-t border-white/5 flex justify-between items-center">
+        <footer className="mt-16 pt-8 border-t border-white/5 flex flex-col sm:flex-row gap-4 justify-between items-center text-center sm:text-left">
           <Link href="/projects/bank-of-gaga" className="text-sm text-slate-400 hover:text-white transition-colors">
             &larr; Prev Project: Bank of Gaga
           </Link>

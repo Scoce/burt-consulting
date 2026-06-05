@@ -48,7 +48,7 @@ export default function TruthsAndLiesProject() {
             AI & Family Collaboration
           </div>
           
-          <h1 className="text-4xl sm:text-5xl font-extrabold text-white leading-tight">
+          <h1 className="text-3xl sm:text-5xl font-extrabold text-white leading-tight">
             Truths & Lies: Teaching AI to My Son
           </h1>
           
@@ -166,7 +166,7 @@ export default function TruthsAndLiesProject() {
         </div>
 
         {/* Bottom Navigation */}
-        <footer className="mt-16 pt-8 border-t border-white/5 flex justify-between items-center">
+        <footer className="mt-16 pt-8 border-t border-white/5 flex flex-col sm:flex-row gap-4 justify-between items-center text-center sm:text-left">
           <Link href="/projects/teaching-sax" className="text-sm text-slate-400 hover:text-white transition-colors">
             &larr; Prev Project: Teaching Sax
           </Link>

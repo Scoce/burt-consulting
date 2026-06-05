@@ -210,7 +210,7 @@ export default function Home() {
                   But before my detour into the tech world, my training was in classical music. I hold a <strong>music education degree</strong> and served as a high school and middle school band director (my primary instrument is the saxophone). In many ways, building software feels just like teaching music: you're analyzing complex, micro-level processes, finding the cleanest path forward, and automating structures so that students—or users—can succeed without hitting unnecessary friction.
                 </p>
                 <p>
-                  Now based in San Antonio, Texas, I use my unique background to help teams integrate AI workflows into their businesses, build lifestyle SaaS tools that make lives easier, and coach pre-sales engineering teams to perform at their absolute best.
+                  Now based in San Antonio, Texas, I focus on building personal software projects, experimenting with new AI workflows, and applying my pre-sales engineering background to everything I create.
                 </p>
               </div>
             </div>

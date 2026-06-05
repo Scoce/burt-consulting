@@ -78,7 +78,7 @@ export default function DualityHero() {
               
               {/* Supporting Copy */}
               <p className="text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed">
-                17 years architecting payments, subscription billing platforms, and software tools. Now helping businesses integrate large language models, automate complex workflows, and build scalable products.
+                17 years architecting payments, subscription billing platforms, and software tools. Now focusing on building web applications, exploring LLM integrations, and designing low-friction workflows.
               </p>
 
               {/* Highlight Bullets */}

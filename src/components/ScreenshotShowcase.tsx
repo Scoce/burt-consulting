@@ -28,6 +28,7 @@ export default function ScreenshotShowcase({
             src={src} 
             alt={alt} 
             onError={() => setHasError(true)}
+            fetchPriority="high"
             className="absolute inset-0 w-full h-full object-cover rounded-xl z-20"
           />
         ) : null}

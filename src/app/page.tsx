@@ -81,8 +81,30 @@ const services = [
 ];
 
 export default function Home() {
+  const personSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    'name': 'James Burt',
+    'url': 'https://burtconsulting.com',
+    'jobTitle': 'Technologist & Software Builder',
+    'description': '17-year B2B SaaS industry veteran, solutions engineering leader, woodwind educator, and software builder based in San Antonio, TX.',
+    'sameAs': [
+      'https://www.linkedin.com/in/jamescburt/'
+    ],
+    'address': {
+      '@type': 'PostalAddress',
+      'addressLocality': 'San Antonio',
+      'addressRegion': 'TX',
+      'addressCountry': 'US'
+    }
+  };
+
   return (
     <div className="relative">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
+      />
       
       {/* Hero Section */}
       <DualityHero />

@@ -37,6 +37,7 @@ export default function DualityHero() {
         {/* Track Selector Toggle */}
         <div className="inline-flex p-1.5 rounded-2xl glass-panel border border-white/10 mb-8 md:mb-12 shadow-2xl scale-95 sm:scale-100">
           <button
+            id="toggle-track-tech"
             onClick={() => setTrack('tech')}
             className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all-300 ${
               track === 'tech'
@@ -48,6 +49,7 @@ export default function DualityHero() {
             Technologist
           </button>
           <button
+            id="toggle-track-music"
             onClick={() => setTrack('music')}
             className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all-300 ${
               track === 'music'
@@ -97,12 +99,14 @@ export default function DualityHero() {
               {/* Call to Actions */}
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
                 <Link
+                  id="cta-tech-contact"
                   href="#contact"
                   className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-tech-cyan to-tech-violet hover:from-tech-cyan/90 hover:to-tech-violet/90 text-white font-semibold shadow-lg hover:shadow-tech-cyan/10 transition-all duration-300 inline-flex items-center justify-center gap-2 group"
                 >
                   Get in Touch <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <Link
+                  id="cta-tech-projects"
                   href="#projects"
                   className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 text-white font-semibold transition-all duration-300 inline-flex items-center justify-center gap-1.5"
                 >
@@ -145,12 +149,14 @@ export default function DualityHero() {
               {/* Call to Actions */}
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
                 <Link
+                  id="cta-music-project"
                   href="/projects/teaching-sax"
                   className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-sax-gold to-amber-600 hover:from-sax-gold/90 hover:to-amber-600/90 text-white font-semibold shadow-lg hover:shadow-sax-gold/10 transition-all duration-300 inline-flex items-center justify-center gap-2 group"
                 >
                   Teaching Sax Project <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <Link
+                  id="cta-music-contact"
                   href="#contact"
                   className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 text-white font-semibold transition-all duration-300 inline-flex items-center justify-center"
                 >

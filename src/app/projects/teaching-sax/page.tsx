@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: 'Teaching Sax | Custom Woodwind Studio Software',
   description: 'How I built a custom teaching platform and virtual classroom to support my return to saxophone instruction, featuring low-latency audio tuning.',
   alternates: {
-    canonical: 'https://burtconsulting.com/projects/teaching-sax',
+    canonical: 'https://jamescburt.com/projects/teaching-sax',
   },
 };
 

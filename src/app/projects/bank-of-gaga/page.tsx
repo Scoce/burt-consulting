@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: 'Bank of Gaga | Family Loan Tracker',
   description: 'How I built Bank of Gaga, a subscription-based Web app that helps families track loans, set schedules, and practice investing.',
   alternates: {
-    canonical: 'https://burtconsulting.com/projects/bank-of-gaga',
+    canonical: 'https://jamescburt.com/projects/bank-of-gaga',
   },
 };
 

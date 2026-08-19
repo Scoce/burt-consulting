@@ -85,7 +85,7 @@ export default function Home() {
     '@context': 'https://schema.org',
     '@type': 'Person',
     'name': 'James Burt',
-    'url': 'https://burtconsulting.com',
+    'url': 'https://jamescburt.com',
     'jobTitle': 'Technologist & Software Builder',
     'description': '17-year B2B SaaS industry veteran, solutions engineering leader, woodwind educator, and software builder based in San Antonio, TX.',
     'sameAs': [

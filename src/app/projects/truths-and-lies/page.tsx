@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: 'Truths and Lies | Gemini AI Kids Game',
   description: 'How I built a two-truths-and-a-lie trivia game using Next.js and the Gemini API, designed collaboratively with my 8-year-old son.',
   alternates: {
-    canonical: 'https://burtconsulting.com/projects/truths-and-lies',
+    canonical: 'https://jamescburt.com/projects/truths-and-lies',
   },
 };
 

@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: 'Teach Weave | K-12 AI Lesson Marketplace',
   description: 'How I built Teach Weave, a B2C SaaS marketplace for K-12 educators featuring AI-adaptive resources, state standards alignment, and LMS integrations.',
   alternates: {
-    canonical: 'https://burtconsulting.com/projects/teach-weave',
+    canonical: 'https://jamescburt.com/projects/teach-weave',
   },
 };
 

@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://burtconsulting.com"),
+  metadataBase: new URL("https://jamescburt.com"),
   title: {
     default: "James Burt | Technologist & Music Lover",
     template: "%s | James Burt",
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     siteName: "James Burt Portfolio",
     title: "James Burt | Technologist & Music Lover",
     description: "17-year B2B tech industry veteran, solutions engineering leader, and musician building software products.",
-    url: "https://burtconsulting.com",
+    url: "https://jamescburt.com",
     locale: "en_US",
     images: [
       {

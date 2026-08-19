@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://burtconsulting.com';
+  const baseUrl = 'https://jamescburt.com';
   const currentDate = new Date();
 
   const staticRoutes = [

@@ -12,19 +12,35 @@ interface EmailPayload {
   message: string;
 }
 
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 export async function sendContactEmail(payload: EmailPayload) {
   const { name, email, company, message } = payload;
-  const companyStr = company ? ` at ${company}` : '';
+  
+  // HTML-escape user inputs to prevent XSS injection in email clients
+  const escapedName = escapeHtml(name);
+  const escapedEmail = escapeHtml(email);
+  const escapedCompany = company ? escapeHtml(company) : '';
+  const escapedMessage = escapeHtml(message);
 
-  const subject = `New Portfolio Inquiry from ${name}${companyStr}`;
+  const companyStr = escapedCompany ? ` at ${escapedCompany}` : '';
+  const subject = `New Portfolio Inquiry from ${escapedName}${companyStr}`;
+
   const html = `
     <h2>New Contact Form Submission</h2>
-    <p><strong>Name:</strong> ${name}</p>
-    <p><strong>Email:</strong> ${email}</p>
-    <p><strong>Company:</strong> ${company || 'N/A'}</p>
+    <p><strong>Name:</strong> ${escapedName}</p>
+    <p><strong>Email:</strong> ${escapedEmail}</p>
+    <p><strong>Company:</strong> ${escapedCompany || 'N/A'}</p>
     <p><strong>Message:</strong></p>
     <div style="background-color: #f5f5f5; padding: 15px; border-left: 4px solid #B27B20; border-radius: 4px; white-space: pre-wrap;">
-      ${message}
+      ${escapedMessage}
     </div>
     <br/>
     <hr/>

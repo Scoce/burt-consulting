@@ -131,19 +131,23 @@ export default function TeachingSaxProject() {
             <ul className="space-y-3.5 pl-5 list-none">
               <li className="flex items-start gap-2.5">
                 <CheckCircle className="w-5 h-5 text-sax-gold shrink-0 mt-0.5" />
-                <span><strong>No-Friction Assignment Flow:</strong> I can write feedback during our video session and send it straight to the student&apos;s practice panel in one click—no post-lesson typing required.</span>
+                <span><strong>Onboarding Wizard & Settings UI:</strong> A multi-tab settings page allowing teachers to configure bios, teaching specialty instruments, default pricing, default lesson lengths, and calendar links.</span>
               </li>
               <li className="flex items-start gap-2.5">
                 <CheckCircle className="w-5 h-5 text-sax-gold shrink-0 mt-0.5" />
-                <span><strong>Practice Recording Log:</strong> Students record audio snippets of their homework directly in the web app. It creates a simple history log so we can hear their tone improvement over weeks and months.</span>
+                <span><strong>Tokenized Student Booking Link:</strong> A Calendly-style student self-booking workflow built on the `/contact` path with custom time templates and automated Resend confirmation emails.</span>
               </li>
               <li className="flex items-start gap-2.5">
                 <CheckCircle className="w-5 h-5 text-sax-gold shrink-0 mt-0.5" />
-                <span><strong>Parent Portal:</strong> Parents paying for lessons get a clean, simple dashboard to see practice consistency and listen to homework recordings without surveilling the student&apos;s active practice space.</span>
+                <span><strong>Google Calendar OAuth Sync:</strong> Direct integration with the Google Calendar API that synchronizes lesson time slots independently of user sign-in credentials, supporting future extension to Microsoft and Apple calendars.</span>
               </li>
               <li className="flex items-start gap-2.5">
                 <CheckCircle className="w-5 h-5 text-sax-gold shrink-0 mt-0.5" />
-                <span><strong>Stripe Billing Automations:</strong> Handles lesson reservations, automated subscription invoices, and late-cancel terms without awkward follow-up messages.</span>
+                <span><strong>iCal Subscription Feed:</strong> Generates a read-only `.ics` calendar URL in standard RFC 5545 format at `/api/calendar/[token]`, enabling teachers and students to sync active lessons to their native phone calendar apps.</span>
+              </li>
+              <li className="flex items-start gap-2.5">
+                <CheckCircle className="w-5 h-5 text-sax-gold shrink-0 mt-0.5" />
+                <span><strong>Multi-Tenant Architecture from Day One:</strong> Ensures absolute tenant isolation across all scheduling tables using custom database schemas scoped by `teacher_id` with automatic backfill hooks during user creation.</span>
               </li>
             </ul>
           </section>

@@ -112,7 +112,7 @@ export default function TruthsAndLiesProject() {
               This app started as a fun, educational way to teach my 8-year-old son how programming and AI work. He came up with the core ideas—choosing categories like Sports Stars and Movies, setting up a Hall of Fame leaderboard, and designing how the badges should look.
             </p>
             <p>
-              Together, we explored how to collaborate with AI:
+              Together, we expanded the solo game into a real-time classroom multiplayer experience:
             </p>
             <ul className="space-y-3.5 pl-5 list-none">
               <li className="flex items-start gap-2.5">
@@ -121,11 +121,15 @@ export default function TruthsAndLiesProject() {
               </li>
               <li className="flex items-start gap-2.5">
                 <CheckCircle className="w-5 h-5 text-tech-violet shrink-0 mt-0.5" />
-                <span><strong>Targeting Content:</strong> Teaching the model to adapt questions based on age—generating Elsa and Superhero questions for kids, and classical music or deep tech trivia for adults.</span>
+                <span><strong>Smartboard & Live Contest Suite:</strong> Designed for teachers to project educational warm-ups on a Smartboard or run 15-second speed contests where students scan a QR code to answer on their own devices.</span>
               </li>
               <li className="flex items-start gap-2.5">
                 <CheckCircle className="w-5 h-5 text-tech-violet shrink-0 mt-0.5" />
-                <span><strong>Database Gamification:</strong> Setting up simple schemas on Neon to store user scores, streak milestones, and award achievements (like getting 5 correct answers in a row).</span>
+                <span><strong>AI-Assisted Nickname Moderation:</strong> A safety pipeline using Gemini-2.5-flash to screen student lobby names in real time, automatically blocking profanity, crude numbers, and Gen Alpha brainrot slang (like *skibidi* or *gyatt*).</span>
+              </li>
+              <li className="flex items-start gap-2.5">
+                <CheckCircle className="w-5 h-5 text-tech-violet shrink-0 mt-0.5" />
+                <span><strong>Zero-Friction Guest Mode:</strong> Automatically creates mock sessions on landing, letting users jump straight into gameplay without completing email registrations.</span>
               </li>
             </ul>
           </section>
@@ -143,21 +147,21 @@ export default function TruthsAndLiesProject() {
                 </p>
               </div>
               <div className="p-5 rounded-xl bg-white/5 border border-white/5 space-y-2">
-                <h4 className="font-bold text-white text-sm">Age Division scoreboards</h4>
+                <h4 className="font-bold text-white text-sm">AI Classroom safety</h4>
                 <p className="text-xs text-slate-400">
-                  Separates score submissions into three different leaderboard divisions to keep matches fair and fun for all players.
+                  Uses strict K-12 moderator system instructions with JSON response schemas to identify cuss evasions, inappropriate numbers, and meme slang.
                 </p>
               </div>
               <div className="p-5 rounded-xl bg-white/5 border border-white/5 space-y-2">
-                <h4 className="font-bold text-white text-sm">Local Mock Database</h4>
+                <h4 className="font-bold text-white text-sm">Live Lobby speed leaderboard</h4>
                 <p className="text-xs text-slate-400">
-                  Implements an in-memory SQL simulator that mimics games, users, and achievements tables to make offline development possible.
+                  Provides a real-time lobby where answers submitted via mobile devices calculate score metrics based on response speed.
                 </p>
               </div>
               <div className="p-5 rounded-xl bg-white/5 border border-white/5 space-y-2">
-                <h4 className="font-bold text-white text-sm">Badge Unlock pipeline</h4>
+                <h4 className="font-bold text-white text-sm">Neon Serverless DB</h4>
                 <p className="text-xs text-slate-400">
-                  Checks streak counts and login times after each turn to trigger badge awards, saving achievements to a relational user table.
+                  Stores live lobbies, user profiles, streaks, and unlocked badges in a scalable relational database with Jose-backed JWT auth tokens.
                 </p>
               </div>
             </div>

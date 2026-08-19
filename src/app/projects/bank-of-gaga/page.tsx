@@ -114,23 +114,27 @@ export default function BankOfGagaProject() {
               <Users className="w-5 h-5 text-sax-gold" /> The Core Concept
             </h2>
             <p>
-              Lending money to family members is incredibly common, but it&apos;s usually tracked on random napkins or messy Excel sheets. This leads to forgotten balances, missed timelines, and awkward family dinner conversations.
+              Lending money to family members is common, but spreadsheets are poorly suited for the human side of tracking. I built Bank of Gaga to professionalize family loan agreements while keeping them friendly and accessible.
             </p>
             <p>
-              I built Bank of Gaga to solve this using a double-sided user interface:
+              The application leverages a double-sided UI tailored to different demographics:
             </p>
             <ul className="space-y-3.5 pl-5 list-none">
               <li className="flex items-start gap-2.5">
                 <CheckCircle className="w-5 h-5 text-sax-gold shrink-0 mt-0.5" />
-                <span><strong>For Lenders ("Gagas"):</strong> A highly legible, clear desktop interface. Gagas can view summaries, click to adjust payment terms, and export clean PDF loan records.</span>
+                <span><strong>High-Legibility Lender Dashboard:</strong> Tailored for older lenders ("Gagas") who value explicit UI cues, featuring a simplified layout, high-contrast states, custom Date Change modals, and easy SMS invitation sharing.</span>
               </li>
               <li className="flex items-start gap-2.5">
                 <CheckCircle className="w-5 h-5 text-sax-gold shrink-0 mt-0.5" />
-                <span><strong>For Borrowers:</strong> A mobile-first progress screen. Borrowers see when payments are due and receive friendly email alerts when a transaction is logged.</span>
+                <span><strong>Free Promissory Note Generator:</strong> A public lead magnet utility that dynamically compiles printable family loan contracts in PDF format, helping bootstrap traffic and capture email leads.</span>
               </li>
               <li className="flex items-start gap-2.5">
                 <CheckCircle className="w-5 h-5 text-sax-gold shrink-0 mt-0.5" />
-                <span><strong>Financial Literacy Arena:</strong> A mock stock market simulator. Borrowers (especially kids) can practice investing their pretend cash balance, adding a fun learning layer to debt tracking.</span>
+                <span><strong>Mortgage-Style Overpayments:</strong> Extra payments apply directly to principal reduction and shorten the term, rather than shrinking future monthly slots into weird fractional amounts (resolved based on direct feedback).</span>
+              </li>
+              <li className="flex items-start gap-2.5">
+                <CheckCircle className="w-5 h-5 text-sax-gold shrink-0 mt-0.5" />
+                <span><strong>Growth & Referrals:</strong> Mutual referral rewards and extended 30-day trial periods ensure that families get a full payment loop to experience the product before committing.</span>
               </li>
             </ul>
           </section>
@@ -142,27 +146,27 @@ export default function BankOfGagaProject() {
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4">
               <div className="p-5 rounded-xl bg-white/5 border border-white/5 space-y-2">
-                <h4 className="font-bold text-white text-sm">Amortization Engine</h4>
+                <h4 className="font-bold text-white text-sm">Amortization & Recalculation Engine</h4>
                 <p className="text-xs text-slate-400">
-                  Runs compounding math directly in database updates to calculate principal vs. interest splits, letting users make extra payments or adjust terms mid-loan.
+                  Calculates real-time principal/interest schedules dynamically, cleanly handling early payments and displaying a "Final Payment 🎉" badge on completion.
                 </p>
               </div>
               <div className="p-5 rounded-xl bg-white/5 border border-white/5 space-y-2">
-                <h4 className="font-bold text-white text-sm">Secure Entry Rate-Limiters</h4>
+                <h4 className="font-bold text-white text-sm">Manual Confirmation Loop & Plaid waitlist</h4>
                 <p className="text-xs text-slate-400">
-                  Protects sensitive entry points (like signups, password resets, and invitation links) from brute-forcing using custom serverless Redis limits.
+                  Lenders review pending payments with a dashboard card, backed by a 24h cron nudge. Includes an in-app "Join Plaid waitlist" CTA to measure demand for full integrations.
                 </p>
               </div>
               <div className="p-5 rounded-xl bg-white/5 border border-white/5 space-y-2">
-                <h4 className="font-bold text-white text-sm">GA4 Attribution Tracking</h4>
+                <h4 className="font-bold text-white text-sm">GA4 & Attribution Funnel</h4>
                 <p className="text-xs text-slate-400">
-                  Tracks subscription signups and correlates landing page flows to Stripe conversions using server-side analytics.
+                  Tracks subscription starts on `/billing/success` via Google Analytics, logging exact signup sources (Google OAuth vs. Email) to a Postgres metadata table.
                 </p>
               </div>
               <div className="p-5 rounded-xl bg-white/5 border border-white/5 space-y-2">
-                <h4 className="font-bold text-white text-sm">Email Reminders pipeline</h4>
+                <h4 className="font-bold text-white text-sm">Email & SMS Reminder Pipelines</h4>
                 <p className="text-xs text-slate-400">
-                  Integrates Resend transactional API to dispatch balance notifications and monthly receipts automatically.
+                  Triggers daily checks via cron jobs, using the Resend API to alert borrowers of upcoming due dates and notify lenders when confirmation is needed.
                 </p>
               </div>
             </div>

@@ -114,23 +114,27 @@ export default function TeachWeaveProject() {
               <Zap className="w-5 h-5 text-tech-cyan" /> The Problem & The Solution
             </h2>
             <p>
-              Every student learns differently. In a single class, a teacher might have kids reading at a 3rd-grade level, some reading at a 6th-grade level, and others who need Spanish translations or extra step-by-step guides. Traditionally, teachers spent hours manually creating these variants.
+              Every student learns differently, but teachers spend hours manually creating variants of worksheets (by reading level or language) or dealing with the painful, manual process of migrating their listings from legacy marketplaces.
             </p>
             <p>
-              Teach Weave changes that completely:
+              Teach Weave solves these points with creator-centric workflows and robust AI helpers:
             </p>
             <ul className="space-y-3.5 pl-5 list-none">
               <li className="flex items-start gap-2.5">
                 <CheckCircle className="w-5 h-5 text-tech-cyan shrink-0 mt-0.5" />
-                <span><strong>AI-Adaptive Customization:</strong> Buyers click a slider to change the reading level, swap languages, or adjust content length on demand, dynamically compiling a customized document.</span>
+                <span><strong>TPT URL Import (Single-Click Migration):</strong> Creators paste any legacy Teachers Pay Teachers URL, and the server automatically scrapes the title, description, and preview metadata to prefill upload fields, saving hours of manual data entry.</span>
               </li>
               <li className="flex items-start gap-2.5">
                 <CheckCircle className="w-5 h-5 text-tech-cyan shrink-0 mt-0.5" />
-                <span><strong>Compliance Checked Automatically:</strong> We map every document automatically to state-specific standards (like Common Core or TEKS) using automated text analysis at upload.</span>
+                <span><strong>Multi-Document Zip & Watermark Pipeline:</strong> Supports resource bundles containing multiple documents (lesson plans, answer keys, worksheets). The platform automatically stamps PDFs with buyer-specific watermarks and compresses them on-the-fly into a secure ZIP download.</span>
               </li>
               <li className="flex items-start gap-2.5">
                 <CheckCircle className="w-5 h-5 text-tech-cyan shrink-0 mt-0.5" />
-                <span><strong>Fair Platform Economics:</strong> Traditional sites take up to 45% of teacher sales. Teach Weave keeps fees at just 15%, routing payouts directly via Stripe Connect.</span>
+                <span><strong>AI-Adaptive Versions (Opt-in Beta):</strong> Allows buyers to dynamically adapt reading levels and translate languages. Creators retain complete control, with a global opt-in/opt-out toggle to protect visual-heavy designs.</span>
+              </li>
+              <li className="flex items-start gap-2.5">
+                <CheckCircle className="w-5 h-5 text-tech-cyan shrink-0 mt-0.5" />
+                <span><strong>Founding Creator Funnel:</strong> A structured applicant pipeline with manual administrative promotion tools to showcase and prioritize resources from early-adopting educators.</span>
               </li>
             </ul>
           </section>
@@ -142,27 +146,27 @@ export default function TeachWeaveProject() {
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4">
               <div className="p-5 rounded-xl bg-white/5 border border-white/5 space-y-2">
-                <h4 className="font-bold text-white text-sm">Dynamic Adaptation Pipeline</h4>
+                <h4 className="font-bold text-white text-sm">Metadata Scraper Engine</h4>
                 <p className="text-xs text-slate-400">
-                  Processes and cleans documents using customized system prompts, then caches modified assets in Supabase storage to make subsequent downloads instantaneous.
+                  Parses HTML listing structures server-side using customized fallbacks (`og:description`, `meta description`) and cleans URL tracking tags for a clean, automated import.
                 </p>
               </div>
               <div className="p-5 rounded-xl bg-white/5 border border-white/5 space-y-2">
-                <h4 className="font-bold text-white text-sm">Standards Graph Parser</h4>
+                <h4 className="font-bold text-white text-sm">Decoupled Google OAuth Flow</h4>
                 <p className="text-xs text-slate-400">
-                  Matches text indices against a hierarchical standards database using fuzzy-match prompts to tag files accurately without manual labor.
+                  Isolates Google Classroom scopes (`drive.file`, `classroom.coursework.students`) from base authentication, preventing unnecessary consent prompts for normal users.
                 </p>
               </div>
               <div className="p-5 rounded-xl bg-white/5 border border-white/5 space-y-2">
-                <h4 className="font-bold text-white text-sm">Secure RLS Isolation</h4>
+                <h4 className="font-bold text-white text-sm">Forensic PDF Watermarking</h4>
                 <p className="text-xs text-slate-400">
-                  Postgres Row-Level Security ensures that purchase tables dictate download access keys, protecting content files from direct URLs.
+                  Programmatically stamps buyer identifiers onto each PDF page before streaming, preventing illegal document leakage and sharing.
                 </p>
               </div>
               <div className="p-5 rounded-xl bg-white/5 border border-white/5 space-y-2">
-                <h4 className="font-bold text-white text-sm">Google Classroom Sync</h4>
+                <h4 className="font-bold text-white text-sm">Google Classroom Draft Integration</h4>
                 <p className="text-xs text-slate-400">
-                  Pushes adapted files directly to the Google Classroom SDK, making distribution to students instant for the buying teacher.
+                  Pushes documents directly to a teacher&apos;s Google Classroom course as a **Draft Assignment**, allowing them to verify points, topics, and due dates before students see it.
                 </p>
               </div>
             </div>

@@ -61,7 +61,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true, message: 'Contact request recorded' });
   } catch (err: unknown) {
     console.error('[api/contact] Fatal error handling contact request:', err);
-    const msg = err instanceof Error ? err.message : 'Internal Server Error';
-    return NextResponse.json({ error: msg }, { status: 500 });
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

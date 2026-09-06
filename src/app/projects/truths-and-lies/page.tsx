@@ -45,15 +45,15 @@ export default function TruthsAndLiesProject() {
         <header className="space-y-6 mb-10">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-tech-violet/10 border border-tech-violet/20 text-xs font-semibold text-tech-violet">
             <BrainCircuit className="w-4 h-4" />
-            AI & Family Collaboration
+            Father &amp; Son Project
           </div>
           
           <h1 className="text-3xl sm:text-5xl font-extrabold text-white leading-tight">
-            Truths & Lies: Teaching AI to My Son
+            Truths &amp; Lies: Building an AI Game with My 8-Year-Old Son
           </h1>
           
           <p className="text-xl text-slate-300 leading-relaxed font-light">
-            An AI-powered trivia game I built with my 8-year-old son to teach him prompt engineering. Powered dynamically by the Google Gemini API.
+            A dynamic two-truths-and-a-lie trivia game built with the Gemini API to teach prompt engineering—plus the unexpected challenge of classroom meme slang moderation.
           </p>
 
           <div className="flex flex-wrap items-center gap-4 pt-2">
@@ -79,7 +79,7 @@ export default function TruthsAndLiesProject() {
         <section className="glass-panel rounded-2xl p-6 border border-white/5 mb-12">
           <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Project Tech Stack</h3>
           <div className="flex flex-wrap gap-2.5">
-            {['Next.js 16', 'TypeScript', 'Gemini API', 'Node Postgres', 'Neon Serverless', 'Tailwind CSS'].map((tech) => (
+            {['Next.js 16', 'TypeScript', 'Gemini API', 'Neon Postgres', 'Tailwind CSS'].map((tech) => (
               <span key={tech} className="px-3 py-1 rounded-lg bg-white/5 border border-white/5 text-slate-300 text-xs font-medium">
                 {tech}
               </span>
@@ -90,78 +90,75 @@ export default function TruthsAndLiesProject() {
         {/* Writeup Content */}
         <div className="space-y-12 text-slate-300 leading-relaxed text-base">
           
-          {/* What We Built */}
+          {/* How It Started */}
           <section className="space-y-4">
             <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-              <Cpu className="w-5 h-5 text-tech-violet" /> What We Built
+              <Heart className="w-5 h-5 text-red-400" /> How It Started
             </h2>
             <p>
-              Truths and Lies is an interactive two-truths-and-a-lie trivia game. Instead of relying on a pre-written database of questions, the game connects to the **Google Gemini API** to generate trivia dynamically. 
+              Instead of just letting my 8-year-old son play games on an iPad, I wanted to show him how software gets made. We decided to build a digital version of &ldquo;Two Truths and a Lie.&rdquo; He served as the creative director: choosing trivia categories (like Sports Stars, Marvel Movies, and Animal Facts), designing achievement badges, and testing early rounds.
             </p>
             <p>
-              Players select a division (Children, Teens, or Adults) and a category (like Sports, Movies, Science, History, or Music), and Gemini instantly cooks up three facts where exactly one is a lie. The challenge is to find the lie without clicking a truth!
+              Rather than writing hundreds of trivia questions by hand, we hooked the game up to Google&apos;s Gemini API. Players choose a division (Kids, Teens, or Adults) and a category, and Gemini generates three plausible statements on the fly where exactly one is false.
             </p>
           </section>
 
-          {/* Why We Built It */}
+          {/* Prompt Engineering & Classroom Lobbies */}
           <section className="space-y-4">
             <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-              <Heart className="w-5 h-5 text-red-400" /> Coding as a Family
+              <Cpu className="w-5 h-5 text-tech-violet" /> Prompt Engineering &amp; School Smartboards
             </h2>
             <p>
-              This app started as a fun, educational way to teach my 8-year-old son how programming and AI work. He came up with the core ideas—choosing categories like Sports Stars and Movies, setting up a Hall of Fame leaderboard, and designing how the badges should look.
-            </p>
-            <p>
-              Together, we expanded the solo game into a real-time classroom multiplayer experience:
+              What started as a simple living-room experiment evolved into a classroom learning tool with a few hilarious engineering lessons along the way:
             </p>
             <ul className="space-y-3.5 pl-5 list-none">
               <li className="flex items-start gap-2.5">
                 <CheckCircle className="w-5 h-5 text-tech-violet shrink-0 mt-0.5" />
-                <span><strong>Writing System Instructions:</strong> Learning how to prompt Gemini so that it instructs the LLM to output structured JSON data containing exactly one lie, without giving away which index is correct.</span>
+                <span><strong>Teaching an 8-Year-Old How Prompts Work:</strong> We spent afternoons discovering how to structure system instructions. He quickly saw that if you aren&apos;t precise, the AI will cheat—either by making the lie absurdly obvious or by accidentally revealing the answer in the JSON output.</span>
               </li>
               <li className="flex items-start gap-2.5">
                 <CheckCircle className="w-5 h-5 text-tech-violet shrink-0 mt-0.5" />
-                <span><strong>Smartboard & Live Contest Suite:</strong> Designed for teachers to project educational warm-ups on a Smartboard or run 15-second speed contests where students scan a QR code to answer on their own devices.</span>
+                <span><strong>Smartboard &amp; QR Code Live Contests:</strong> We built a classroom mode for teachers. An educator can project the statements on a Smartboard for group discussions, or launch a 15-second speed contest where students scan a QR code on their phones to lock in their guesses.</span>
               </li>
               <li className="flex items-start gap-2.5">
                 <CheckCircle className="w-5 h-5 text-tech-violet shrink-0 mt-0.5" />
-                <span><strong>AI-Assisted Nickname Moderation:</strong> A safety pipeline using Gemini-2.5-flash to screen student lobby names in real time, automatically blocking profanity, crude numbers, and Gen Alpha brainrot slang (like *skibidi* or *gyatt*).</span>
+                <span><strong>The &ldquo;Brainrot&rdquo; Moderation Filter:</strong> As soon as we added live multiplayer lobbies, we ran into a real school problem: kids love disruptive nicknames. We had to build a dedicated safety pipeline using Gemini-2.5-flash to screen student lobby names in real time, specifically instructing the model to reject inappropriate words, meme numbers, and Gen Alpha slang (*skibidi*, *gyatt*, *rizzler*, *sigma*).</span>
               </li>
               <li className="flex items-start gap-2.5">
                 <CheckCircle className="w-5 h-5 text-tech-violet shrink-0 mt-0.5" />
-                <span><strong>Zero-Friction Guest Mode:</strong> Automatically creates mock sessions on landing, letting users jump straight into gameplay without completing email registrations.</span>
+                <span><strong>Zero-Friction Guest Access:</strong> In a classroom setting, no teacher wants 25 students creating email accounts. We built an automatic guest session flow so kids can scan the QR code and jump straight into the game.</span>
               </li>
             </ul>
           </section>
 
-          {/* Tech details */}
+          {/* Under the Hood */}
           <section className="space-y-4">
             <h2 className="text-2xl font-bold text-white flex items-center gap-2">
               <Trophy className="w-5 h-5 text-tech-violet" /> Under the Hood
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4">
               <div className="p-5 rounded-xl bg-white/5 border border-white/5 space-y-2">
-                <h4 className="font-bold text-white text-sm">Dynamic Gemini Prompting</h4>
-                <p className="text-xs text-slate-400">
-                  Calls Gemini dynamically using system instructions to enforce JSON returns, separating content delivery from validation checks.
+                <h4 className="font-bold text-white text-sm">Strict JSON Prompting</h4>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Enforces strict JSON schema outputs from Gemini, cleanly separating statement text from the hidden lie index to prevent answer leaks on the client.
                 </p>
               </div>
               <div className="p-5 rounded-xl bg-white/5 border border-white/5 space-y-2">
-                <h4 className="font-bold text-white text-sm">AI Classroom safety</h4>
-                <p className="text-xs text-slate-400">
-                  Uses strict K-12 moderator system instructions with JSON response schemas to identify cuss evasions, inappropriate numbers, and meme slang.
+                <h4 className="font-bold text-white text-sm">Real-Time AI Nickname Guard</h4>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Screens student lobby submissions with a low-latency Gemini prompt tuned specifically to catch cuss-word evasions, crude numbers, and classroom meme slang.
                 </p>
               </div>
               <div className="p-5 rounded-xl bg-white/5 border border-white/5 space-y-2">
-                <h4 className="font-bold text-white text-sm">Live Lobby speed leaderboard</h4>
-                <p className="text-xs text-slate-400">
-                  Provides a real-time lobby where answers submitted via mobile devices calculate score metrics based on response speed.
+                <h4 className="font-bold text-white text-sm">Live Speed Leaderboards</h4>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Calculates live scores based on both correctness and millisecond submission speed for high-energy classroom contest rounds.
                 </p>
               </div>
               <div className="p-5 rounded-xl bg-white/5 border border-white/5 space-y-2">
-                <h4 className="font-bold text-white text-sm">Neon Serverless DB</h4>
-                <p className="text-xs text-slate-400">
-                  Stores live lobbies, user profiles, streaks, and unlocked badges in a scalable relational database with Jose-backed JWT auth tokens.
+                <h4 className="font-bold text-white text-sm">Serverless Neon DB</h4>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Stores live lobbies, user streaks, and unlocked badges in a serverless relational database with lightweight JWT session management.
                 </p>
               </div>
             </div>

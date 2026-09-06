@@ -45,15 +45,15 @@ export default function TeachWeaveProject() {
         <header className="space-y-6 mb-10">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-tech-cyan/10 border border-tech-cyan/20 text-xs font-semibold text-tech-cyan">
             <GraduationCap className="w-4 h-4" />
-            Education Technology SaaS
+            Education Tech
           </div>
           
           <h1 className="text-3xl sm:text-5xl font-extrabold text-white leading-tight">
-            Teach Weave: Homework That Adapts to Every Kid
+            Teach Weave: A Teaching Resource Marketplace That Respects Teachers
           </h1>
           
           <p className="text-xl text-slate-300 leading-relaxed font-light">
-            A modern SaaS marketplace for K-12 teachers. Upload once, and let AI translate lessons to different reading levels, languages, and accessibility needs in one click.
+            An alternative to Teachers Pay Teachers built with fair creator economics (15% vs up to 45%), one-click listing migration, and sensibly scoped AI.
           </p>
 
           <div className="flex flex-wrap items-center gap-4 pt-2">
@@ -66,7 +66,7 @@ export default function TeachWeaveProject() {
               Visit Live App <ExternalLink className="w-4 h-4" />
             </a>
             <span className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/5 text-slate-400 text-xs font-semibold">
-              Project Type: Commercial SaaS Prototype
+              Project Status: Live Prototype
             </span>
           </div>
         </header>
@@ -95,46 +95,43 @@ export default function TeachWeaveProject() {
         {/* Writeup Content */}
         <div className="space-y-12 text-slate-300 leading-relaxed text-base">
           
-          {/* What We Built */}
-          <section className="space-y-4">
-            <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-              <Cpu className="w-5 h-5 text-tech-cyan" /> What I Built
-            </h2>
-            <p>
-              Teach Weave is a full-featured lesson plan marketplace. Think of it like a next-generation alternative to Teachers Pay Teachers. It allows educators to buy and sell classroom materials, but with a massive technical upgrade: **dynamic, AI-powered document adaptation**.
-            </p>
-            <p>
-              Under the hood, I integrated a background job queue using **Inngest** and the **Vercel AI SDK**. When a lesson is uploaded, background workers analyze the content, verify state standards, and prepare it so buyers can customize the material instantly.
-            </p>
-          </section>
-
           {/* Why I Built It */}
           <section className="space-y-4">
             <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-              <Zap className="w-5 h-5 text-tech-cyan" /> The Problem & The Solution
+              <Zap className="w-5 h-5 text-tech-cyan" /> Why I Built It
             </h2>
             <p>
-              Every student learns differently, but teachers spend hours manually creating variants of worksheets (by reading level or language) or dealing with the painful, manual process of migrating their listings from legacy marketplaces.
+              Teachers Pay Teachers (TPT) is the dominant marketplace for classroom resources, but almost every teacher who sells on it shares the same frustrations: the platform takes a steep cut (often 20% to 45%), search is cluttered with keyword-stuffed titles, and migrating an existing catalog anywhere else feels like an exhausting weekend of manual copying and pasting.
             </p>
             <p>
-              Teach Weave solves these points with creator-centric workflows and robust AI helpers:
+              I built Teach Weave to test what a marketplace looks like when it actually puts teachers first: keeping creator fees capped at a flat 15% via Stripe Connect, organizing search primarily by state standards (like TEKS, B.E.S.T., and Common Core), and building migration tooling so creators can bring their inventory over in an evening.
+            </p>
+          </section>
+
+          {/* Where AI Helps vs Hurts */}
+          <section className="space-y-4">
+            <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+              <Cpu className="w-5 h-5 text-tech-cyan" /> Where AI Actually Helps (and Where It Doesn&apos;t)
+            </h2>
+            <p>
+              A lot of modern tools slap &ldquo;AI&rdquo; on the cover as marketing hype. While building Teach Weave, we learned early on what was genuinely useful and what teachers hated:
             </p>
             <ul className="space-y-3.5 pl-5 list-none">
               <li className="flex items-start gap-2.5">
                 <CheckCircle className="w-5 h-5 text-tech-cyan shrink-0 mt-0.5" />
-                <span><strong>TPT URL Import (Single-Click Migration):</strong> Creators paste any legacy Teachers Pay Teachers URL, and the server automatically scrapes the title, description, and preview metadata to prefill upload fields, saving hours of manual data entry.</span>
+                <span><strong>Keeping AI Scope Sensible:</strong> We initially tested letting AI rebuild entire worksheet layouts. In practice, teachers hated losing their visual formatting and hand-designed structures. We pulled that back and narrowed AI strictly to reading-level adjustments and language translations, keeping it as an opt-in toggle so creators retain full control.</span>
               </li>
               <li className="flex items-start gap-2.5">
                 <CheckCircle className="w-5 h-5 text-tech-cyan shrink-0 mt-0.5" />
-                <span><strong>Multi-Document Zip & Watermark Pipeline:</strong> Supports resource bundles containing multiple documents (lesson plans, answer keys, worksheets). The platform automatically stamps PDFs with buyer-specific watermarks and compresses them on-the-fly into a secure ZIP download.</span>
+                <span><strong>TPT 1-Click URL Import:</strong> The biggest friction for creators is retyping titles and descriptions. With Teach Weave, creators just paste their existing TPT product URL. The server automatically pulls title and description metadata and pre-fills the upload form in seconds.</span>
               </li>
               <li className="flex items-start gap-2.5">
                 <CheckCircle className="w-5 h-5 text-tech-cyan shrink-0 mt-0.5" />
-                <span><strong>AI-Adaptive Versions (Opt-in Beta):</strong> Allows buyers to dynamically adapt reading levels and translate languages. Creators retain complete control, with a global opt-in/opt-out toggle to protect visual-heavy designs.</span>
+                <span><strong>Multi-Document Bundles &amp; Watermarked ZIPs:</strong> Real classroom units include multiple files—lesson plans, worksheets, and answer keys. The system compiles multi-file uploads, stamps PDFs with per-buyer watermarks, and streams them as a clean ZIP package.</span>
               </li>
               <li className="flex items-start gap-2.5">
                 <CheckCircle className="w-5 h-5 text-tech-cyan shrink-0 mt-0.5" />
-                <span><strong>Founding Creator Funnel:</strong> A structured applicant pipeline with manual administrative promotion tools to showcase and prioritize resources from early-adopting educators.</span>
+                <span><strong>Google Classroom Draft Push:</strong> Instead of downloading files and manually re-uploading them to Google, teachers push resources straight to their Classroom courses—landing as a draft assignment so they can verify due dates and points before students see it.</span>
               </li>
             </ul>
           </section>
@@ -142,31 +139,31 @@ export default function TeachWeaveProject() {
           {/* Technical Details */}
           <section className="space-y-4">
             <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-              <LayoutGrid className="w-5 h-5 text-tech-cyan" /> Cool Tech Under the Hood
+              <LayoutGrid className="w-5 h-5 text-tech-cyan" /> Practical Architecture Choices
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4">
               <div className="p-5 rounded-xl bg-white/5 border border-white/5 space-y-2">
                 <h4 className="font-bold text-white text-sm">Metadata Scraper Engine</h4>
-                <p className="text-xs text-slate-400">
-                  Parses HTML listing structures server-side using customized fallbacks (`og:description`, `meta description`) and cleans URL tracking tags for a clean, automated import.
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Fetches listing metadata server-side, cleans URL tracking tags, and resolves fallbacks so creators can import their existing catalog without retyping hours of copy.
                 </p>
               </div>
               <div className="p-5 rounded-xl bg-white/5 border border-white/5 space-y-2">
                 <h4 className="font-bold text-white text-sm">Decoupled Google OAuth Flow</h4>
-                <p className="text-xs text-slate-400">
-                  Isolates Google Classroom scopes (`drive.file`, `classroom.coursework.students`) from base authentication, preventing unnecessary consent prompts for normal users.
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Isolates Google Classroom scopes from standard login. Normal users never see intrusive permission screens, and Drive access is scoped strictly to files created by the application.
                 </p>
               </div>
               <div className="p-5 rounded-xl bg-white/5 border border-white/5 space-y-2">
                 <h4 className="font-bold text-white text-sm">Forensic PDF Watermarking</h4>
-                <p className="text-xs text-slate-400">
-                  Programmatically stamps buyer identifiers onto each PDF page before streaming, preventing illegal document leakage and sharing.
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Programmatically stamps buyer identifiers onto each PDF page before download streaming, creating clear provenance to discourage unauthorized public re-sharing.
                 </p>
               </div>
               <div className="p-5 rounded-xl bg-white/5 border border-white/5 space-y-2">
-                <h4 className="font-bold text-white text-sm">Google Classroom Draft Integration</h4>
-                <p className="text-xs text-slate-400">
-                  Pushes documents directly to a teacher&apos;s Google Classroom course as a **Draft Assignment**, allowing them to verify points, topics, and due dates before students see it.
+                <h4 className="font-bold text-white text-sm">Standards-First Search Graph</h4>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Every resource is linked to state-specific standards frameworks (Common Core, TEKS, NGSS), allowing teachers to search directly by code rather than wading through keyword spam.
                 </p>
               </div>
             </div>

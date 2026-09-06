@@ -46,7 +46,7 @@ export default function DualityHero() {
             }`}
           >
             <Cpu className="w-4 h-4" />
-            Technologist
+            Software & Tech
           </button>
           <button
             id="toggle-track-music"
@@ -58,7 +58,7 @@ export default function DualityHero() {
             }`}
           >
             <Music className="w-4 h-4" />
-            Music Lover & Teacher
+            Music & Teaching
           </button>
         </div>
 
@@ -69,48 +69,48 @@ export default function DualityHero() {
               {/* Tagline Badge */}
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-tech-cyan/10 border border-tech-cyan/20 text-xs font-semibold text-tech-cyan">
                 <Sparkles className="w-3 h-3" />
-                AI Workflows & B2B SaaS Architecture
+                Builder & Tinkerer
               </div>
               
               {/* Main Headline */}
               <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-white leading-[1.15]">
-                Integrating AI Workflows into <br />
-                <span className="text-gradient-tech">Modern Business SaaS</span>
+                Building software I actually use, <br />
+                <span className="text-gradient-tech">tinkering with AI along the way.</span>
               </h1>
               
               {/* Supporting Copy */}
-              <p className="text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed">
-                17 years architecting payments, subscription billing platforms, and software tools. Now focusing on building web applications, exploring LLM integrations, and designing low-friction workflows.
+              <p className="text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed font-light">
+                I&apos;ve spent 17 years working in B2B SaaS—mostly around payments, subscription billing, and systems architecture. These days, I spend my free time building tools that solve real problems and exploring practical uses for LLMs.
               </p>
 
               {/* Highlight Bullets */}
               <div className="flex flex-wrap justify-center gap-y-2 gap-x-6 text-sm text-slate-400 py-4 max-w-lg sm:max-w-xl mx-auto">
                 <span className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-tech-cyan" /> Enterprise Solutions Architecture
+                  <CheckCircle2 className="w-4 h-4 text-tech-cyan" /> 17 Years in B2B SaaS
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-tech-cyan" /> Subscription Billing Expert
+                  <CheckCircle2 className="w-4 h-4 text-tech-cyan" /> Billing & Payment Systems
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-tech-cyan" /> Secure AI Integrations
+                  <CheckCircle2 className="w-4 h-4 text-tech-cyan" /> Practical AI Tools
                 </span>
               </div>
 
               {/* Call to Actions */}
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
                 <Link
-                  id="cta-tech-contact"
-                  href="#contact"
-                  className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-tech-cyan to-tech-violet hover:from-tech-cyan/90 hover:to-tech-violet/90 text-white font-semibold shadow-lg hover:shadow-tech-cyan/10 transition-all duration-300 inline-flex items-center justify-center gap-2 group"
-                >
-                  Get in Touch <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </Link>
-                <Link
                   id="cta-tech-projects"
                   href="#projects"
-                  className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 text-white font-semibold transition-all duration-300 inline-flex items-center justify-center gap-1.5"
+                  className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-tech-cyan to-tech-violet hover:from-tech-cyan/90 hover:to-tech-violet/90 text-white font-semibold shadow-lg hover:shadow-tech-cyan/10 transition-all duration-300 inline-flex items-center justify-center gap-2 group"
                 >
-                  View Case Studies
+                  Explore the Projects <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
+                <Link
+                  id="cta-tech-contact"
+                  href="#contact"
+                  className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 text-white font-semibold transition-all duration-300 inline-flex items-center justify-center"
+                >
+                  Say Hello
                 </Link>
               </div>
             </div>
@@ -119,30 +119,30 @@ export default function DualityHero() {
               {/* Tagline Badge */}
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sax-gold/10 border border-sax-gold/20 text-xs font-semibold text-sax-gold">
                 <Music className="w-3 h-3" />
-                Woodwind Pedagogy & Software Design
+                Music Education & Woodwinds
               </div>
               
               {/* Main Headline */}
               <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-white leading-[1.15]">
-                Translating Musical Precision <br />
-                <span className="text-gradient-gold">into Software Crafts</span>
+                Former band director <br />
+                <span className="text-gradient-gold">building tools for real music studios.</span>
               </h1>
               
               {/* Supporting Copy */}
-              <p className="text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed">
-                Rooted in music education as a woodwind specialist and former band director. Bringing the discipline of pedagogical workflow design directly to SaaS projects like Teaching Sax.
+              <p className="text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed font-light">
+                Before my tech career, I taught middle and high school band. My instrument is the saxophone. Now I&apos;m combining both backgrounds—running a private virtual studio and building software designed for how music lessons actually run.
               </p>
 
               {/* Highlight Bullets */}
               <div className="flex flex-wrap justify-center gap-y-2 gap-x-6 text-sm text-slate-400 py-4 max-w-lg sm:max-w-xl mx-auto">
                 <span className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-sax-gold" /> Woodwind Studio Owner
+                  <CheckCircle2 className="w-4 h-4 text-sax-gold" /> Music Education Background
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-sax-gold" /> Practice Tracking Innovator
+                  <CheckCircle2 className="w-4 h-4 text-sax-gold" /> Active Saxophone Studio
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-sax-gold" /> Custom Music Pedagogy SaaS
+                  <CheckCircle2 className="w-4 h-4 text-sax-gold" /> Pedagogy-First Software
                 </span>
               </div>
 
@@ -153,14 +153,14 @@ export default function DualityHero() {
                   href="/projects/teaching-sax"
                   className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-sax-gold to-amber-600 hover:from-sax-gold/90 hover:to-amber-600/90 text-white font-semibold shadow-lg hover:shadow-sax-gold/10 transition-all duration-300 inline-flex items-center justify-center gap-2 group"
                 >
-                  Teaching Sax Project <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  See Teaching Sax <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <Link
                   id="cta-music-contact"
                   href="#contact"
                   className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 text-white font-semibold transition-all duration-300 inline-flex items-center justify-center"
                 >
-                  Contact Me
+                  Say Hello
                 </Link>
               </div>
             </div>

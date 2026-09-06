@@ -55,9 +55,9 @@ export default function ContactForm() {
           <CheckCircle2 className="w-8 h-8" />
         </div>
         <div className="space-y-2">
-          <h3 className="text-2xl font-bold text-white">Message Sent Successfully!</h3>
+          <h3 className="text-2xl font-bold text-white">Message Sent!</h3>
           <p className="text-slate-300 leading-relaxed text-sm">
-            Thank you for reaching out, James. Your inquiry has been routed securely. I will check my inbox and get back to you shortly.
+            Thanks for reaching out! I&apos;ve received your note and will get back to you soon.
           </p>
         </div>
         <button
@@ -154,7 +154,7 @@ export default function ContactForm() {
             required
             rows={5}
             disabled={status === 'submitting'}
-            placeholder="Let's connect! Send a message here if you want to chat about software development, music, AI, or how we might collaborate..."
+            placeholder="Say hi, ask about a project, or trade notes on software and music..."
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             className="w-full bg-deep-blue/50 border border-white/10 focus:border-sax-gold/40 focus:ring-1 focus:ring-sax-gold/20 rounded-xl py-3 px-4 text-white text-sm outline-none transition-all duration-300 placeholder:text-slate-600 min-h-[120px] resize-y disabled:opacity-50"

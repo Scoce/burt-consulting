@@ -14,15 +14,14 @@ import {
   Gamepad2, 
   Code2, 
   Coins, 
-  Workflow, 
-  Layers 
+  Workflow 
 } from 'lucide-react';
 
 const projects = [
   {
     title: 'Teach Weave',
-    subtitle: 'K-12 AI-Adaptive Lesson Marketplace',
-    desc: 'A modern alternative to Teachers Pay Teachers. It uses AI to adapt resources (like reading levels or languages) on the fly and maps them to state compliance standards.',
+    subtitle: 'K-12 Teaching Resource Marketplace',
+    desc: 'A modern alternative to Teachers Pay Teachers. Fair creator fees (15% vs TPT\'s 45%), one-click TPT listing migration, and opt-in AI reading level adjustments.',
     icon: <GraduationCap className="w-6 h-6 text-tech-cyan" />,
     path: '/projects/teach-weave',
     liveUrl: 'https://teachweave.com',
@@ -31,7 +30,7 @@ const projects = [
   {
     title: 'Bank of Gaga',
     subtitle: 'Informal Family Loan Tracker',
-    desc: 'A friendly app that replaces awkward family loan spreadsheets. Lenders get formal loan contracts and automated timelines, while kids learn investing with simulated cash.',
+    desc: 'Replaces awkward family loan spreadsheets and napkins with clear agreements, automatic schedules, and a pretend stock market simulator for kids.',
     icon: <PiggyBank className="w-6 h-6 text-sax-gold" />,
     path: '/projects/bank-of-gaga',
     liveUrl: 'https://bankofgaga.com',
@@ -40,7 +39,7 @@ const projects = [
   {
     title: 'Teaching Sax',
     subtitle: 'Wind Studio Management Software',
-    desc: 'A custom teaching tool built when I restarted my virtual saxophone studio. It tracks student practice, handles scheduling, and features a low-latency video player tuned for music lessons.',
+    desc: 'A virtual studio tool built for my own saxophone students. Features low-latency uncompressed audio so held notes don\'t get muted, plus simple calendar sync.',
     icon: <Music className="w-6 h-6 text-sax-gold" />,
     path: '/projects/teaching-sax',
     liveUrl: 'https://teachingsax.com',
@@ -48,8 +47,8 @@ const projects = [
   },
   {
     title: 'Truths & Lies: AI Edition',
-    subtitle: 'Kids Prompt Engineering Game',
-    desc: 'An AI-powered trivia game I built with my 8-year-old son to teach him prompt engineering. It uses Gemini to create fun, age-friendly categories on the fly.',
+    subtitle: 'Father-Son Prompt Engineering Game',
+    desc: 'A two-truths-and-a-lie trivia game built with my 8-year-old son using Gemini. Features live Smartboard speed contests and an AI moderation filter for classroom meme slang.',
     icon: <Gamepad2 className="w-6 h-6 text-tech-violet" />,
     path: '/projects/truths-and-lies',
     liveUrl: '#',
@@ -57,26 +56,26 @@ const projects = [
   }
 ];
 
-const services = [
+const focusAreas = [
   {
-    title: 'AI Workflow Integration',
-    desc: 'Building custom AI workflows—like automatic content adaptation and background document checkups—to automate repetitive tasks and remove software friction.',
-    icon: <Workflow className="w-5 h-5 text-tech-cyan" />
+    title: 'Software for Real Problems',
+    desc: 'Building clean, focused tools for families, educators, and music studios—prioritizing simple workflows over bloated enterprise features.',
+    icon: <Code2 className="w-5 h-5 text-tech-cyan" />
   },
   {
-    title: 'Full-Stack SaaS Development',
-    desc: 'Designing and building clean, modern web applications from scratch, leveraging Next.js, Neon Serverless Postgres, and Stripe integrations.',
-    icon: <Code2 className="w-5 h-5 text-tech-violet" />
-  },
-  {
-    title: 'Payments & Subscriptions Strategy',
-    desc: 'Architecting robust billing systems, subscription models, payment processing pipelines, and Stripe Connect multi-party payouts.',
+    title: 'Payments & Subscriptions',
+    desc: '17 years of hands-on experience with recurring billing systems, Stripe integrations, merchant acquiring, and multi-party payout flows.',
     icon: <Coins className="w-5 h-5 text-sax-gold" />
   },
   {
-    title: 'Solutions Engineering & Architecture',
-    desc: 'Leading and scaling pre-sales solutions engineering teams, mapping technical architectures, and designing sales engineering strategies.',
-    icon: <Layers className="w-5 h-5 text-slate-400" />
+    title: 'Pragmatic AI Tools',
+    desc: 'Using LLMs where they genuinely remove hours of manual typing—like document adaptation, metadata scraping, and automated drafts—not as marketing hype.',
+    icon: <Workflow className="w-5 h-5 text-tech-violet" />
+  },
+  {
+    title: 'Audio & Pedagogy Tech',
+    desc: 'Designing studio tools that solve real teaching frictions, such as uncompressed WebRTC audio for instruments and painless assignment tracking.',
+    icon: <Music className="w-5 h-5 text-slate-400" />
   }
 ];
 
@@ -87,7 +86,7 @@ export default function Home() {
     'name': 'James Burt',
     'url': 'https://jamescburt.com',
     'jobTitle': 'Technologist & Software Builder',
-    'description': '17-year B2B SaaS industry veteran, solutions engineering leader, woodwind educator, and software builder based in San Antonio, TX.',
+    'description': '17-year B2B SaaS industry veteran, woodwind educator, and software builder based in San Antonio, TX.',
     'sameAs': [
       'https://www.linkedin.com/in/jamescburt/'
     ],
@@ -109,32 +108,32 @@ export default function Home() {
       {/* Hero Section */}
       <DualityHero />
 
-      {/* Services Section */}
+      {/* Focus Areas Section */}
       <section id="expertise" className="py-20 bg-deep-blue/40 relative">
         <div className="absolute inset-0 bg-grid-pattern opacity-10 pointer-events-none" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-              Areas of Focus & Expertise
+              What I Like Building &amp; Tinkering With
             </h2>
             <p className="text-slate-400 text-base leading-relaxed">
-              Applying the precision of a classical musician and the experience of a B2B tech veteran to designing, building, and deploying high-performance software.
+              Combining 17 years in B2B tech with the day-to-day realities of teaching music and building software I actually use.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {services.map((service, index) => (
+            {focusAreas.map((area, index) => (
               <div 
                 key={index}
                 className="glass-panel p-6 sm:p-8 rounded-2xl border border-white/5 hover:border-white/10 transition-all duration-300 flex gap-4 items-start"
               >
                 <div className="flex-shrink-0 p-3 rounded-xl bg-white/5 border border-white/10">
-                  {service.icon}
+                  {area.icon}
                 </div>
                 <div className="space-y-2">
-                  <h3 className="text-lg font-bold text-white">{service.title}</h3>
-                  <p className="text-sm text-slate-400 leading-relaxed">{service.desc}</p>
+                  <h3 className="text-lg font-bold text-white">{area.title}</h3>
+                  <p className="text-sm text-slate-400 leading-relaxed">{area.desc}</p>
                 </div>
               </div>
             ))}
@@ -153,7 +152,7 @@ export default function Home() {
               Featured Projects
             </h2>
             <p className="text-slate-400 text-base leading-relaxed">
-              A look at actual applications I've built for personal passions and commercial validation.
+              A look at software I&apos;ve built to solve actual problems for myself, my family, and my students.
             </p>
           </div>
 
@@ -219,20 +218,20 @@ export default function Home() {
                   My Story
                 </div>
                 <h2 className="text-3xl font-extrabold text-white tracking-tight">
-                  About the Builder
+                  About Me
                 </h2>
                 <div className="w-20 h-1 bg-sax-gold rounded-full" />
               </div>
               
-              <div className="lg:col-span-2 space-y-6 text-slate-300 text-sm leading-relaxed">
+              <div className="lg:col-span-2 space-y-6 text-slate-300 text-sm leading-relaxed font-light">
                 <p>
-                  I've spent the last <strong>17 years building, scaling, and supporting SaaS products</strong>. My experience spans everything from sales engineering and product management to sysadmin and managing pre-sales solutions consulting teams. I've had the chance to work across diverse fields including subscription billing, embedded payment systems, cybersecurity awareness, video surveillance, and hosting infrastructure.
+                  I&apos;ve spent the last <strong>17 years working across B2B tech</strong>—starting out in sysadmin and support, moving into product, and spending the bulk of my career leading sales engineering and solutions consulting teams. I&apos;ve spent years knee-deep in recurring subscription billing, embedded payments, cybersecurity awareness, video surveillance, and hosting infrastructure.
                 </p>
                 <p>
-                  But before my detour into the tech world, my training was in classical music. I hold a <strong>music education degree</strong> and served as a high school and middle school band director (my primary instrument is the saxophone). In many ways, building software feels just like teaching music: you're analyzing complex, micro-level processes, finding the cleanest path forward, and automating structures so that students—or users—can succeed without hitting unnecessary friction.
+                  Before my detour into tech, my training was in music. I hold a <strong>music education degree</strong> and served as a high school and middle school band director (my primary instrument is the saxophone). In many ways, building good software feels just like teaching music: you break down a complex, messy problem into clear pieces, remove the friction, and build a rhythm so people can do their work without fighting the tools.
                 </p>
                 <p>
-                  Now based in San Antonio, Texas, I focus on building personal software projects, experimenting with new AI workflows, and applying my pre-sales engineering background to everything I create.
+                  Based in San Antonio, Texas, I spend my spare time building personal software products, running my private saxophone studio, and testing out what&apos;s genuinely useful with AI.
                 </p>
               </div>
             </div>
@@ -246,13 +245,13 @@ export default function Home() {
           <div className="text-center max-w-3xl mx-auto mb-12 space-y-4">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-tech-cyan/10 border border-tech-cyan/20 text-xs font-semibold text-tech-cyan">
               <Sparkles className="w-3 h-3" />
-              {"Let's Connect"}
+              Say Hello
             </div>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-              Let's Connect
+              Get in Touch
             </h2>
             <p className="text-slate-400 text-base leading-relaxed">
-              Have a question about one of my projects, want to talk software architecture, or see some way we can work together? Send a message below.
+              Have a question about a project, want to trade notes on tech or music, or just want to connect? Send a note below.
             </p>
           </div>
 

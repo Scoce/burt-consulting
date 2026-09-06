@@ -45,7 +45,7 @@ export default function TeachingSaxProject() {
         <header className="space-y-6 mb-10">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sax-gold/10 border border-sax-gold/20 text-xs font-semibold text-sax-gold">
             <Music className="w-4 h-4" />
-            Music Pedagogy & Software
+            Music Pedagogy &amp; Software
           </div>
           
           <h1 className="text-3xl sm:text-5xl font-extrabold text-white leading-tight">
@@ -53,7 +53,7 @@ export default function TeachingSaxProject() {
           </h1>
           
           <p className="text-xl text-slate-300 leading-relaxed font-light">
-            A custom virtual classroom and dashboard I built to support my return to saxophone teaching—specifically tuned to solve the audio problems music teachers face.
+            A custom teaching studio and practice platform I built to solve the real headaches of running a virtual woodwind studio.
           </p>
 
           <div className="flex flex-wrap items-center gap-4 pt-2">
@@ -66,7 +66,7 @@ export default function TeachingSaxProject() {
               Visit Live App <ExternalLink className="w-4 h-4" />
             </a>
             <span className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/5 text-slate-400 text-xs font-semibold">
-              Project Type: Personal Practice Support Tool
+              Project Status: Active Studio Tool
             </span>
           </div>
         </header>
@@ -84,7 +84,7 @@ export default function TeachingSaxProject() {
         <section className="glass-panel rounded-2xl p-6 border border-white/5 mb-12">
           <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Project Tech Stack</h3>
           <div className="flex flex-wrap gap-2.5">
-            {['Next.js 16', 'TypeScript', 'Daily.co SDK (WebRTC)', 'Drizzle ORM', 'Supabase Postgres', 'Stripe Payments', 'Playwright', 'Tailwind CSS'].map((tech) => (
+            {['Next.js 16', 'TypeScript', 'Daily.co SDK (WebRTC)', 'Drizzle ORM', 'Neon Postgres', 'Stripe Payments', 'Tailwind CSS'].map((tech) => (
               <span key={tech} className="px-3 py-1 rounded-lg bg-white/5 border border-white/5 text-slate-300 text-xs font-medium">
                 {tech}
               </span>
@@ -101,10 +101,10 @@ export default function TeachingSaxProject() {
               <Star className="w-5 h-5 text-sax-gold" /> Why I Built It
             </h2>
             <p>
-              When I decided to get back into woodwind teaching, I wanted a clean way to manage the studio. But looking at the available software out there, everything felt clunky, dated, and built mostly for piano lessons. 
+              When I decided to get back into teaching private saxophone lessons, I looked around for software to manage student rosters, schedule slots, and keep track of assignments. Almost everything available felt like it was built in 2005—clunky, dated, and heavily skewed toward in-person piano studios.
             </p>
             <p>
-              I saw a great opportunity to build something custom that I could use in my own lessons every week. By using the app with real students, I could test features immediately, see what actually helps kids practice, and iterate on the code in real-time.
+              As someone with both a music education degree and a background in building web apps, I decided to build my own studio tool from scratch. Using the software every week with actual students means every feature solves a friction point I&apos;ve personally experienced during a lesson.
             </p>
           </section>
 
@@ -113,41 +113,41 @@ export default function TeachingSaxProject() {
             <div className="absolute top-0 right-0 w-48 h-48 bg-sax-gold/5 rounded-full blur-2xl -z-10 pointer-events-none" />
             
             <h3 className="text-lg font-bold text-white flex items-center gap-2">
-              <Video className="w-5 h-5 text-sax-gold" /> The Core Feature: High-Fidelity, Low-Latency Audio Video
+              <Video className="w-5 h-5 text-sax-gold" /> The Core Problem: Why Zoom Fails for Instruments
             </h3>
-            <p className="text-sm text-slate-300 leading-relaxed">
-              If you&apos;ve ever tried to teach music lessons over standard video platforms like Zoom or Teams, you know they are designed for voice conversation, not music. Standard noise-cancellation algorithms treat a sustained saxophone or flute note as "background noise" and instantly mute it, resulting in a frustrating, choppy experience.
+            <p className="text-sm text-slate-300 leading-relaxed font-light">
+              If you&apos;ve ever tried to teach music lessons over standard video platforms like Zoom or Teams, you know the frustration. Standard video conferencing tools use aggressive noise-cancellation and noise-gating algorithms designed to isolate speech and silence background noise. When a student plays a long, sustained tone on a saxophone, the software assumes it&apos;s a vacuum cleaner or HVAC unit and cuts the sound off completely.
             </p>
-            <p className="text-sm text-slate-300 leading-relaxed">
-              To fix this, I built a custom virtual classroom integration using the **Daily.co WebRTC SDK** with uncompressed, stereo audio channels. This prevents the browser from muting instrumental sounds and ensures we can play together with clear, natural tone quality and minimal latency.
+            <p className="text-sm text-slate-300 leading-relaxed font-light">
+              To solve this, I built a custom virtual classroom integration using the **Daily.co WebRTC SDK** with raw, uncompressed stereo Opus audio (256kbps stereo, 48kHz). By bypassing browser speech filtering, tone quality, dynamics, and subtle intonation come through naturally with minimal latency.
             </p>
           </section>
 
           {/* Key Features */}
           <section className="space-y-4">
             <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-              <FileText className="w-5 h-5 text-sax-gold" /> Key Features
+              <FileText className="w-5 h-5 text-sax-gold" /> Making Studio Management Painless
             </h2>
             <ul className="space-y-3.5 pl-5 list-none">
               <li className="flex items-start gap-2.5">
                 <CheckCircle className="w-5 h-5 text-sax-gold shrink-0 mt-0.5" />
-                <span><strong>Onboarding Wizard & Settings UI:</strong> A multi-tab settings page allowing teachers to configure bios, teaching specialty instruments, default pricing, default lesson lengths, and calendar links.</span>
+                <span><strong>Tokenized Self-Booking Links:</strong> Students pick available slots from a Calendly-style booking view on `/contact` with custom time templates and automated email confirmations.</span>
               </li>
               <li className="flex items-start gap-2.5">
                 <CheckCircle className="w-5 h-5 text-sax-gold shrink-0 mt-0.5" />
-                <span><strong>Tokenized Student Booking Link:</strong> A Calendly-style student self-booking workflow built on the `/contact` path with custom time templates and automated Resend confirmation emails.</span>
+                <span><strong>Google Calendar API Sync:</strong> Decoupled from user sign-in, allowing direct sync of lesson slots into my real calendar without permission headaches.</span>
               </li>
               <li className="flex items-start gap-2.5">
                 <CheckCircle className="w-5 h-5 text-sax-gold shrink-0 mt-0.5" />
-                <span><strong>Google Calendar OAuth Sync:</strong> Direct integration with the Google Calendar API that synchronizes lesson time slots independently of user sign-in credentials, supporting future extension to Microsoft and Apple calendars.</span>
+                <span><strong>iCal Native Calendar Feeds:</strong> Serves a read-only `.ics` calendar URL at `/api/calendar/[token]` so students and parents can subscribe directly from Apple or Google Calendar on their phones.</span>
               </li>
               <li className="flex items-start gap-2.5">
                 <CheckCircle className="w-5 h-5 text-sax-gold shrink-0 mt-0.5" />
-                <span><strong>iCal Subscription Feed:</strong> Generates a read-only `.ics` calendar URL in standard RFC 5545 format at `/api/calendar/[token]`, enabling teachers and students to sync active lessons to their native phone calendar apps.</span>
+                <span><strong>Painless Assignment Flow:</strong> I can type feedback and assigned exercises during the lesson so it appears immediately on the student&apos;s practice page without post-lesson typing.</span>
               </li>
               <li className="flex items-start gap-2.5">
                 <CheckCircle className="w-5 h-5 text-sax-gold shrink-0 mt-0.5" />
-                <span><strong>Multi-Tenant Architecture from Day One:</strong> Ensures absolute tenant isolation across all scheduling tables using custom database schemas scoped by `teacher_id` with automatic backfill hooks during user creation.</span>
+                <span><strong>Multi-Tenant Architecture from Day One:</strong> Scoped by `teacher_id` across all database tables so the infrastructure can cleanly support other music teachers whenever the studio expands.</span>
               </li>
             </ul>
           </section>

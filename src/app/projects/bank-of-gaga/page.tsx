@@ -45,15 +45,15 @@ export default function BankOfGagaProject() {
         <header className="space-y-6 mb-10">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sax-gold/10 border border-sax-gold/20 text-xs font-semibold text-sax-gold">
             <PiggyBank className="w-4 h-4" />
-            Family Finance SaaS
+            Family Finance
           </div>
           
           <h1 className="text-3xl sm:text-5xl font-extrabold text-white leading-tight">
-            Bank of Gaga: Keeping Family Loans Friendly
+            Bank of Gaga: Tracking Family Loans Without the Awkwardness
           </h1>
           
           <p className="text-xl text-slate-300 leading-relaxed font-light">
-            Replaces awkward IOUs and messy spreadsheets with clear loan contracts, automatic math calculations, and friendly reminders.
+            A web app built to replace messy spreadsheets and back-of-the-napkin IOUs with clear agreements, automatic schedules, and friendly reminders.
           </p>
 
           <div className="flex flex-wrap items-center gap-4 pt-2">
@@ -66,7 +66,7 @@ export default function BankOfGagaProject() {
               Visit Live App <ExternalLink className="w-4 h-4" />
             </a>
             <span className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/5 text-slate-400 text-xs font-semibold">
-              Project Type: Subscription SaaS App
+              Project Status: Live App
             </span>
           </div>
         </header>
@@ -95,78 +95,71 @@ export default function BankOfGagaProject() {
         {/* Writeup Content */}
         <div className="space-y-12 text-slate-300 leading-relaxed text-base">
           
-          {/* What I Built */}
-          <section className="space-y-4">
-            <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-              <Shield className="w-5 h-5 text-sax-gold" /> What I Built
-            </h2>
-            <p>
-              Bank of Gaga is a family loan management portal. It lets family members set up real loan agreements with custom amortization rates, automatic payment schedules, and clear dashboards. It removes the awkwardness from lending money by letting the software handle the math and reminders.
-            </p>
-            <p>
-              The app is a complete subscription SaaS. It uses NextAuth for secure logging, Drizzle to manage database schemas, and Stripe webhooks to manage monthly ($7.99) and annual ($59.99) subscription billing.
-            </p>
-          </section>
-
           {/* Why I Built It */}
           <section className="space-y-4">
             <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-              <Users className="w-5 h-5 text-sax-gold" /> The Core Concept
+              <Users className="w-5 h-5 text-sax-gold" /> Why I Built It
             </h2>
             <p>
-              Lending money to family members is common, but spreadsheets are poorly suited for the human side of tracking. I built Bank of Gaga to professionalize family loan agreements while keeping them friendly and accessible.
+              Lending money between family members happens all the time, but it&apos;s almost always tracked on random napkins, buried in a messy Excel sheet, or left to memory. That leads to forgotten balances, missed timelines, and awkward tension at family gatherings.
             </p>
             <p>
-              The application leverages a double-sided UI tailored to different demographics:
+              The name comes from our own family: the kids call their grandfather &ldquo;Gaga,&rdquo; and he would occasionally lend them money for a car, college books, or a big expense. I wanted to build a tool that gave family loans the clarity of a real agreement without feeling cold or corporate.
+            </p>
+          </section>
+
+          {/* Designing for Two Audiences */}
+          <section className="space-y-4">
+            <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+              <Shield className="w-5 h-5 text-sax-gold" /> Designing for Two Very Different Audiences
+            </h2>
+            <p>
+              The most interesting challenge was designing for two completely different user mindsets on the same platform:
             </p>
             <ul className="space-y-3.5 pl-5 list-none">
               <li className="flex items-start gap-2.5">
                 <CheckCircle className="w-5 h-5 text-sax-gold shrink-0 mt-0.5" />
-                <span><strong>High-Legibility Lender Dashboard:</strong> Tailored for older lenders ("Gagas") who value explicit UI cues, featuring a simplified layout, high-contrast states, custom Date Change modals, and easy SMS invitation sharing.</span>
+                <span><strong>Older Lenders (&ldquo;Gagas&rdquo;):</strong> They manage the loans and want clear, high-contrast buttons, explicit labels, and zero guesswork. I built large confirmation modals, simple date adjustments, and one-click SMS invitation sharing so they never feel lost in the UI.</span>
               </li>
               <li className="flex items-start gap-2.5">
                 <CheckCircle className="w-5 h-5 text-sax-gold shrink-0 mt-0.5" />
-                <span><strong>Free Promissory Note Generator:</strong> A public lead magnet utility that dynamically compiles printable family loan contracts in PDF format, helping bootstrap traffic and capture email leads.</span>
+                <span><strong>Younger Borrowers:</strong> They interact almost entirely on their phones. They need a simple, mobile-first view showing when their next payment is due, deep links to Venmo or Cash App, and quick confirmation when a payment is logged.</span>
               </li>
               <li className="flex items-start gap-2.5">
                 <CheckCircle className="w-5 h-5 text-sax-gold shrink-0 mt-0.5" />
-                <span><strong>Mortgage-Style Overpayments:</strong> Extra payments apply directly to principal reduction and shorten the term, rather than shrinking future monthly slots into weird fractional amounts (resolved based on direct feedback).</span>
-              </li>
-              <li className="flex items-start gap-2.5">
-                <CheckCircle className="w-5 h-5 text-sax-gold shrink-0 mt-0.5" />
-                <span><strong>Growth & Referrals:</strong> Mutual referral rewards and extended 30-day trial periods ensure that families get a full payment loop to experience the product before committing.</span>
+                <span><strong>Pretend Stock Market for Kids:</strong> For younger family members, I built a simulated stock market module using real price feeds. They can practice investing their pretend cash balance, turning debt repayment into a practical financial literacy game.</span>
               </li>
             </ul>
           </section>
 
-          {/* Tech Features */}
+          {/* Solving the Real Details */}
           <section className="space-y-4">
             <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 text-sax-gold" /> Key Technical Features
+              <TrendingUp className="w-5 h-5 text-sax-gold" /> Solving the Real Details
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4">
               <div className="p-5 rounded-xl bg-white/5 border border-white/5 space-y-2">
-                <h4 className="font-bold text-white text-sm">Amortization & Recalculation Engine</h4>
-                <p className="text-xs text-slate-400">
-                  Calculates real-time principal/interest schedules dynamically, cleanly handling early payments and displaying a "Final Payment 🎉" badge on completion.
+                <h4 className="font-bold text-white text-sm">Mortgage-Style Overpayments</h4>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  When an early user made extra payments, the math initially shrank future monthly payment slots into weird fractional amounts. I rewrote the recalculation engine to follow mortgage behavior: extra payments directly reduce principal and shorten the loan term, celebrated with a &ldquo;Final Payment 🎉&rdquo; badge.
                 </p>
               </div>
               <div className="p-5 rounded-xl bg-white/5 border border-white/5 space-y-2">
-                <h4 className="font-bold text-white text-sm">Manual Confirmation Loop & Plaid waitlist</h4>
-                <p className="text-xs text-slate-400">
-                  Lenders review pending payments with a dashboard card, backed by a 24h cron nudge. Includes an in-app "Join Plaid waitlist" CTA to measure demand for full integrations.
+                <h4 className="font-bold text-white text-sm">Confirmation Loops &amp; Plaid</h4>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Moving actual money introduces massive regulatory hurdles, so the app intentionally stays a tracking and agreement tool. Lenders confirm payments via a dashboard card with a 24-hour reminder nudge, alongside an in-app waitlist to gauge real demand for bank-feed sync.
                 </p>
               </div>
               <div className="p-5 rounded-xl bg-white/5 border border-white/5 space-y-2">
-                <h4 className="font-bold text-white text-sm">GA4 & Attribution Funnel</h4>
-                <p className="text-xs text-slate-400">
-                  Tracks subscription starts on `/billing/success` via Google Analytics, logging exact signup sources (Google OAuth vs. Email) to a Postgres metadata table.
+                <h4 className="font-bold text-white text-sm">Free Printable Agreement Generator</h4>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  For families who just need a physical contract, I built a free public promissory note generator that lets anyone create and download a print-ready PDF loan contract on demand.
                 </p>
               </div>
               <div className="p-5 rounded-xl bg-white/5 border border-white/5 space-y-2">
-                <h4 className="font-bold text-white text-sm">Email & SMS Reminder Pipelines</h4>
-                <p className="text-xs text-slate-400">
-                  Triggers daily checks via cron jobs, using the Resend API to alert borrowers of upcoming due dates and notify lenders when confirmation is needed.
+                <h4 className="font-bold text-white text-sm">Automated Friendly Reminders</h4>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  No one wants to text their kid or sibling asking for money. Automated daily background checks trigger friendly email notifications through Resend before due dates arrive, removing the personal friction.
                 </p>
               </div>
             </div>

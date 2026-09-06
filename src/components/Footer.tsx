@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Linkedin, Github, Cpu, Music, Heart } from 'lucide-react';
+import { Linkedin, Github, Cpu, Heart } from 'lucide-react';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -63,7 +63,7 @@ export default function Footer() {
                 <Linkedin className="w-4 h-4" />
               </a>
               <a 
-                href="https://github.com" 
+                href="https://github.com/Scoce" 
                 target="_blank" 
                 rel="noreferrer"
                 className="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-slate-300 hover:text-sax-gold hover:border-sax-gold/30 hover:bg-white/10 transition-all duration-300"

@@ -16,34 +16,152 @@ import {
   ShieldCheck,
   Megaphone,
   LogOut,
+  Plus,
+  Copy,
+  Check,
+  X,
+  FileCheck,
+  Send,
+  AlertCircle,
 } from 'lucide-react';
-import { PortfolioGrowthMetrics, AppGrowthData } from '@/lib/growth-telemetry';
+import { PortfolioGrowthMetrics, AppGrowthData, CreativeAngle } from '@/lib/growth-telemetry';
 
 export default function GrowthHubDashboard() {
   const [metrics, setMetrics] = useState<PortfolioGrowthMetrics | null>(null);
   const [selectedApp, setSelectedApp] = useState<string>('bank-of-gaga');
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    async function fetchTelemetry() {
-      try {
-        const res = await fetch('/api/admin/growth/metrics');
-        if (res.ok) {
-          const data = await res.json();
-          setMetrics(data);
-        }
-      } catch (err) {
-        console.error('Failed to load growth telemetry:', err);
-      } finally {
-        setLoading(false);
+  // Modals and interactive state
+  const [inspectingAngle, setInspectingAngle] = useState<CreativeAngle | null>(null);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [copiedField, setCopiedField] = useState<string | null>(null);
+  const [actionLoadingId, setActionLoadingId] = useState<string | null>(null);
+
+  // New Angle Form State
+  const [newTitle, setNewTitle] = useState('');
+  const [newCohort, setNewCohort] = useState('Boomer Parents & Grandparents');
+  const [newFormat, setNewFormat] = useState('UGC Video Reel & 3-Frame Carousel');
+  const [newHook, setNewHook] = useState('');
+  const [newScript, setNewScript] = useState('');
+  const [newHeadline, setNewHeadline] = useState('');
+  const [newCta, setNewCta] = useState('Open Your Family Bank (14-Day Free Trial)');
+  const [newVisualSpecs, setNewVisualSpecs] = useState('');
+
+  async function fetchTelemetry() {
+    try {
+      const res = await fetch('/api/admin/growth/metrics');
+      if (res.ok) {
+        const data = await res.json();
+        setMetrics(data);
       }
+    } catch (err) {
+      console.error('Failed to load growth telemetry:', err);
+    } finally {
+      setLoading(false);
     }
+  }
+
+  useEffect(() => {
     fetchTelemetry();
   }, []);
 
   const activeApp: AppGrowthData | undefined = metrics?.apps.find(
     (a) => a.slug === selectedApp
   );
+
+  async function handleValidate(angleId: string) {
+    setActionLoadingId(angleId);
+    try {
+      const res = await fetch('/api/admin/growth/angles', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'validate', id: angleId }),
+      });
+      if (res.ok) {
+        await fetchTelemetry();
+        if (inspectingAngle?.id === angleId) {
+          const updatedRes = await fetch(`/api/admin/growth/angles?app=${selectedApp}`);
+          const data = await updatedRes.json();
+          const fresh = data.angles.find((a: CreativeAngle) => a.id === angleId);
+          if (fresh) setInspectingAngle(fresh);
+        }
+      }
+    } catch (err) {
+      console.error('Validation error:', err);
+    } finally {
+      setActionLoadingId(null);
+    }
+  }
+
+  async function handlePublish(angleId: string) {
+    setActionLoadingId(angleId);
+    try {
+      const res = await fetch('/api/admin/growth/angles', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'publish', id: angleId }),
+      });
+      if (res.ok) {
+        await fetchTelemetry();
+        if (inspectingAngle?.id === angleId) {
+          const updatedRes = await fetch(`/api/admin/growth/angles?app=${selectedApp}`);
+          const data = await updatedRes.json();
+          const fresh = data.angles.find((a: CreativeAngle) => a.id === angleId);
+          if (fresh) setInspectingAngle(fresh);
+        }
+      }
+    } catch (err) {
+      console.error('Publish error:', err);
+    } finally {
+      setActionLoadingId(null);
+    }
+  }
+
+  async function handleCreateAngle(e: React.FormEvent) {
+    e.preventDefault();
+    if (!newTitle.trim() || !newHook.trim() || !newScript.trim()) return;
+
+    setActionLoadingId('creating');
+    try {
+      const res = await fetch('/api/admin/growth/angles', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'create',
+          app: selectedApp,
+          title: newTitle.trim(),
+          cohort: newCohort,
+          format: newFormat,
+          hook3s: newHook.trim(),
+          bodyScript: newScript.trim(),
+          headline: newHeadline.trim(),
+          cta: newCta.trim(),
+          visualSpecs: newVisualSpecs.trim(),
+        }),
+      });
+
+      if (res.ok) {
+        setIsCreateModalOpen(false);
+        // Reset form
+        setNewTitle('');
+        setNewHook('');
+        setNewScript('');
+        setNewHeadline('');
+        setNewVisualSpecs('');
+        await fetchTelemetry();
+      }
+    } catch (err) {
+      console.error('Create angle error:', err);
+    } finally {
+      setActionLoadingId(null);
+    }
+  }
+
+  function copyToClipboard(text: string, fieldId: string) {
+    navigator.clipboard.writeText(text);
+    setCopiedField(fieldId);
+    setTimeout(() => setCopiedField(null), 2000);
+  }
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 font-sans">
@@ -64,16 +182,24 @@ export default function GrowthHubDashboard() {
           </div>
 
           <div className="flex items-center gap-3">
-            <span className="inline-flex items-center gap-1.5 text-xs text-slate-400">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              Live Telemetry
-            </span>
+            {metrics?.isStripeLive ? (
+              <span className="inline-flex items-center gap-1.5 text-xs text-emerald-400 bg-emerald-950/50 border border-emerald-800/60 px-2.5 py-1 rounded-full font-medium">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                Live Stripe Connected
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1.5 text-xs text-amber-400 bg-amber-950/50 border border-amber-800/60 px-2.5 py-1 rounded-full font-medium">
+                Demo Baseline
+              </span>
+            )}
+
             <Link
               href="/"
               className="text-xs font-semibold text-slate-400 hover:text-white px-3 py-1.5 rounded-lg border border-white/10 hover:bg-white/5 transition-all"
             >
               Back to Site
             </Link>
+
             <button
               type="button"
               onClick={async () => {
@@ -89,19 +215,54 @@ export default function GrowthHubDashboard() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-        {/* KPI Row */}
+        {/* Live Stripe Status Banner */}
+        {metrics?.isStripeLive && (
+          <div className="bg-emerald-950/40 border border-emerald-500/30 rounded-2xl p-4 flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold text-sm">
+                ✓
+              </div>
+              <div>
+                <h4 className="text-sm font-bold text-white">Live Stripe Integration Active</h4>
+                <p className="text-xs text-emerald-300/80">
+                  Direct telemetry from Stripe account for{' '}
+                  <strong>{activeApp?.stripeProductName || 'BankOfGaga — The Gaga Plan'}</strong>.
+                  Customer signups and paid conversions stream in real-time.
+                </p>
+              </div>
+            </div>
+            <span className="text-xs font-mono text-emerald-400 font-bold bg-emerald-900/60 px-3 py-1 rounded-lg border border-emerald-700/50">
+              Live API
+            </span>
+          </div>
+        )}
+
+        {/* Real KPI Row */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="bg-slate-900/60 border border-white/10 rounded-2xl p-5 space-y-2">
             <div className="flex items-center justify-between text-slate-400">
-              <span className="text-xs font-bold uppercase tracking-wider">Portfolio MRR</span>
-              <DollarSign className="w-4 h-4 text-teal-400" />
+              <span className="text-xs font-bold uppercase tracking-wider">Active Paid Subscriptions</span>
+              <Users className="w-4 h-4 text-teal-400" />
+            </div>
+            <div className="text-3xl font-black text-white">
+              {metrics?.totalPaidSubscribers ?? 0}
+            </div>
+            <div className="text-xs text-slate-400">
+              Live paying customers via Stripe
+            </div>
+          </div>
+
+          <div className="bg-slate-900/60 border border-white/10 rounded-2xl p-5 space-y-2">
+            <div className="flex items-center justify-between text-slate-400">
+              <span className="text-xs font-bold uppercase tracking-wider">Live Monthly MRR</span>
+              <DollarSign className="w-4 h-4 text-emerald-400" />
             </div>
             <div className="text-3xl font-black text-white">
               ${((metrics?.totalMrrCents ?? 0) / 100).toFixed(0)}
               <span className="text-xs font-medium text-slate-400 ml-1">/mo</span>
             </div>
-            <div className="text-xs text-emerald-400 flex items-center gap-1">
-              <TrendingUp className="w-3 h-3" /> Recurring subscriptions across portfolio
+            <div className="text-xs text-slate-400">
+              Gross recurring subscription revenue
             </div>
           </div>
 
@@ -114,125 +275,180 @@ export default function GrowthHubDashboard() {
               {metrics?.totalActiveTrials ?? 0}
             </div>
             <div className="text-xs text-slate-400">
-              In 14-day evaluation period
+              Accounts in 14-day evaluation
             </div>
           </div>
 
           <div className="bg-slate-900/60 border border-white/10 rounded-2xl p-5 space-y-2">
             <div className="flex items-center justify-between text-slate-400">
-              <span className="text-xs font-bold uppercase tracking-wider">Paid Subscribers</span>
-              <Users className="w-4 h-4 text-emerald-400" />
-            </div>
-            <div className="text-3xl font-black text-white">
-              {metrics?.totalPaidSubscribers ?? 0}
-            </div>
-            <div className="text-xs text-slate-400">
-              Active accounts across all apps
-            </div>
-          </div>
-
-          <div className="bg-slate-900/60 border border-white/10 rounded-2xl p-5 space-y-2">
-            <div className="flex items-center justify-between text-slate-400">
-              <span className="text-xs font-bold uppercase tracking-wider">Avg Trial Conversion</span>
+              <span className="text-xs font-bold uppercase tracking-wider">Conversion Rate</span>
               <TrendingUp className="w-4 h-4 text-indigo-400" />
             </div>
             <div className="text-3xl font-black text-white">
               {metrics?.avgConversionRate ?? 0}%
             </div>
-            <div className="text-xs text-emerald-400">
-              Benchmark: Top quartile for SaaS
+            <div className="text-xs text-slate-400">
+              Trial-to-paid activation benchmark
             </div>
           </div>
         </div>
 
         {/* App Selector Tabs */}
-        <div className="flex items-center gap-2 border-b border-white/10 pb-2">
-          {metrics?.apps.map((app) => (
-            <button
-              key={app.slug}
-              onClick={() => setSelectedApp(app.slug)}
-              className={`px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 ${
-                selectedApp === app.slug
-                  ? 'bg-teal-500/20 text-teal-300 border border-teal-500/40'
-                  : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
-              }`}
-            >
-              <Layers className="w-4 h-4" />
-              {app.name}
-              {app.slug === 'bank-of-gaga' && (
-                <span className="text-[10px] uppercase font-extrabold bg-orange-500/20 text-orange-300 px-1.5 py-0.5 rounded border border-orange-500/30">
-                  Focus
-                </span>
-              )}
-            </button>
-          ))}
+        <div className="flex items-center justify-between border-b border-white/10 pb-3">
+          <div className="flex items-center gap-2">
+            {metrics?.apps.map((app) => (
+              <button
+                key={app.slug}
+                onClick={() => setSelectedApp(app.slug)}
+                className={`px-4 py-2 rounded-xl text-sm font-bold transition-all flex items-center gap-2 ${
+                  selectedApp === app.slug
+                    ? 'bg-teal-500/20 text-teal-300 border border-teal-500/40'
+                    : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
+                }`}
+              >
+                <Layers className="w-4 h-4" />
+                {app.name}
+                {app.slug === 'bank-of-gaga' && (
+                  <span className="text-[10px] uppercase font-extrabold bg-orange-500/20 text-orange-300 px-1.5 py-0.5 rounded border border-orange-500/30">
+                    Live Focus
+                  </span>
+                )}
+              </button>
+            ))}
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setIsCreateModalOpen(true)}
+            className="bg-teal-500 hover:bg-teal-400 text-slate-950 font-black text-xs px-3.5 py-2 rounded-xl transition-all flex items-center gap-1.5 shadow-md shadow-teal-500/20"
+          >
+            <Plus className="w-4 h-4" /> Create New Angle
+          </button>
         </div>
 
         {/* Selected App Detail Section */}
         {activeApp && (
-          <div className="space-y-6">
-            {/* App Overview Banner */}
-            <div className="bg-slate-900/40 border border-white/10 rounded-3xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-6">
-              <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <h2 className="text-2xl font-black text-white">{activeApp.name}</h2>
-                  <a
-                    href={`https://${activeApp.domain}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-xs font-semibold text-slate-400 hover:text-teal-400 flex items-center gap-1"
-                  >
-                    {activeApp.domain} <ExternalLink className="w-3 h-3" />
-                  </a>
+          <div className="space-y-8">
+            {/* Interactive Creative Angles & Publishing Pipeline */}
+            <div className="bg-slate-900/60 border border-white/10 rounded-3xl p-6 sm:p-8 space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
+                <div className="space-y-0.5">
+                  <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                    <ShieldCheck className="w-5 h-5 text-teal-400" /> Staging & Publishing Pipeline
+                  </h3>
+                  <p className="text-xs text-slate-400">
+                    Click any angle to view full scripts, run automated validation checks, and publish directly to active campaign status.
+                  </p>
                 </div>
-                <p className="text-sm text-slate-400">
-                  {activeApp.slug === 'bank-of-gaga'
-                    ? 'Family loan tracking, promissory note generator, and automated repayment reminders.'
-                    : activeApp.slug === 'teach-weave'
-                    ? 'Teacher curriculum marketplace and standards alignment platform.'
-                    : 'Private music studio scheduling and uncompressed stereo WebRTC audio.'}
-                </p>
+
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-slate-400">Filter:</span>
+                  <span className="text-xs font-semibold bg-white/5 border border-white/10 px-2.5 py-1 rounded-lg text-teal-300">
+                    {activeApp.angles.length} Angles Total
+                  </span>
+                </div>
               </div>
 
-              {/* Quick Metrics */}
-              <div className="flex items-center gap-6 border-t md:border-t-0 md:border-l border-white/10 pt-4 md:pt-0 md:pl-6">
-                <div>
-                  <div className="text-xs text-slate-500 font-bold uppercase">App MRR</div>
-                  <div className="text-xl font-black text-white">
-                    ${(activeApp.mrrCents / 100).toFixed(0)}
+              {/* Angles Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                {activeApp.angles.map((angle) => (
+                  <div
+                    key={angle.id}
+                    className="bg-slate-950/70 border border-white/10 rounded-2xl p-5 space-y-4 hover:border-teal-500/40 transition-all flex flex-col justify-between group"
+                  >
+                    <div className="space-y-3">
+                      {/* Status and Cohort */}
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded truncate max-w-[170px]">
+                          {angle.cohort}
+                        </span>
+                        <span
+                          className={`text-[11px] font-extrabold px-2 py-0.5 rounded-full border ${
+                            angle.status === 'Published'
+                              ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                              : angle.status === 'Validated'
+                              ? 'bg-blue-500/20 text-blue-300 border-blue-500/40'
+                              : 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                          }`}
+                        >
+                          {angle.status}
+                        </span>
+                      </div>
+
+                      {/* Title */}
+                      <h4 className="text-base font-extrabold text-white group-hover:text-teal-300 transition-colors">
+                        {angle.title}
+                      </h4>
+
+                      {/* 3-Second Hook Preview */}
+                      <div className="bg-white/5 p-3 rounded-xl border border-white/5 space-y-1">
+                        <span className="text-[10px] font-bold uppercase text-orange-400 tracking-wider">
+                          3-Second Hook:
+                        </span>
+                        <p className="text-xs text-slate-300 italic line-clamp-3">
+                          &ldquo;{angle.hook3s}&rdquo;
+                        </p>
+                      </div>
+
+                      <div className="text-xs text-slate-400">
+                        <strong>Headline:</strong> {angle.headline}
+                      </div>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="pt-3 border-t border-white/5 flex items-center justify-between gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setInspectingAngle(angle)}
+                        className="text-xs font-bold text-teal-400 hover:text-teal-300 hover:underline flex items-center gap-1"
+                      >
+                        Inspect Script & Specs →
+                      </button>
+
+                      <div className="flex items-center gap-1.5">
+                        {angle.status === 'Draft' && (
+                          <button
+                            type="button"
+                            disabled={actionLoadingId === angle.id}
+                            onClick={() => handleValidate(angle.id)}
+                            className="text-xs font-bold bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 border border-blue-500/40 px-2.5 py-1 rounded-lg transition-colors flex items-center gap-1"
+                          >
+                            <FileCheck className="w-3 h-3" /> Validate
+                          </button>
+                        )}
+                        {angle.status === 'Validated' && (
+                          <button
+                            type="button"
+                            disabled={actionLoadingId === angle.id}
+                            onClick={() => handlePublish(angle.id)}
+                            className="text-xs font-bold bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-2.5 py-1 rounded-lg transition-colors flex items-center gap-1"
+                          >
+                            <Send className="w-3 h-3" /> Publish
+                          </button>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                </div>
-                <div>
-                  <div className="text-xs text-slate-500 font-bold uppercase">Active Trials</div>
-                  <div className="text-xl font-black text-orange-400">{activeApp.activeTrials}</div>
-                </div>
-                <div>
-                  <div className="text-xs text-slate-500 font-bold uppercase">Conversion %</div>
-                  <div className="text-xl font-black text-emerald-400">
-                    {activeApp.trialConversionRate}%
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
 
-            {/* Growth Campaigns & Flywheel */}
+            {/* Active Channels Overview */}
             <div className="bg-slate-900/60 border border-white/10 rounded-3xl p-6 sm:p-8 space-y-6">
-              <div className="flex items-center justify-between border-b border-white/10 pb-4">
-                <div>
-                  <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                    <Megaphone className="w-5 h-5 text-teal-400" /> Active Marketing & Acquisition Channels
-                  </h3>
-                  <p className="text-xs text-slate-400 mt-0.5">
-                    Live SEO magnets, Meta Advantage+ direct-response campaigns, and community flywheels.
-                  </p>
-                </div>
+              <div className="border-b border-white/10 pb-4">
+                <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                  <Megaphone className="w-5 h-5 text-orange-400" /> Acquisition Channels & Live Funnels
+                </h3>
+                <p className="text-xs text-slate-400 mt-0.5">
+                  Live SEO magnets and direct-response campaign allocations.
+                </p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {activeApp.campaigns.map((camp) => (
                   <div
                     key={camp.id}
-                    className="bg-slate-950/60 border border-white/10 rounded-2xl p-5 space-y-3 hover:border-white/20 transition-colors"
+                    className="bg-slate-950/60 border border-white/10 rounded-2xl p-5 space-y-3"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div>
@@ -254,15 +470,6 @@ export default function GrowthHubDashboard() {
                       </span>
                     </div>
 
-                    <div className="text-xs text-slate-300 space-y-1">
-                      <div>
-                        <strong className="text-slate-400">Cohort:</strong> {camp.targetCohort}
-                      </div>
-                      <div>
-                        <strong className="text-slate-400">Target KPI:</strong> {camp.primaryMetric}
-                      </div>
-                    </div>
-
                     <p className="text-xs text-slate-400 bg-white/5 p-3 rounded-xl border border-white/5 leading-relaxed">
                       {camp.performanceNotes}
                     </p>
@@ -281,75 +488,313 @@ export default function GrowthHubDashboard() {
                 ))}
               </div>
             </div>
-
-            {/* Bank of Gaga Ad Playbook Reference Card */}
-            {activeApp.slug === 'bank-of-gaga' && (
-              <div className="bg-slate-900/60 border border-white/10 rounded-3xl p-6 sm:p-8 space-y-6">
-                <div className="flex items-center justify-between border-b border-white/10 pb-4">
-                  <div className="space-y-0.5">
-                    <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                      <ShieldCheck className="w-5 h-5 text-orange-400" /> Direct-Response Creative Angles
-                    </h3>
-                    <p className="text-xs text-slate-400">
-                      Battle-tested copy frameworks from{' '}
-                      <code className="text-orange-300 font-mono text-xs">
-                        docs/marketing/bank-of-gaga-ad-playbook.md
-                      </code>
-                    </p>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="bg-slate-950/70 border border-white/10 rounded-2xl p-5 space-y-3">
-                    <span className="text-[10px] font-extrabold uppercase text-orange-400 bg-orange-950/60 border border-orange-800/60 px-2 py-0.5 rounded">
-                      Angle 1.1 · Boomer Parents
-                    </span>
-                    <h4 className="font-bold text-white text-sm">
-                      The Thanksgiving Table Dilemma
-                    </h4>
-                    <p className="text-xs text-slate-400 leading-relaxed">
-                      &ldquo;If you&apos;re thinking about lending your adult kid money for a house down payment... watch this before you write that check. Most loans don&apos;t fail from bad intent; they fail because nobody wants to talk about it.&rdquo;
-                    </p>
-                    <div className="text-[11px] text-teal-400 font-semibold">
-                      Goal: Emotional relief & automated boundary setting.
-                    </div>
-                  </div>
-
-                  <div className="bg-slate-950/70 border border-white/10 rounded-2xl p-5 space-y-3">
-                    <span className="text-[10px] font-extrabold uppercase text-amber-400 bg-amber-950/60 border border-amber-800/60 px-2 py-0.5 rounded">
-                      Angle 1.2 · Tax Compliance
-                    </span>
-                    <h4 className="font-bold text-white text-sm">
-                      The IRS Gift Tax Trap (AFR Rules)
-                    </h4>
-                    <p className="text-xs text-slate-400 leading-relaxed">
-                      &ldquo;Did you know the IRS has a mandatory minimum interest rate you have to charge family? Learn how the $10,000 carve-out and statutory AFR rates keep your loan 100% audit-proof.&rdquo;
-                    </p>
-                    <div className="text-[11px] text-teal-400 font-semibold">
-                      Goal: Drives traffic to /afr-calculator.
-                    </div>
-                  </div>
-
-                  <div className="bg-slate-950/70 border border-white/10 rounded-2xl p-5 space-y-3">
-                    <span className="text-[10px] font-extrabold uppercase text-emerald-400 bg-emerald-950/60 border border-emerald-800/60 px-2 py-0.5 rounded">
-                      Angle 2.1 · Adult Borrowers
-                    </span>
-                    <h4 className="font-bold text-white text-sm">
-                      Don&apos;t Pay the Bank 7.5%
-                    </h4>
-                    <p className="text-xs text-slate-400 leading-relaxed">
-                      &ldquo;Why give commercial banks $100k in mortgage interest when it could stay in your family? Borrow from parents at 4.3% AFR with formal contracts and transparent tracking.&rdquo;
-                    </p>
-                    <div className="text-[11px] text-teal-400 font-semibold">
-                      Goal: Financial empowerment & dignity.
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         )}
       </main>
+
+      {/* Inspect Angle Modal */}
+      {inspectingAngle && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+          <div className="bg-slate-900 border border-white/15 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 space-y-6 shadow-2xl">
+            <div className="flex items-start justify-between gap-4 border-b border-white/10 pb-4">
+              <div>
+                <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded">
+                  {inspectingAngle.cohort} · {inspectingAngle.format}
+                </span>
+                <h3 className="text-xl font-black text-white mt-1">
+                  {inspectingAngle.title}
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setInspectingAngle(null)}
+                className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-white/5 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Validation Checklist if present */}
+            {inspectingAngle.validationChecks && (
+              <div className="bg-slate-950/70 border border-white/10 rounded-2xl p-4 space-y-2.5">
+                <div className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+                  <FileCheck className="w-4 h-4 text-teal-400" /> Automated Validation Report
+                </div>
+                <div className="space-y-1.5">
+                  {inspectingAngle.validationChecks.map((check, i) => (
+                    <div key={i} className="text-xs flex items-center gap-2">
+                      <span className={check.passed ? 'text-emerald-400' : 'text-red-400'}>
+                        {check.passed ? '✓' : '✗'}
+                      </span>
+                      <strong className="text-white">{check.name}:</strong>
+                      <span className="text-slate-400">{check.note}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* 3-Second Hook */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-bold uppercase tracking-wider text-orange-400">
+                  3-Second Hook (UGC Opening Video Frame)
+                </label>
+                <button
+                  type="button"
+                  onClick={() => copyToClipboard(inspectingAngle.hook3s, 'hook')}
+                  className="text-xs font-bold text-slate-400 hover:text-white flex items-center gap-1"
+                >
+                  {copiedField === 'hook' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                  {copiedField === 'hook' ? 'Copied!' : 'Copy Hook'}
+                </button>
+              </div>
+              <div className="bg-slate-950 p-4 rounded-2xl border border-white/10 text-sm font-medium text-slate-200 leading-relaxed italic">
+                &ldquo;{inspectingAngle.hook3s}&rdquo;
+              </div>
+            </div>
+
+            {/* Full Body Script / Primary Text */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                  Full Video Script & Meta Primary Text
+                </label>
+                <button
+                  type="button"
+                  onClick={() => copyToClipboard(inspectingAngle.bodyScript, 'body')}
+                  className="text-xs font-bold text-slate-400 hover:text-white flex items-center gap-1"
+                >
+                  {copiedField === 'body' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                  {copiedField === 'body' ? 'Copied!' : 'Copy Script'}
+                </button>
+              </div>
+              <div className="bg-slate-950 p-4 rounded-2xl border border-white/10 text-xs sm:text-sm font-normal text-slate-300 leading-relaxed whitespace-pre-wrap">
+                {inspectingAngle.bodyScript}
+              </div>
+            </div>
+
+            {/* Headline and CTA */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="bg-slate-950 p-4 rounded-2xl border border-white/10 space-y-1">
+                <span className="text-[10px] font-bold uppercase text-slate-500">Ad Headline</span>
+                <p className="text-xs font-bold text-white">{inspectingAngle.headline}</p>
+              </div>
+              <div className="bg-slate-950 p-4 rounded-2xl border border-white/10 space-y-1">
+                <span className="text-[10px] font-bold uppercase text-slate-500">CTA Button</span>
+                <p className="text-xs font-bold text-teal-400">{inspectingAngle.cta}</p>
+              </div>
+            </div>
+
+            {/* Visual Storyboard Specs */}
+            <div className="bg-slate-950 p-4 rounded-2xl border border-white/10 space-y-1.5">
+              <span className="text-[10px] font-bold uppercase text-slate-500">
+                Visual Specs & Storyboard Frames
+              </span>
+              <p className="text-xs text-slate-300 leading-relaxed">
+                {inspectingAngle.visualSpecs}
+              </p>
+            </div>
+
+            {/* Footer Buttons */}
+            <div className="flex items-center justify-between border-t border-white/10 pt-4">
+              <span className="text-xs text-slate-400">
+                Status: <strong className="text-white">{inspectingAngle.status}</strong>
+              </span>
+
+              <div className="flex items-center gap-2">
+                {inspectingAngle.status === 'Draft' && (
+                  <button
+                    type="button"
+                    onClick={() => handleValidate(inspectingAngle.id)}
+                    className="bg-blue-500 hover:bg-blue-400 text-slate-950 font-bold text-xs px-4 py-2 rounded-xl transition-all"
+                  >
+                    Run Automated Validation
+                  </button>
+                )}
+                {inspectingAngle.status === 'Validated' && (
+                  <button
+                    type="button"
+                    onClick={() => handlePublish(inspectingAngle.id)}
+                    className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs px-4 py-2 rounded-xl transition-all"
+                  >
+                    Publish to Active Campaigns
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={() => setInspectingAngle(null)}
+                  className="bg-white/10 hover:bg-white/15 text-white font-bold text-xs px-4 py-2 rounded-xl transition-all"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Create New Angle Modal */}
+      {isCreateModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+          <div className="bg-slate-900 border border-white/15 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 space-y-6 shadow-2xl">
+            <div className="flex items-start justify-between gap-4 border-b border-white/10 pb-4">
+              <div>
+                <h3 className="text-xl font-black text-white">
+                  Draft New Creative Angle
+                </h3>
+                <p className="text-xs text-slate-400 mt-0.5">
+                  Create a direct-response ad concept, script, and visual spec for {activeApp?.name}.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsCreateModalOpen(false)}
+                className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-white/5 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateAngle} className="space-y-4">
+              <div className="space-y-1.5">
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-400">
+                  Angle Title / Concept
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. Angle 4.1: The Grandparent College Loan"
+                  value={newTitle}
+                  onChange={(e) => setNewTitle(e.target.value)}
+                  required
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-white/10 text-white text-sm focus:outline-none focus:border-teal-400"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-400">
+                    Target Cohort
+                  </label>
+                  <select
+                    value={newCohort}
+                    onChange={(e) => setNewCohort(e.target.value)}
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-white/10 text-white text-sm focus:outline-none focus:border-teal-400"
+                  >
+                    <option value="Boomer Parents & Grandparents">Boomer Parents & Grandparents</option>
+                    <option value="Responsible Adult Children">Responsible Adult Children</option>
+                    <option value="High-Net-Worth Estate Planners">High-Net-Worth Estate Planners</option>
+                    <option value="Wedding & Down Payment Borrowers">Wedding & Down Payment Borrowers</option>
+                    <option value="General Audience">General Audience</option>
+                  </select>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-400">
+                    Creative Format
+                  </label>
+                  <select
+                    value={newFormat}
+                    onChange={(e) => setNewFormat(e.target.value)}
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-white/10 text-white text-sm focus:outline-none focus:border-teal-400"
+                  >
+                    <option value="UGC Video Reel & 3-Frame Carousel">UGC Video Reel & 3-Frame Carousel</option>
+                    <option value="Split-Screen Comparison Infographic">Split-Screen Comparison Infographic</option>
+                    <option value="Document Proof / Authority Clip">Document Proof / Authority Clip</option>
+                    <option value="LinkedIn Carousel / Long-Form">LinkedIn Carousel / Long-Form</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="block text-xs font-bold uppercase tracking-wider text-orange-400">
+                  3-Second Hook (Video Opening Frame / First Line)
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. Stop lending your kids money on a handshake. Here is what to do instead..."
+                  value={newHook}
+                  onChange={(e) => setNewHook(e.target.value)}
+                  required
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-white/10 text-white text-sm focus:outline-none focus:border-orange-500"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-400">
+                  Body Script / Primary Ad Copy
+                </label>
+                <textarea
+                  rows={5}
+                  placeholder="Write the full script or primary ad text here..."
+                  value={newScript}
+                  onChange={(e) => setNewScript(e.target.value)}
+                  required
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-white/10 text-white text-xs sm:text-sm font-sans focus:outline-none focus:border-teal-400"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-400">
+                    Headline
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Family Loans Made Clean & Simple"
+                    value={newHeadline}
+                    onChange={(e) => setNewHeadline(e.target.value)}
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-white/10 text-white text-sm focus:outline-none focus:border-teal-400"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-400">
+                    Call To Action
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Open Your Bank (14-Day Free Trial)"
+                    value={newCta}
+                    onChange={(e) => setNewCta(e.target.value)}
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-white/10 text-white text-sm focus:outline-none focus:border-teal-400"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-400">
+                  Visual Specs & Storyboard
+                </label>
+                <textarea
+                  rows={2}
+                  placeholder="e.g. Frame 1: Parent talking to camera. Frame 2: Screen recording of mobile agreement. Frame 3: End card with logo."
+                  value={newVisualSpecs}
+                  onChange={(e) => setNewVisualSpecs(e.target.value)}
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-white/10 text-white text-xs focus:outline-none focus:border-teal-400"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-white/10">
+                <button
+                  type="button"
+                  onClick={() => setIsCreateModalOpen(false)}
+                  className="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={actionLoadingId === 'creating'}
+                  className="bg-teal-500 hover:bg-teal-400 text-slate-950 font-black text-xs px-5 py-2.5 rounded-xl transition-all shadow-md shadow-teal-500/20"
+                >
+                  {actionLoadingId === 'creating' ? 'Saving...' : 'Save as Draft'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

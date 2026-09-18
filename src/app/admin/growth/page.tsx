@@ -23,15 +23,24 @@ import {
   FileCheck,
   Send,
   AlertCircle,
+  FileText,
+  MessageSquare,
+  Eye,
+  Sliders,
+  Share2,
 } from 'lucide-react';
 import { PortfolioGrowthMetrics, AppGrowthData, CreativeAngle } from '@/lib/growth-telemetry';
+import { StagedArticle } from '@/lib/growth-content';
+import { CommunityThread } from '@/lib/community-listener';
+import VisualCardGenerator from '@/components/growth/visual-card-generator';
 
 export default function GrowthHubDashboard() {
   const [metrics, setMetrics] = useState<PortfolioGrowthMetrics | null>(null);
   const [selectedApp, setSelectedApp] = useState<string>('bank-of-gaga');
+  const [activeTab, setActiveTab] = useState<'overview' | 'content' | 'creative' | 'community'>('overview');
   const [loading, setLoading] = useState(true);
 
-  // Modals and interactive state
+  // Modals & Interactive Angle State
   const [inspectingAngle, setInspectingAngle] = useState<CreativeAngle | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [copiedField, setCopiedField] = useState<string | null>(null);
@@ -47,6 +56,16 @@ export default function GrowthHubDashboard() {
   const [newCta, setNewCta] = useState('Open Your Family Bank (14-Day Free Trial)');
   const [newVisualSpecs, setNewVisualSpecs] = useState('');
 
+  // SEO Content Flywheel State (Module B)
+  const [articles, setArticles] = useState<StagedArticle[]>([]);
+  const [inspectingArticle, setInspectingArticle] = useState<StagedArticle | null>(null);
+  const [contentLoadingId, setContentLoadingId] = useState<string | null>(null);
+  const [contentFeedback, setContentFeedback] = useState<string | null>(null);
+
+  // Community Intent Listener State (Module D)
+  const [threads, setThreads] = useState<CommunityThread[]>([]);
+  const [threadLoadingId, setThreadLoadingId] = useState<string | null>(null);
+
   async function fetchTelemetry() {
     try {
       const res = await fetch('/api/admin/growth/metrics');
@@ -61,15 +80,45 @@ export default function GrowthHubDashboard() {
     }
   }
 
+  async function fetchContent() {
+    try {
+      const res = await fetch(`/api/admin/growth/content?app=${selectedApp}`);
+      if (res.ok) {
+        const data = await res.json();
+        setArticles(data.articles || []);
+      }
+    } catch (err) {
+      console.error('Failed to load staged content:', err);
+    }
+  }
+
+  async function fetchCommunity() {
+    try {
+      const res = await fetch(`/api/admin/growth/community?app=${selectedApp}`);
+      if (res.ok) {
+        const data = await res.json();
+        setThreads(data.threads || []);
+      }
+    } catch (err) {
+      console.error('Failed to load community threads:', err);
+    }
+  }
+
   useEffect(() => {
     fetchTelemetry();
   }, []);
+
+  useEffect(() => {
+    fetchContent();
+    fetchCommunity();
+  }, [selectedApp]);
 
   const activeApp: AppGrowthData | undefined = metrics?.apps.find(
     (a) => a.slug === selectedApp
   );
 
-  async function handleValidate(angleId: string) {
+  // --- Angles Handler (Module C) ---
+  async function handleValidateAngle(angleId: string) {
     setActionLoadingId(angleId);
     try {
       const res = await fetch('/api/admin/growth/angles', {
@@ -93,7 +142,7 @@ export default function GrowthHubDashboard() {
     }
   }
 
-  async function handlePublish(angleId: string) {
+  async function handlePublishAngle(angleId: string) {
     setActionLoadingId(angleId);
     try {
       const res = await fetch('/api/admin/growth/angles', {
@@ -142,7 +191,6 @@ export default function GrowthHubDashboard() {
 
       if (res.ok) {
         setIsCreateModalOpen(false);
-        // Reset form
         setNewTitle('');
         setNewHook('');
         setNewScript('');
@@ -157,6 +205,78 @@ export default function GrowthHubDashboard() {
     }
   }
 
+  // --- Content Handlers (Module B) ---
+  async function handleValidateContent(slug: string) {
+    setContentLoadingId(slug);
+    try {
+      const res = await fetch('/api/admin/growth/content', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'validate', slug }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        await fetchContent();
+        if (inspectingArticle?.slug === slug && data.article) {
+          setInspectingArticle(data.article);
+        }
+        setContentFeedback(`Validated "${slug}" successfully.`);
+        setTimeout(() => setContentFeedback(null), 3000);
+      }
+    } catch (err) {
+      console.error('Article validation error:', err);
+    } finally {
+      setContentLoadingId(null);
+    }
+  }
+
+  async function handlePublishContent(slug: string) {
+    setContentLoadingId(slug);
+    try {
+      const res = await fetch('/api/admin/growth/content', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'publish', slug }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        await fetchContent();
+        if (inspectingArticle?.slug === slug && data.article) {
+          setInspectingArticle(data.article);
+        }
+        setContentFeedback(
+          data.pathWritten
+            ? `Published directly to ${data.pathWritten}!`
+            : `Article marked as Published in repository queue.`
+        );
+        setTimeout(() => setContentFeedback(null), 4000);
+      }
+    } catch (err) {
+      console.error('Article publish error:', err);
+    } finally {
+      setContentLoadingId(null);
+    }
+  }
+
+  // --- Community Handlers (Module D) ---
+  async function handleThreadStatus(id: string, status: 'Fresh' | 'Drafted' | 'Engaged') {
+    setThreadLoadingId(id);
+    try {
+      const res = await fetch('/api/admin/growth/community', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'update_status', id, status }),
+      });
+      if (res.ok) {
+        await fetchCommunity();
+      }
+    } catch (err) {
+      console.error('Thread status error:', err);
+    } finally {
+      setThreadLoadingId(null);
+    }
+  }
+
   function copyToClipboard(text: string, fieldId: string) {
     navigator.clipboard.writeText(text);
     setCopiedField(fieldId);
@@ -165,7 +285,7 @@ export default function GrowthHubDashboard() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 font-sans">
-      {/* Header */}
+      {/* Top Bar Header */}
       <header className="border-b border-white/10 bg-slate-900/80 backdrop-blur sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -215,7 +335,7 @@ export default function GrowthHubDashboard() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-        {/* Live Stripe Status Banner */}
+        {/* Real Live Stripe Banner */}
         {metrics?.isStripeLive && (
           <div className="bg-emerald-950/40 border border-emerald-500/30 rounded-2xl p-4 flex items-center justify-between gap-4">
             <div className="flex items-center gap-3">
@@ -225,15 +345,21 @@ export default function GrowthHubDashboard() {
               <div>
                 <h4 className="text-sm font-bold text-white">Live Stripe Integration Active</h4>
                 <p className="text-xs text-emerald-300/80">
-                  Direct telemetry from Stripe account for{' '}
-                  <strong>{activeApp?.stripeProductName || 'BankOfGaga — The Gaga Plan'}</strong>.
-                  Customer signups and paid conversions stream in real-time.
+                  Real-time telemetry from Stripe live product: <strong>{activeApp?.stripeProductName || 'BankOfGaga — The Gaga Plan'}</strong>.
                 </p>
               </div>
             </div>
             <span className="text-xs font-mono text-emerald-400 font-bold bg-emerald-900/60 px-3 py-1 rounded-lg border border-emerald-700/50">
               Live API
             </span>
+          </div>
+        )}
+
+        {/* Global Feedback Banner */}
+        {contentFeedback && (
+          <div className="bg-teal-950/60 border border-teal-500/40 rounded-2xl p-3.5 px-4 text-xs font-bold text-teal-300 flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-teal-400" />
+            {contentFeedback}
           </div>
         )}
 
@@ -293,7 +419,7 @@ export default function GrowthHubDashboard() {
           </div>
         </div>
 
-        {/* App Selector Tabs */}
+        {/* Portfolio App Switcher */}
         <div className="flex items-center justify-between border-b border-white/10 pb-3">
           <div className="flex items-center gap-2">
             {metrics?.apps.map((app) => (
@@ -317,35 +443,294 @@ export default function GrowthHubDashboard() {
             ))}
           </div>
 
+          <a
+            href={activeApp?.domain ? `https://${activeApp.domain}` : '#'}
+            target="_blank"
+            rel="noreferrer"
+            className="text-xs font-bold text-slate-400 hover:text-teal-300 transition-colors flex items-center gap-1.5"
+          >
+            Visit {activeApp?.name} <ArrowUpRight className="w-3.5 h-3.5" />
+          </a>
+        </div>
+
+        {/* 4 Architectural Growth Modules (Sub-Navigation Tabs) */}
+        <div className="bg-slate-900/90 border border-white/10 rounded-2xl p-1.5 flex items-center gap-1 sm:gap-2">
           <button
             type="button"
-            onClick={() => setIsCreateModalOpen(true)}
-            className="bg-teal-500 hover:bg-teal-400 text-slate-950 font-black text-xs px-3.5 py-2 rounded-xl transition-all flex items-center gap-1.5 shadow-md shadow-teal-500/20"
+            onClick={() => setActiveTab('overview')}
+            className={`flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-2 ${
+              activeTab === 'overview'
+                ? 'bg-teal-500 text-slate-950 shadow-md shadow-teal-500/20'
+                : 'text-slate-400 hover:text-white hover:bg-white/5'
+            }`}
           >
-            <Plus className="w-4 h-4" /> Create New Angle
+            <Activity className="w-4 h-4" />
+            <span>Funnels & Acquisition</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab('content')}
+            className={`flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-2 ${
+              activeTab === 'content'
+                ? 'bg-teal-500 text-slate-950 shadow-md shadow-teal-500/20'
+                : 'text-slate-400 hover:text-white hover:bg-white/5'
+            }`}
+          >
+            <FileText className="w-4 h-4" />
+            <span>SEO & Blog Flywheel</span>
+            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-black/30 font-mono">
+              {articles.length}
+            </span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab('creative')}
+            className={`flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-2 ${
+              activeTab === 'creative'
+                ? 'bg-teal-500 text-slate-950 shadow-md shadow-teal-500/20'
+                : 'text-slate-400 hover:text-white hover:bg-white/5'
+            }`}
+          >
+            <Sparkles className="w-4 h-4" />
+            <span>Ad Creative Engine</span>
+            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-black/30 font-mono">
+              {activeApp?.angles.length || 0}
+            </span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab('community')}
+            className={`flex-1 py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-2 ${
+              activeTab === 'community'
+                ? 'bg-teal-500 text-slate-950 shadow-md shadow-teal-500/20'
+                : 'text-slate-400 hover:text-white hover:bg-white/5'
+            }`}
+          >
+            <MessageSquare className="w-4 h-4" />
+            <span>Community Intent</span>
+            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-black/30 font-mono">
+              {threads.length}
+            </span>
           </button>
         </div>
 
-        {/* Selected App Detail Section */}
-        {activeApp && (
+        {/* TAB 1: FUNNELS & OVERVIEW (Module A) */}
+        {activeTab === 'overview' && activeApp && (
+          <div className="space-y-6">
+            <div className="bg-slate-900/60 border border-white/10 rounded-3xl p-6 sm:p-8 space-y-6">
+              <div className="border-b border-white/10 pb-4 flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                    <Megaphone className="w-5 h-5 text-orange-400" /> Live Acquisition Magnets & Campaigns
+                  </h3>
+                  <p className="text-xs text-slate-400 mt-0.5">
+                    Live SEO interactive tools, calculators, and direct-response campaign allocations.
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {activeApp.campaigns.map((camp) => (
+                  <div
+                    key={camp.id}
+                    className="bg-slate-950/60 border border-white/10 rounded-2xl p-5 space-y-3"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded">
+                          {camp.channel}
+                        </span>
+                        <h4 className="text-base font-bold text-white mt-1.5">{camp.name}</h4>
+                      </div>
+                      <span
+                        className={`text-xs font-bold px-2.5 py-1 rounded-full ${
+                          camp.status === 'Active'
+                            ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
+                            : camp.status === 'Ready to Launch'
+                            ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
+                            : 'bg-slate-800 text-slate-400 border border-slate-700'
+                        }`}
+                      >
+                        {camp.status}
+                      </span>
+                    </div>
+
+                    <p className="text-xs text-slate-400 bg-white/5 p-3 rounded-xl border border-white/5 leading-relaxed">
+                      {camp.performanceNotes}
+                    </p>
+
+                    {camp.url && (
+                      <a
+                        href={camp.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1.5 text-xs font-bold text-teal-400 hover:text-teal-300 hover:underline pt-1"
+                      >
+                        View Public Landing Page <ArrowUpRight className="w-3.5 h-3.5" />
+                      </a>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 2: SEO CONTENT FLYWHEEL (Module B) */}
+        {activeTab === 'content' && (
+          <div className="space-y-6">
+            <div className="bg-slate-900/60 border border-white/10 rounded-3xl p-6 sm:p-8 space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
+                <div>
+                  <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                    <FileText className="w-5 h-5 text-teal-400" /> Module B: High-Intent SEO Staging & Publishing
+                  </h3>
+                  <p className="text-xs text-slate-400 mt-0.5">
+                    Stage, validate SEO criteria (word count, keywords, calculator links), and publish directly to Bank of Gaga repository.
+                  </p>
+                </div>
+                <div className="text-xs text-slate-400 font-mono bg-white/5 border border-white/10 px-3 py-1.5 rounded-xl">
+                  Target Dir: <span className="text-teal-300">loan-portal/content/blog/</span>
+                </div>
+              </div>
+
+              {articles.length === 0 ? (
+                <div className="p-8 text-center text-slate-400 text-sm bg-slate-950/50 rounded-2xl border border-white/5">
+                  No staged articles found for this app yet.
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {articles.map((art) => (
+                    <div
+                      key={art.slug}
+                      className="bg-slate-950/70 border border-white/10 rounded-2xl p-5 space-y-4 hover:border-teal-500/40 transition-all"
+                    >
+                      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                        <div className="space-y-1 flex-1">
+                          <div className="flex items-center gap-2">
+                            <span className="text-[10px] font-bold uppercase tracking-wider text-orange-400 bg-orange-950/60 border border-orange-800/60 px-2 py-0.5 rounded">
+                              Keyword: {art.targetKeyword}
+                            </span>
+                            <span
+                              className={`text-[11px] font-extrabold px-2.5 py-0.5 rounded-full border ${
+                                art.status === 'Published'
+                                  ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                                  : art.status === 'Validated'
+                                  ? 'bg-blue-500/20 text-blue-300 border-blue-500/40'
+                                  : 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                              }`}
+                            >
+                              {art.status}
+                            </span>
+                          </div>
+                          <h4 className="text-base font-extrabold text-white mt-1">
+                            {art.title}
+                          </h4>
+                          <p className="text-xs text-slate-400 line-clamp-2">
+                            {art.description}
+                          </p>
+                          <div className="text-[11px] text-teal-400/90 italic pt-1">
+                            Intent: {art.intent}
+                          </div>
+                        </div>
+
+                        {/* Actions */}
+                        <div className="flex sm:flex-col items-center sm:items-end gap-2 shrink-0">
+                          <button
+                            type="button"
+                            onClick={() => setInspectingArticle(art)}
+                            className="text-xs font-bold text-slate-300 hover:text-white bg-white/10 hover:bg-white/15 px-3 py-1.5 rounded-xl transition-colors flex items-center gap-1.5"
+                          >
+                            <Eye className="w-3.5 h-3.5" /> Read Full Article
+                          </button>
+
+                          {art.status === 'Draft' && (
+                            <button
+                              type="button"
+                              disabled={contentLoadingId === art.slug}
+                              onClick={() => handleValidateContent(art.slug)}
+                              className="text-xs font-bold bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 border border-blue-500/40 px-3 py-1.5 rounded-xl transition-colors flex items-center gap-1.5"
+                            >
+                              <FileCheck className="w-3.5 h-3.5" /> Run SEO Audit
+                            </button>
+                          )}
+
+                          {art.status === 'Validated' && (
+                            <button
+                              type="button"
+                              disabled={contentLoadingId === art.slug}
+                              onClick={() => handlePublishContent(art.slug)}
+                              className="text-xs font-black bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-3.5 py-1.5 rounded-xl transition-all shadow-md shadow-emerald-500/20 flex items-center gap-1.5"
+                            >
+                              <Send className="w-3.5 h-3.5" /> Publish to Bank of Gaga
+                            </button>
+                          )}
+
+                          {art.status === 'Published' && (
+                            <span className="text-xs font-bold text-emerald-400 flex items-center gap-1">
+                              <CheckCircle2 className="w-3.5 h-3.5" /> Live in Repository
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Validation checks preview if present */}
+                      {art.validationChecks && (
+                        <div className="bg-slate-900/60 p-3.5 rounded-xl border border-white/5 space-y-1.5">
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">
+                            Automated SEO Audit Results:
+                          </span>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                            {art.validationChecks.map((chk, i) => (
+                              <div key={i} className="flex items-start gap-1.5">
+                                <span className={chk.passed ? 'text-emerald-400' : 'text-red-400'}>
+                                  {chk.passed ? '✓' : '✗'}
+                                </span>
+                                <span className="text-slate-300">
+                                  <strong>{chk.name}:</strong> {chk.note}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* TAB 3: AD CREATIVE ENGINE & VISUAL CARDS (Module C) */}
+        {activeTab === 'creative' && activeApp && (
           <div className="space-y-8">
-            {/* Interactive Creative Angles & Publishing Pipeline */}
+            {/* 1. Visual Card Generator Component */}
+            <VisualCardGenerator />
+
+            {/* 2. Ad Angles & Scripts Pipeline */}
             <div className="bg-slate-900/60 border border-white/10 rounded-3xl p-6 sm:p-8 space-y-6">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
                 <div className="space-y-0.5">
                   <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                    <ShieldCheck className="w-5 h-5 text-teal-400" /> Staging & Publishing Pipeline
+                    <ShieldCheck className="w-5 h-5 text-teal-400" /> Direct-Response Angles & Script Pipeline
                   </h3>
                   <p className="text-xs text-slate-400">
-                    Click any angle to view full scripts, run automated validation checks, and publish directly to active campaign status.
+                    Targeted Meta Advantage+ scripts (Problem → Agitation → Solution) with 1-click script copy.
                   </p>
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-slate-400">Filter:</span>
-                  <span className="text-xs font-semibold bg-white/5 border border-white/10 px-2.5 py-1 rounded-lg text-teal-300">
-                    {activeApp.angles.length} Angles Total
-                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setIsCreateModalOpen(true)}
+                    className="bg-teal-500 hover:bg-teal-400 text-slate-950 font-black text-xs px-3.5 py-2 rounded-xl transition-all flex items-center gap-1.5 shadow-md shadow-teal-500/20"
+                  >
+                    <Plus className="w-4 h-4" /> Create New Angle
+                  </button>
                 </div>
               </div>
 
@@ -410,7 +795,7 @@ export default function GrowthHubDashboard() {
                           <button
                             type="button"
                             disabled={actionLoadingId === angle.id}
-                            onClick={() => handleValidate(angle.id)}
+                            onClick={() => handleValidateAngle(angle.id)}
                             className="text-xs font-bold bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 border border-blue-500/40 px-2.5 py-1 rounded-lg transition-colors flex items-center gap-1"
                           >
                             <FileCheck className="w-3 h-3" /> Validate
@@ -420,7 +805,7 @@ export default function GrowthHubDashboard() {
                           <button
                             type="button"
                             disabled={actionLoadingId === angle.id}
-                            onClick={() => handlePublish(angle.id)}
+                            onClick={() => handlePublishAngle(angle.id)}
                             className="text-xs font-bold bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-2.5 py-1 rounded-lg transition-colors flex items-center gap-1"
                           >
                             <Send className="w-3 h-3" /> Publish
@@ -432,61 +817,135 @@ export default function GrowthHubDashboard() {
                 ))}
               </div>
             </div>
+          </div>
+        )}
 
-            {/* Active Channels Overview */}
+        {/* TAB 4: COMMUNITY INTENT MONITOR (Module D) */}
+        {activeTab === 'community' && (
+          <div className="space-y-6">
             <div className="bg-slate-900/60 border border-white/10 rounded-3xl p-6 sm:p-8 space-y-6">
-              <div className="border-b border-white/10 pb-4">
-                <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                  <Megaphone className="w-5 h-5 text-orange-400" /> Acquisition Channels & Live Funnels
-                </h3>
-                <p className="text-xs text-slate-400 mt-0.5">
-                  Live SEO magnets and direct-response campaign allocations.
-                </p>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
+                <div>
+                  <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                    <MessageSquare className="w-5 h-5 text-orange-400" /> Module D: Community Forum Intent Monitor
+                  </h3>
+                  <p className="text-xs text-slate-400 mt-0.5">
+                    High-intent threads from Reddit (r/personalfinance, r/AgingParents) with authentic, authoritative responses and 1-click copy.
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-slate-400">Total Discussions:</span>
+                  <span className="text-xs font-bold bg-white/5 border border-white/10 px-2.5 py-1 rounded-lg text-teal-300 font-mono">
+                    {threads.length} Monitored
+                  </span>
+                </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {activeApp.campaigns.map((camp) => (
-                  <div
-                    key={camp.id}
-                    className="bg-slate-950/60 border border-white/10 rounded-2xl p-5 space-y-3"
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded">
-                          {camp.channel}
-                        </span>
-                        <h4 className="text-base font-bold text-white mt-1.5">{camp.name}</h4>
+              {threads.length === 0 ? (
+                <div className="p-8 text-center text-slate-400 text-sm bg-slate-950/50 rounded-2xl border border-white/5">
+                  No community discussions found for this app.
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  {threads.map((thread) => (
+                    <div
+                      key={thread.id}
+                      className="bg-slate-950/70 border border-white/10 rounded-2xl p-5 sm:p-6 space-y-4 hover:border-orange-500/30 transition-all"
+                    >
+                      {/* Thread Header */}
+                      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2">
+                            <span className="text-[10px] font-black uppercase tracking-wider text-orange-400 bg-orange-950/70 border border-orange-800/60 px-2 py-0.5 rounded">
+                              {thread.community}
+                            </span>
+                            <span className="text-xs text-slate-400">
+                              by <strong>{thread.author}</strong> · {thread.postedTimeAgo}
+                            </span>
+                            <span className="text-xs text-slate-500">
+                              ({thread.upvotes} upvotes · {thread.commentsCount} comments)
+                            </span>
+                          </div>
+                          <h4 className="text-base font-extrabold text-white">
+                            {thread.threadTitle}
+                          </h4>
+                        </div>
+
+                        <div className="flex items-center gap-2 shrink-0">
+                          <span
+                            className={`text-xs font-bold px-2.5 py-1 rounded-full border ${
+                              thread.status === 'Engaged'
+                                ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                                : thread.status === 'Drafted'
+                                ? 'bg-blue-500/20 text-blue-300 border-blue-500/40'
+                                : 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                            }`}
+                          >
+                            {thread.status}
+                          </span>
+
+                          <button
+                            type="button"
+                            disabled={threadLoadingId === thread.id}
+                            onClick={() =>
+                              handleThreadStatus(
+                                thread.id,
+                                thread.status === 'Engaged' ? 'Fresh' : 'Engaged'
+                              )
+                            }
+                            className="text-xs font-bold text-slate-400 hover:text-white bg-white/5 border border-white/10 px-2.5 py-1 rounded-lg transition-colors"
+                          >
+                            {thread.status === 'Engaged' ? 'Mark Fresh' : 'Mark Engaged'}
+                          </button>
+                        </div>
                       </div>
-                      <span
-                        className={`text-xs font-bold px-2.5 py-1 rounded-full ${
-                          camp.status === 'Active'
-                            ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-                            : camp.status === 'Ready to Launch'
-                            ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
-                            : 'bg-slate-800 text-slate-400 border border-slate-700'
-                        }`}
-                      >
-                        {camp.status}
-                      </span>
+
+                      {/* Pain Point & Tool Match */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                        <div className="bg-red-950/20 border border-red-500/20 rounded-xl p-3 space-y-1">
+                          <span className="text-[10px] font-bold uppercase text-red-400 tracking-wider">
+                            Extracted Core Pain Point:
+                          </span>
+                          <p className="text-slate-300">{thread.extractedPainPoint}</p>
+                        </div>
+
+                        <div className="bg-teal-950/20 border border-teal-500/20 rounded-xl p-3 space-y-1">
+                          <span className="text-[10px] font-bold uppercase text-teal-400 tracking-wider">
+                            Recommended Growth Solution:
+                          </span>
+                          <p className="text-teal-200 font-medium">{thread.recommendedAngleOrTool}</p>
+                        </div>
+                      </div>
+
+                      {/* Pre-Drafted Authentic Reply */}
+                      <div className="space-y-2 bg-slate-900/80 p-4 rounded-xl border border-white/5">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+                            <Share2 className="w-3.5 h-3.5 text-teal-400" />
+                            Drafted High-Reputation Reply (Non-Spam / Helpful)
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => copyToClipboard(thread.draftedReply, thread.id)}
+                            className="text-xs font-bold text-teal-400 hover:text-teal-300 flex items-center gap-1 bg-teal-500/10 border border-teal-500/20 px-2.5 py-1 rounded-lg transition-colors"
+                          >
+                            {copiedField === thread.id ? (
+                              <Check className="w-3.5 h-3.5 text-emerald-400" />
+                            ) : (
+                              <Copy className="w-3.5 h-3.5" />
+                            )}
+                            {copiedField === thread.id ? 'Copied Reply!' : 'Copy Reply'}
+                          </button>
+                        </div>
+
+                        <p className="text-xs text-slate-300 whitespace-pre-wrap leading-relaxed">
+                          {thread.draftedReply}
+                        </p>
+                      </div>
                     </div>
-
-                    <p className="text-xs text-slate-400 bg-white/5 p-3 rounded-xl border border-white/5 leading-relaxed">
-                      {camp.performanceNotes}
-                    </p>
-
-                    {camp.url && (
-                      <a
-                        href={camp.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-1.5 text-xs font-bold text-teal-400 hover:text-teal-300 hover:underline pt-1"
-                      >
-                        View Public Landing Page <ArrowUpRight className="w-3.5 h-3.5" />
-                      </a>
-                    )}
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -518,7 +977,7 @@ export default function GrowthHubDashboard() {
             {inspectingAngle.validationChecks && (
               <div className="bg-slate-950/70 border border-white/10 rounded-2xl p-4 space-y-2.5">
                 <div className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
-                  <FileCheck className="w-4 h-4 text-teal-400" /> Automated Validation Report
+                  <FileCheck className="w-4 h-4 text-teal-400" /> Automated Direct-Response Checks
                 </div>
                 <div className="space-y-1.5">
                   {inspectingAngle.validationChecks.map((check, i) => (
@@ -606,7 +1065,7 @@ export default function GrowthHubDashboard() {
                 {inspectingAngle.status === 'Draft' && (
                   <button
                     type="button"
-                    onClick={() => handleValidate(inspectingAngle.id)}
+                    onClick={() => handleValidateAngle(inspectingAngle.id)}
                     className="bg-blue-500 hover:bg-blue-400 text-slate-950 font-bold text-xs px-4 py-2 rounded-xl transition-all"
                   >
                     Run Automated Validation
@@ -615,7 +1074,7 @@ export default function GrowthHubDashboard() {
                 {inspectingAngle.status === 'Validated' && (
                   <button
                     type="button"
-                    onClick={() => handlePublish(inspectingAngle.id)}
+                    onClick={() => handlePublishAngle(inspectingAngle.id)}
                     className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs px-4 py-2 rounded-xl transition-all"
                   >
                     Publish to Active Campaigns
@@ -624,6 +1083,107 @@ export default function GrowthHubDashboard() {
                 <button
                   type="button"
                   onClick={() => setInspectingAngle(null)}
+                  className="bg-white/10 hover:bg-white/15 text-white font-bold text-xs px-4 py-2 rounded-xl transition-all"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Inspect Staged Article Modal */}
+      {inspectingArticle && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+          <div className="bg-slate-900 border border-white/15 rounded-3xl max-w-3xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 space-y-6 shadow-2xl">
+            <div className="flex items-start justify-between gap-4 border-b border-white/10 pb-4">
+              <div>
+                <span className="text-[10px] font-extrabold uppercase tracking-wider text-orange-400 bg-orange-950/70 border border-orange-800/60 px-2 py-0.5 rounded">
+                  Target Keyword: {inspectingArticle.targetKeyword}
+                </span>
+                <h3 className="text-xl font-black text-white mt-1">
+                  {inspectingArticle.title}
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setInspectingArticle(null)}
+                className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-white/5 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Validation Checklist if present */}
+            {inspectingArticle.validationChecks && (
+              <div className="bg-slate-950/70 border border-white/10 rounded-2xl p-4 space-y-2">
+                <div className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+                  <FileCheck className="w-4 h-4 text-teal-400" /> SEO Content Audit
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                  {inspectingArticle.validationChecks.map((check, i) => (
+                    <div key={i} className="flex items-start gap-1.5">
+                      <span className={check.passed ? 'text-emerald-400' : 'text-red-400'}>
+                        {check.passed ? '✓' : '✗'}
+                      </span>
+                      <span className="text-slate-300">
+                        <strong>{check.name}:</strong> {check.note}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Markdown Content Viewer */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                  Full Article Markdown
+                </label>
+                <button
+                  type="button"
+                  onClick={() => copyToClipboard(inspectingArticle.contentMarkdown, 'article')}
+                  className="text-xs font-bold text-slate-400 hover:text-white flex items-center gap-1"
+                >
+                  {copiedField === 'article' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                  {copiedField === 'article' ? 'Copied Markdown!' : 'Copy Markdown'}
+                </button>
+              </div>
+              <div className="bg-slate-950 p-4 rounded-2xl border border-white/10 text-xs font-mono text-slate-300 leading-relaxed whitespace-pre-wrap max-h-[400px] overflow-y-auto">
+                {inspectingArticle.contentMarkdown}
+              </div>
+            </div>
+
+            {/* Footer Buttons */}
+            <div className="flex items-center justify-between border-t border-white/10 pt-4">
+              <span className="text-xs text-slate-400">
+                Status: <strong className="text-white">{inspectingArticle.status}</strong>
+              </span>
+
+              <div className="flex items-center gap-2">
+                {inspectingArticle.status === 'Draft' && (
+                  <button
+                    type="button"
+                    onClick={() => handleValidateContent(inspectingArticle.slug)}
+                    className="bg-blue-500 hover:bg-blue-400 text-slate-950 font-bold text-xs px-4 py-2 rounded-xl transition-all"
+                  >
+                    Run SEO Audit
+                  </button>
+                )}
+                {inspectingArticle.status === 'Validated' && (
+                  <button
+                    type="button"
+                    onClick={() => handlePublishContent(inspectingArticle.slug)}
+                    className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs px-4 py-2 rounded-xl transition-all"
+                  >
+                    Publish to Bank of Gaga
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={() => setInspectingArticle(null)}
                   className="bg-white/10 hover:bg-white/15 text-white font-bold text-xs px-4 py-2 rounded-xl transition-all"
                 >
                   Close

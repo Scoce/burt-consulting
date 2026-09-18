@@ -74,7 +74,7 @@ That's why we built Bank of Gaga. It creates a simple, legally sound family loan
 
 You get paid back on schedule, the IRS stays happy, and Thanksgiving stays Thanksgiving.`,
     headline: 'Stop Being the Awkward Debt Collector at Family Dinners',
-    cta: 'Open Your Family Bank (14-Day Free Trial)',
+    cta: 'Open Your Family Bank (30-Day Free Trial)',
     visualSpecs: 'Frame 1: Parent looking worried at phone. Frame 2: Split screen showing awkward unwritten loan vs clean Bank of Gaga dashboard. Frame 3: Happy family dinner with mobile text notification received seamlessly.',
     status: 'Published',
     createdAt: '2026-09-18T10:00:00Z',

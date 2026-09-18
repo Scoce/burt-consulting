@@ -53,7 +53,7 @@ export default function GrowthHubDashboard() {
   const [newHook, setNewHook] = useState('');
   const [newScript, setNewScript] = useState('');
   const [newHeadline, setNewHeadline] = useState('');
-  const [newCta, setNewCta] = useState('Open Your Family Bank (14-Day Free Trial)');
+  const [newCta, setNewCta] = useState('Open Your Family Bank (30-Day Free Trial)');
   const [newVisualSpecs, setNewVisualSpecs] = useState('');
 
   // SEO Content Flywheel State (Module B)
@@ -1314,7 +1314,7 @@ export default function GrowthHubDashboard() {
                   </label>
                   <input
                     type="text"
-                    placeholder="e.g. Open Your Bank (14-Day Free Trial)"
+                    placeholder="e.g. Open Your Bank (30-Day Free Trial)"
                     value={newCta}
                     onChange={(e) => setNewCta(e.target.value)}
                     className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-white/10 text-white text-sm focus:outline-none focus:border-teal-400"

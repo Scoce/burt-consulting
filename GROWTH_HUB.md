@@ -69,5 +69,40 @@ A private internal portal at `/admin/growth` within `BurtConsulting`:
 1. **Portfolio Telemetry Dashboard**:
    - Route: [`/admin/growth`](file:///Users/jamesburt/dev/BurtConsulting/src/app/admin/growth/page.tsx)
    - API: [`/api/admin/growth/metrics`](file:///Users/jamesburt/dev/BurtConsulting/src/app/api/admin/growth/metrics/route.ts)
-   - Features: Portfolio MRR, active trials, paid subscriber counts, trial conversion rate, live marketing campaign tracking, and ad creative reference cards.
+   - Features: Portfolio MRR, active trials, paid subscriber counts, trial conversion rate, live marketing campaign tracking, ad creative generator, SEO staging flywheel, and community discussion listener.
+
+---
+
+## 6. Brand Voice & Tone Codex (Extracted from BankOfGaga Agent Memory)
+
+To ensure strict marketing consistency across all growth campaigns, ad scripts, blog articles, and community forum replies:
+
+### 1. The Core Persona: "The Costco Membership Middle"
+- **Not an 'AARP app'**: Do not over-correct into medicalized, fragile, or patronizing language. Older parents and grandparents are competent, proud, and often tech-literate.
+- **Large, Clear, and Confident**: Emphasize explicit over terse, visible over discoverable, and safety nets over minimalism.
+- **Warmth and Dignity**: Protect the emotional sanctity of family gatherings (*"Thanksgiving stays Thanksgiving"*).
+
+### 2. Mandatory Brand Vocabulary
+| Preferred Language | Deprecated / Avoided Language | Context / Reason |
+| :--- | :--- | :--- |
+| **"BankOfGaga"** | "Bank of Gaga" (in official legal / brand headers) | Single-word branding prevents Texas bank-naming regulatory scrutiny. |
+| **"Money agreement"** | "Loan" | Softens transactional coldness when talking between parents and kids. |
+| **"Member"** | "Borrower" | Removes debt stigma; frames borrowing as family participation. |
+| **"Gaga"** | "Admin", "Lender", "Creditor" | Centers the beloved patriarch/matriarch origin story. |
+| **"Mark Paid"** | "Record", "Confirm", "Verify" | Plain, unambiguous action label for older users. |
+| **"30-Day Free Trial"** | "14-Day Free Trial" | Extended sitewide on 2026-07-02 to give a full monthly payment cycle. |
+| **"Sunday dinner / Thanksgiving table"** | Generic "family events" | Concrete, visceral emotional hook that resonates instantly. |
+
+### 3. Dual-Audience Messaging
+- **Gagas (Lenders - Paying Segment)**:
+  - *Core Fears*: Awkward holiday dinners, playing unpaid debt collector, IRS § 7872 gift-tax audits, losing touch with kids over money.
+  - *Tone*: Reassuring, protective, structured, respectful, authoritative on tax/underwriting rules.
+- **Members (Adult Children - Borrowers)**:
+  - *Core Fears*: Feeling like a dependent child, having money held over their head, paying $100k+ in commercial 7.5%+ bank interest to Wall Street.
+  - *Tone*: Empowering, respectful, dignity-first, mathematical clarity.
+
+### 4. Technical & Regulatory Guardrails
+- **Zero Money Movement / No Escrow**: Always clarify that BankOfGaga is a tracking and documentation software, never holding or moving client funds directly (avoids money transmitter licensing).
+- **Statutory Authority**: Always ground tax discussions in real statutes: IRC § 7872 (imputed interest), IRS Applicable Federal Rates (AFR), and Fannie Mae/Freddie Mac mortgage gift-letter rules.
+
 

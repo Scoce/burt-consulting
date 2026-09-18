@@ -15,6 +15,7 @@ import {
   ArrowUpRight,
   ShieldCheck,
   Megaphone,
+  LogOut,
 } from 'lucide-react';
 import { PortfolioGrowthMetrics, AppGrowthData } from '@/lib/growth-telemetry';
 
@@ -73,6 +74,16 @@ export default function GrowthHubDashboard() {
             >
               Back to Site
             </Link>
+            <button
+              type="button"
+              onClick={async () => {
+                await fetch('/api/admin/logout', { method: 'POST' });
+                window.location.href = '/admin/login';
+              }}
+              className="text-xs font-semibold text-red-400 hover:text-red-300 px-3 py-1.5 rounded-lg border border-red-500/20 hover:bg-red-500/10 transition-all flex items-center gap-1.5"
+            >
+              <LogOut className="w-3 h-3" /> Log Out
+            </button>
           </div>
         </div>
       </header>

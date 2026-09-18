@@ -49,5 +49,25 @@ A private internal portal at `/admin/growth` within `BurtConsulting`:
 ## 4. Technical Stack
 - **Host**: `BurtConsulting` (Next.js 16 App Router).
 - **Database**: Neon Serverless PostgreSQL (`@neondatabase/serverless`).
-- **Authentication**: Secured admin session guarding `/admin/growth`.
-- **Integrations**: Stripe API (multi-account/multi-product), GA4 Data API, Google Search Console API, Resend (notifications).
+- **Authentication**: Secured admin route guarding `/admin/growth` (`disallow: ['/admin/']` in `robots.ts`).
+- **Telemetry**: Headless aggregator (`lib/growth-telemetry.ts` and `/api/admin/growth/metrics`).
+
+---
+
+## 5. Live Assets & Implemented Modules
+
+### Bank of Gaga (`loan-portal`)
+1. **Interactive Acquisition Magnet**:
+   - Location: `https://bankofgaga.com/afr-calculator` ([`afr-calculator/page.tsx`](file:///Users/jamesburt/dev/loan-portal/src/app/afr-calculator/page.tsx))
+   - Features: Monthly statutory IRS AFR rate tiers (Short/Mid/Long-Term), commercial bank interest savings calculation, IRS § 7872 / § 2503(b) gift-tax compliance analyzer, and 1-click contract builder export.
+   - SEO: Rich structured JSON-LD data (`SoftwareApplication` + `FAQPage`).
+2. **Paid Ad & Social Creative Playbook**:
+   - Location: [`docs/marketing/bank-of-gaga-ad-playbook.md`](file:///Users/jamesburt/dev/loan-portal/docs/marketing/bank-of-gaga-ad-playbook.md)
+   - Features: Battle-tested hooks, primary text, headlines, and video/carousel specs for 3 buyer cohorts (Boomer Parents, Adult Borrowers, and Estate Planners).
+
+### Centralized Growth Hub (`BurtConsulting`)
+1. **Portfolio Telemetry Dashboard**:
+   - Route: [`/admin/growth`](file:///Users/jamesburt/dev/BurtConsulting/src/app/admin/growth/page.tsx)
+   - API: [`/api/admin/growth/metrics`](file:///Users/jamesburt/dev/BurtConsulting/src/app/api/admin/growth/metrics/route.ts)
+   - Features: Portfolio MRR, active trials, paid subscriber counts, trial conversion rate, live marketing campaign tracking, and ad creative reference cards.
+

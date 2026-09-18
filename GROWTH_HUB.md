@@ -90,7 +90,7 @@ To ensure strict marketing consistency across all growth campaigns, ad scripts, 
 | **"Member"** | "Borrower" | Removes debt stigma; frames borrowing as family participation. |
 | **"Gaga"** | "Admin", "Lender", "Creditor" | Centers the beloved patriarch/matriarch origin story. |
 | **"Mark Paid"** | "Record", "Confirm", "Verify" | Plain, unambiguous action label for older users. |
-| **"30-Day Free Trial"** | "14-Day Free Trial" | Extended sitewide on 2026-07-02 to give a full monthly payment cycle. |
+| **"14-Day Free Trial"** | "30-Day Free Trial" | Standardized across Stripe API (trial_period_days: 14) and all marketing copy. |
 | **"Sunday dinner / Thanksgiving table"** | Generic "family events" | Concrete, visceral emotional hook that resonates instantly. |
 
 ### 3. Dual-Audience Messaging

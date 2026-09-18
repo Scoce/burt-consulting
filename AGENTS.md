@@ -23,3 +23,7 @@ As a coding agent on this project, you must adhere to the following rules at all
    - **Defensive Parameter Validation**: Never pass dynamic route parameters (`params.id`, etc.) directly into typed SQL columns (like `UUID`). Validate with `isUuid()` and immediately trigger `notFound()` (404) to prevent database syntax crashes on malformed bot/crawler requests.
    - **Resilient Error & 404 Boundaries**: Maintain route-level `error.tsx` and top-level `not-found.tsx` with user-friendly retry actions so transient network/database hiccups do not crash the entire site into a white 500 error screen.
    - **Zero-Downtime Deployment Telemetry**: Filter expected rolling-deployment artifacts (such as Next.js `Failed to find Server Action` / `UnrecognizedActionError`) in Sentry server and edge configs to keep alerts focused on real code regressions.
+
+6. **Portfolio Growth Hub & Marketing Automation**
+   - BurtConsulting houses the centralized **Portfolio Growth Hub** (`GROWTH_HUB.md`).
+   - Drives automated analytics, high-intent SEO content, and performance tracking across the app portfolio (Bank of Gaga, TeachingSax, TeachWeave, etc.). Always prefer headless API/webhook integrations over brittle GUI/screen-clicking automations.

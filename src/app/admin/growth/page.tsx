@@ -576,6 +576,110 @@ export default function GrowthHubDashboard() {
                 ))}
               </div>
             </div>
+
+            {/* BLOG & CONTENT CTA PERFORMANCE (ATTRIBUTION ENGINE) */}
+            {activeApp.blogAttribution && activeApp.blogAttribution.length > 0 && (
+              <div className="bg-slate-900/60 border border-white/10 rounded-3xl p-6 sm:p-8 space-y-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
+                  <div>
+                    <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                      <TrendingUp className="w-5 h-5 text-orange-400" /> Blog &amp; Content CTA Performance (Attribution Engine)
+                    </h3>
+                    <p className="text-xs text-slate-400 mt-0.5">
+                      Live conversion telemetry tracking clicks, 14-day trials, paid subscribers, and MRR per article.
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs font-mono bg-orange-950/40 text-orange-300 border border-orange-800/60 px-3 py-1.5 rounded-xl">
+                    <ShieldCheck className="w-4 h-4 text-orange-400" />
+                    UTM Tagged &amp; Stripe Telemetry Active
+                  </div>
+                </div>
+
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs">
+                    <thead>
+                      <tr className="border-b border-white/10 text-slate-400 uppercase tracking-wider font-semibold">
+                        <th className="pb-3 pr-4">Article / Topic</th>
+                        <th className="pb-3 px-4 text-center">CTA Clicks</th>
+                        <th className="pb-3 px-4 text-center">14-Day Trials</th>
+                        <th className="pb-3 px-4 text-center">Paid Subscribers</th>
+                        <th className="pb-3 px-4 text-center">MRR Generated</th>
+                        <th className="pb-3 px-4 text-center">Conv. Rate</th>
+                        <th className="pb-3 pl-4 text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-white/5">
+                      {activeApp.blogAttribution.map((item) => (
+                        <tr key={item.slug} className="hover:bg-white/[0.02] transition-colors group">
+                          <td className="py-3.5 pr-4">
+                            <div className="font-bold text-white group-hover:text-orange-300 transition-colors">
+                              {item.title}
+                            </div>
+                            <div className="flex items-center gap-2 mt-1">
+                              <span className="text-[10px] text-slate-400 font-mono bg-white/5 px-2 py-0.5 rounded border border-white/5">
+                                {item.targetKeyword}
+                              </span>
+                              <a
+                                href={`https://bankofgaga.com/blog/${item.slug}`}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-[11px] text-teal-400 hover:text-teal-300 hover:underline flex items-center gap-1"
+                              >
+                                View Post <ArrowUpRight className="w-3 h-3" />
+                              </a>
+                            </div>
+                          </td>
+                          <td className="py-3.5 px-4 text-center font-mono font-bold text-slate-200">
+                            {item.ctaClicks}
+                          </td>
+                          <td className="py-3.5 px-4 text-center font-mono font-bold text-orange-400">
+                            {item.trialSignups}
+                          </td>
+                          <td className="py-3.5 px-4 text-center font-mono font-bold text-emerald-400">
+                            {item.paidSubscribers}
+                          </td>
+                          <td className="py-3.5 px-4 text-center font-mono font-bold text-white">
+                            ${(item.mrrCents / 100).toFixed(2)}
+                          </td>
+                          <td className="py-3.5 px-4 text-center">
+                            <span
+                              className={`font-mono font-extrabold px-2 py-0.5 rounded ${
+                                item.conversionRate > 0
+                                  ? 'bg-emerald-500/20 text-emerald-300'
+                                  : 'bg-white/5 text-slate-400'
+                              }`}
+                            >
+                              {item.conversionRate}%
+                            </span>
+                          </td>
+                          <td className="py-3.5 pl-4 text-right">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                navigator.clipboard.writeText(item.trackedUrl);
+                                setCopiedField(`cta-${item.slug}`);
+                                setTimeout(() => setCopiedField(null), 2000);
+                              }}
+                              className="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/10 transition-colors"
+                            >
+                              {copiedField === `cta-${item.slug}` ? (
+                                <>
+                                  <Check className="w-3 h-3 text-emerald-400" /> Copied
+                                </>
+                              ) : (
+                                <>
+                                  <Copy className="w-3 h-3" /> Copy Tracked CTA
+                                </>
+                              )}
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
           </div>
         )}
 

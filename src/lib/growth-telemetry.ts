@@ -27,6 +27,18 @@ export interface GrowthCampaign {
   url?: string;
 }
 
+export interface BlogAttributionMetric {
+  slug: string;
+  title: string;
+  targetKeyword: string;
+  ctaClicks: number;
+  trialSignups: number;
+  paidSubscribers: number;
+  mrrCents: number;
+  conversionRate: number;
+  trackedUrl: string;
+}
+
 export interface AppGrowthData {
   slug: string;
   name: string;
@@ -41,6 +53,7 @@ export interface AppGrowthData {
   stripeProductName?: string;
   campaigns: GrowthCampaign[];
   angles: CreativeAngle[];
+  blogAttribution?: BlogAttributionMetric[];
 }
 
 export interface PortfolioGrowthMetrics {
@@ -240,8 +253,67 @@ interface StripeLiveResult {
   paidSubscribers: number;
   activeTrials: number;
   productName?: string;
+  campaignAttribution: Record<string, { activeTrials: number; paidSubscribers: number; mrrCents: number }>;
   error?: string;
 }
+
+const BANK_OF_GAGA_BLOG_CATALOG = [
+  {
+    slug: 'how-to-lend-money-to-adult-children-for-down-payment-without-tax-penalties',
+    title: 'How to Lend Money to Adult Children for a Down Payment (Without Tax Penalties)',
+    targetKeyword: 'lend money to child for down payment tax',
+  },
+  {
+    slug: 'the-irs-and-your-family-loan',
+    title: "The IRS and Your Family Loan: The Non-Tax-Lawyer's Guide to Not Getting Audited",
+    targetKeyword: 'irs family loan rules',
+  },
+  {
+    slug: 'family-loan-for-down-payment',
+    title: 'Can You Use a Family Loan for a Mortgage Down Payment?',
+    targetKeyword: 'family loan down payment',
+  },
+  {
+    slug: 'family-mortgage-gift-letter-vs-loan',
+    title: 'Mortgage Gift Letter vs. Family Loan: Which One Should You Actually Choose?',
+    targetKeyword: 'mortgage gift letter vs family loan',
+  },
+  {
+    slug: 'family-loan-agreement-what-to-include',
+    title: 'Family Loan Agreements: 7 Things Every Written Contract Must Include',
+    targetKeyword: 'family loan agreement template',
+  },
+  {
+    slug: 'what-happens-if-you-dont-document-a-family-loan',
+    title: "What Actually Happens If You Don't Document a Family Loan?",
+    targetKeyword: 'undocumented family loan consequences',
+  },
+  {
+    slug: 'the-boring-math-that-saves-your-kid',
+    title: 'The Boring Math That Saves Your Kid $10,000: An AFR Walkthrough',
+    targetKeyword: 'afr interest savings calculator',
+  },
+  {
+    slug: 'lending-money-to-family-without-ruining-thanksgiving',
+    title: 'How to Lend Money to Family Without Ruining Thanksgiving Dinner',
+    targetKeyword: 'lend money to family relationships',
+  },
+  {
+    slug: 'parent-to-child-car-loan-agreement',
+    title: 'Parent-to-Child Car Loan: How to Set Up the Agreement So It Actually Gets Paid',
+    targetKeyword: 'parent child car loan agreement',
+  },
+  {
+    slug: 'grandparent-student-loan-agreement',
+    title: 'Grandparent Student Loans: How to Help with College Without Triggering Gift Taxes',
+    targetKeyword: 'grandparent student loan gift tax',
+  },
+  {
+    slug: 'family-loan-agreement-medicaid-lookback',
+    title: 'Family Loans and the Medicaid 5-Year Look-Back: What You Must Know',
+    targetKeyword: 'medicaid lookback family loan',
+  },
+];
 
 async function fetchStripeLiveMetrics(): Promise<StripeLiveResult> {
   const stripeKey = process.env.STRIPE_SECRET_KEY;
@@ -251,6 +323,7 @@ async function fetchStripeLiveMetrics(): Promise<StripeLiveResult> {
       mrrCents: 0,
       paidSubscribers: 0,
       activeTrials: 0,
+      campaignAttribution: {},
       error: 'STRIPE_SECRET_KEY not set in environment',
     };
   }
@@ -268,6 +341,7 @@ async function fetchStripeLiveMetrics(): Promise<StripeLiveResult> {
         mrrCents: 0,
         paidSubscribers: 0,
         activeTrials: 0,
+        campaignAttribution: {},
         error: `Stripe API error: ${subRes.statusText}`,
       };
     }
@@ -277,26 +351,41 @@ async function fetchStripeLiveMetrics(): Promise<StripeLiveResult> {
 
     const subscriptions: Array<{
       status: string;
+      metadata?: Record<string, string>;
       items: { data: Array<{ price: { unit_amount: number; recurring?: { interval: string } } }> };
     }> = subData.data || [];
 
     let mrrCents = 0;
     let activeTrials = 0;
     let paidSubscribers = 0;
+    const campaignAttribution: Record<string, { activeTrials: number; paidSubscribers: number; mrrCents: number }> = {};
 
     for (const sub of subscriptions) {
+      const camp = sub.metadata?.signup_campaign;
+      if (camp && !campaignAttribution[camp]) {
+        campaignAttribution[camp] = { activeTrials: 0, paidSubscribers: 0, mrrCents: 0 };
+      }
+
       if (sub.status === 'trialing') {
         activeTrials++;
+        if (camp) campaignAttribution[camp].activeTrials++;
       } else if (sub.status === 'active') {
         paidSubscribers++;
+        let subMrr = 0;
         for (const item of sub.items.data) {
           const unitAmount = item.price?.unit_amount || 0;
           const interval = item.price?.recurring?.interval;
           if (interval === 'month') {
             mrrCents += unitAmount;
+            subMrr += unitAmount;
           } else if (interval === 'year') {
             mrrCents += Math.round(unitAmount / 12);
+            subMrr += Math.round(unitAmount / 12);
           }
+        }
+        if (camp) {
+          campaignAttribution[camp].paidSubscribers++;
+          campaignAttribution[camp].mrrCents += subMrr;
         }
       }
     }
@@ -309,6 +398,7 @@ async function fetchStripeLiveMetrics(): Promise<StripeLiveResult> {
       paidSubscribers,
       activeTrials,
       productName: activeProd?.name || 'BankOfGaga — The Gaga Plan',
+      campaignAttribution,
     };
   } catch (err) {
     console.error('[stripe-telemetry] Failed to fetch live data:', err);
@@ -317,6 +407,7 @@ async function fetchStripeLiveMetrics(): Promise<StripeLiveResult> {
       mrrCents: 0,
       paidSubscribers: 0,
       activeTrials: 0,
+      campaignAttribution: {},
       error: String(err),
     };
   }
@@ -399,6 +490,44 @@ export async function getPortfolioGrowthMetrics(): Promise<PortfolioGrowthMetric
 
   const bogAngles = getAllAngles('bank-of-gaga');
 
+  let liveClicks: Record<string, number> = {};
+  try {
+    const telRes = await fetch('https://bankofgaga.com/api/telemetry/attribution', {
+      headers: { 'User-Agent': 'BurtConsulting-GrowthHub/1.0' },
+      next: { revalidate: 60 },
+    });
+    if (telRes.ok) {
+      const telData = await telRes.json();
+      for (const c of telData.campaigns || []) {
+        liveClicks[c.slug] = c.clicks;
+      }
+    }
+  } catch {
+    // Telemetry fetch failed gracefully
+  }
+
+  const bogBlogAttribution: BlogAttributionMetric[] = BANK_OF_GAGA_BLOG_CATALOG.map((post) => {
+    const stripeStats = stripeLive.campaignAttribution?.[post.slug];
+    const clicks = liveClicks[post.slug] || 0;
+    const trials = stripeStats?.activeTrials || 0;
+    const paid = stripeStats?.paidSubscribers || 0;
+    const mrr = stripeStats?.mrrCents || 0;
+    const totalConversions = trials + paid;
+    const conversionRate = clicks > 0 ? Math.round((totalConversions / clicks) * 1000) / 10 : 0;
+
+    return {
+      slug: post.slug,
+      title: post.title,
+      targetKeyword: post.targetKeyword,
+      ctaClicks: clicks,
+      trialSignups: trials,
+      paidSubscribers: paid,
+      mrrCents: mrr,
+      conversionRate,
+      trackedUrl: `https://bankofgaga.com/signup?utm_source=blog&utm_medium=cta_bottom&utm_campaign=${post.slug}`,
+    };
+  });
+
   const apps: AppGrowthData[] = [
     {
       slug: 'bank-of-gaga',
@@ -415,6 +544,7 @@ export async function getPortfolioGrowthMetrics(): Promise<PortfolioGrowthMetric
       stripeProductName: stripeLive.productName,
       campaigns: bankOfGagaCampaigns,
       angles: bogAngles,
+      blogAttribution: bogBlogAttribution,
     },
     {
       slug: 'teach-weave',

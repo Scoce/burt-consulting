@@ -28,7 +28,8 @@ const INITIAL_STAGED_ARTICLES: StagedArticle[] = [
     targetKeyword: 'lend money to child for down payment tax',
     intent: 'High Commercial / Solution Intent (Parents with cash ready to assist first-time home buyers)',
     author: 'BankOfGaga',
-    status: 'Draft',
+    status: 'Published',
+    publishedAt: '2026-09-18T19:00:00Z',
     contentMarkdown: `---
 title: "How to Lend Money to Adult Children for a Down Payment (Without Tax Penalties)"
 metaTitle: "Family Loans for Down Payments: Avoid IRS Gift Tax Penalties | BankOfGaga"

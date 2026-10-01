@@ -17,6 +17,7 @@ import {
   ShieldCheck,
   Calendar,
   Layers,
+  Edit3,
 } from 'lucide-react';
 import { StagedArticle } from '@/lib/growth-content';
 
@@ -25,6 +26,7 @@ interface ArticleReviewModalProps {
   onClose: () => void;
   onPublish: (slug: string) => Promise<void>;
   onValidate: (slug: string) => Promise<void>;
+  onUpdate?: (updated: StagedArticle) => void;
   isLoading: boolean;
 }
 
@@ -33,10 +35,55 @@ export default function ArticleReviewModal({
   onClose,
   onPublish,
   onValidate,
+  onUpdate,
   isLoading,
 }: ArticleReviewModalProps) {
-  const [activeTab, setActiveTab] = useState<'preview' | 'audit' | 'distribution' | 'raw'>('preview');
+  const [currentArticle, setCurrentArticle] = useState<StagedArticle>(article);
+  const [activeTab, setActiveTab] = useState<'preview' | 'audit' | 'edit' | 'distribution' | 'raw'>('preview');
   const [copiedField, setCopiedField] = useState<string | null>(null);
+
+  // In-Dashboard Editing State
+  const [editTitle, setEditTitle] = useState(article.title);
+  const [editDescription, setEditDescription] = useState(article.description);
+  const [editKeyword, setEditKeyword] = useState(article.targetKeyword);
+  const [editMarkdown, setEditMarkdown] = useState(article.contentMarkdown);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveMessage, setSaveMessage] = useState<string | null>(null);
+
+  async function handleSaveEdits(e: React.FormEvent) {
+    e.preventDefault();
+    setIsSaving(true);
+    try {
+      const res = await fetch('/api/admin/growth/content', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'update',
+          slug: currentArticle.slug,
+          title: editTitle,
+          description: editDescription,
+          targetKeyword: editKeyword,
+          contentMarkdown: editMarkdown,
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.article) {
+          setCurrentArticle(data.article);
+          if (onUpdate) onUpdate(data.article);
+        }
+        setSaveMessage('Saved changes! Switched back to preview.');
+        setTimeout(() => {
+          setSaveMessage(null);
+          setActiveTab('preview');
+        }, 1200);
+      }
+    } catch (err) {
+      console.error('Failed to save edits:', err);
+    } finally {
+      setIsSaving(false);
+    }
+  }
 
   function copyToClipboard(text: string, fieldId: string) {
     navigator.clipboard.writeText(text);
@@ -261,6 +308,18 @@ export default function ArticleReviewModal({
 
           <button
             type="button"
+            onClick={() => setActiveTab('edit')}
+            className={`pb-3 px-3 border-b-2 flex items-center gap-1.5 transition-all ${
+              activeTab === 'edit'
+                ? 'border-teal-400 text-teal-300'
+                : 'border-transparent text-slate-400 hover:text-white'
+            }`}
+          >
+            <Edit3 className="w-4 h-4" /> Edit &amp; Tweak Copy
+          </button>
+
+          <button
+            type="button"
             onClick={() => setActiveTab('distribution')}
             className={`pb-3 px-3 border-b-2 flex items-center gap-1.5 transition-all ${
               activeTab === 'distribution'
@@ -355,6 +414,112 @@ export default function ArticleReviewModal({
                 </ul>
               </div>
             </div>
+          )}
+
+          {/* TAB: EDIT & TWEAK COPY */}
+          {activeTab === 'edit' && (
+            <form onSubmit={handleSaveEdits} className="space-y-5 max-w-2xl mx-auto">
+              <div className="bg-teal-950/30 border border-teal-500/30 p-4 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-teal-300 flex items-center gap-1.5">
+                    <Edit3 className="w-4 h-4" /> In-Dashboard Copy Editor
+                  </h4>
+                  <p className="text-xs text-slate-300 mt-0.5">
+                    Tweak headings, fix wording, or edit paragraphs. Save changes to update the visual preview instantly.
+                  </p>
+                </div>
+                <button
+                  type="submit"
+                  disabled={isSaving}
+                  className="bg-teal-500 hover:bg-teal-400 text-slate-950 font-black text-xs px-4 py-2 rounded-xl transition-all shadow-md shadow-teal-500/20 shrink-0"
+                >
+                  {isSaving ? 'Saving...' : 'Save Changes'}
+                </button>
+              </div>
+
+              {saveMessage && (
+                <div className="bg-emerald-950/60 border border-emerald-500/40 rounded-xl p-3 text-xs font-bold text-emerald-300 flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                  {saveMessage}
+                </div>
+              )}
+
+              <div className="space-y-1.5">
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-400">
+                  Article Title
+                </label>
+                <input
+                  type="text"
+                  value={editTitle}
+                  onChange={(e) => setEditTitle(e.target.value)}
+                  required
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-white/10 text-white text-sm focus:outline-none focus:border-teal-400 font-bold"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-orange-400">
+                    Target SEO Keyword
+                  </label>
+                  <input
+                    type="text"
+                    value={editKeyword}
+                    onChange={(e) => setEditKeyword(e.target.value)}
+                    required
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-white/10 text-white text-xs font-mono focus:outline-none focus:border-orange-500"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-400">
+                    Meta Description (Search Snippet)
+                  </label>
+                  <input
+                    type="text"
+                    value={editDescription}
+                    onChange={(e) => setEditDescription(e.target.value)}
+                    required
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-white/10 text-white text-xs focus:outline-none focus:border-teal-400"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-400">
+                    Article Body (Markdown)
+                  </label>
+                  <span className="text-[10px] text-slate-500">
+                    Supports **bold**, headings, images, and lists
+                  </span>
+                </div>
+                <textarea
+                  rows={14}
+                  value={editMarkdown}
+                  onChange={(e) => setEditMarkdown(e.target.value)}
+                  required
+                  className="w-full px-4 py-3 rounded-xl bg-slate-950 border border-white/10 text-slate-200 text-xs font-mono leading-relaxed focus:outline-none focus:border-teal-400"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('preview')}
+                  className="px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSaving}
+                  className="bg-teal-500 hover:bg-teal-400 text-slate-950 font-black text-xs px-5 py-2.5 rounded-xl transition-all shadow-md shadow-teal-500/20"
+                >
+                  {isSaving ? 'Saving Changes...' : 'Save Changes & Update Preview'}
+                </button>
+              </div>
+            </form>
           )}
 
           {/* TAB 3: DISTRIBUTION & SOCIAL CHANNELS */}

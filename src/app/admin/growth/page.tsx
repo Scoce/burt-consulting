@@ -60,6 +60,7 @@ export default function GrowthHubDashboard() {
   // SEO Content Flywheel State (Module B)
   const [articles, setArticles] = useState<StagedArticle[]>([]);
   const [inspectingArticle, setInspectingArticle] = useState<StagedArticle | null>(null);
+  const [contentFilter, setContentFilter] = useState<'awaiting' | 'published' | 'all'>('awaiting');
   const [contentLoadingId, setContentLoadingId] = useState<string | null>(null);
   const [contentFeedback, setContentFeedback] = useState<string | null>(null);
 
@@ -710,13 +711,66 @@ export default function GrowthHubDashboard() {
                 </div>
               </div>
 
+              {/* Status Filter Pills */}
+              {articles.length > 0 && (
+                <div className="flex items-center gap-2 pt-1 pb-1">
+                  <button
+                    type="button"
+                    onClick={() => setContentFilter('awaiting')}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+                      contentFilter === 'awaiting'
+                        ? 'bg-orange-500/20 text-orange-300 border border-orange-500/40 shadow-sm'
+                        : 'bg-white/5 text-slate-400 hover:text-white border border-white/5'
+                    }`}
+                  >
+                    <span>Awaiting Your Review</span>
+                    <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-black/40 font-mono">
+                      {articles.filter((a) => a.status === 'Validated' || a.status === 'Draft').length}
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setContentFilter('published')}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+                      contentFilter === 'published'
+                        ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm'
+                        : 'bg-white/5 text-slate-400 hover:text-white border border-white/5'
+                    }`}
+                  >
+                    <span>Published Archive</span>
+                    <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-black/40 font-mono">
+                      {articles.filter((a) => a.status === 'Published').length}
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setContentFilter('all')}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+                      contentFilter === 'all'
+                        ? 'bg-teal-500/20 text-teal-300 border border-teal-500/40 shadow-sm'
+                        : 'bg-white/5 text-slate-400 hover:text-white border border-white/5'
+                    }`}
+                  >
+                    <span>All ({articles.length})</span>
+                  </button>
+                </div>
+              )}
+
               {articles.length === 0 ? (
                 <div className="p-8 text-center text-slate-400 text-sm bg-slate-950/50 rounded-2xl border border-white/5">
                   No staged articles found for this app yet.
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {articles.map((art) => (
+                  {articles
+                    .filter((art) => {
+                      if (contentFilter === 'awaiting') return art.status === 'Validated' || art.status === 'Draft';
+                      if (contentFilter === 'published') return art.status === 'Published';
+                      return true;
+                    })
+                    .map((art) => (
                     <div
                       key={art.slug}
                       className="bg-slate-950/70 border border-white/10 rounded-2xl p-5 space-y-4 hover:border-teal-500/40 transition-all"
@@ -1213,6 +1267,12 @@ export default function GrowthHubDashboard() {
           onClose={() => setInspectingArticle(null)}
           onPublish={handlePublishContent}
           onValidate={handleValidateContent}
+          onUpdate={(updated) => {
+            setArticles((prev) =>
+              prev.map((a) => (a.slug === updated.slug ? updated : a))
+            );
+            setInspectingArticle(updated);
+          }}
           isLoading={contentLoadingId === inspectingArticle.slug}
         />
       )}

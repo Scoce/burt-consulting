@@ -3,6 +3,7 @@ import {
   getAllStagedArticles,
   validateStagedArticle,
   publishArticleToRepository,
+  updateStagedArticle,
 } from '@/lib/growth-content';
 
 export async function GET(request: Request) {
@@ -27,6 +28,22 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: 'Article not found' }, { status: 404 });
       }
       return NextResponse.json({ success: true, ...result });
+    }
+
+    if (action === 'update') {
+      const { title, description, targetKeyword, contentMarkdown } = body;
+      const updated = updateStagedArticle(slug, {
+        title,
+        description,
+        targetKeyword,
+        contentMarkdown,
+      });
+      if (!updated) {
+        return NextResponse.json({ error: 'Article not found' }, { status: 404 });
+      }
+      // Re-run validation so audit badges stay accurate
+      const validated = validateStagedArticle(slug);
+      return NextResponse.json({ success: true, article: validated?.article || updated });
     }
 
     if (action === 'publish') {

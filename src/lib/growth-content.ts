@@ -395,3 +395,23 @@ export function publishArticleToRepository(slug: string): { success: boolean; pa
   globalContentStore.__stagedArticles = [...articles];
   return { success: true, pathWritten, article: updated };
 }
+
+export function updateStagedArticle(
+  slug: string,
+  updates: Partial<Pick<StagedArticle, 'title' | 'description' | 'targetKeyword' | 'contentMarkdown'>>
+): StagedArticle | null {
+  const articles = globalContentStore.__stagedArticles || [];
+  const index = articles.findIndex((a) => a.slug === slug);
+  if (index === -1) return null;
+
+  const current = articles[index];
+  const updated: StagedArticle = {
+    ...current,
+    ...updates,
+  };
+
+  articles[index] = updated;
+  globalContentStore.__stagedArticles = [...articles];
+  return updated;
+}
+

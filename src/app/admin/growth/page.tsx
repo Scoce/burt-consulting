@@ -285,7 +285,7 @@ export default function GrowthHubDashboard() {
     setTimeout(() => setCopiedField(null), 2000);
   }
 
-  const awaitingReviewCount = articles.filter((a) => a.status === 'Validated').length;
+  const awaitingReviewCount = articles.filter((a) => a.status === 'Validated' || a.status === 'Draft').length;
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 font-sans">
@@ -483,13 +483,9 @@ export default function GrowthHubDashboard() {
           >
             <FileText className="w-4 h-4" />
             <span>Content &amp; HITL Staging</span>
-            {awaitingReviewCount > 0 ? (
+            {awaitingReviewCount > 0 && (
               <span className="text-[10px] px-2 py-0.5 rounded-full bg-orange-500 text-slate-950 font-black animate-pulse shadow-sm">
                 {awaitingReviewCount} Review
-              </span>
-            ) : (
-              <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-black/30 font-mono">
-                {articles.length}
               </span>
             )}
           </button>

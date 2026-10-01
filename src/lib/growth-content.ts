@@ -146,7 +146,8 @@ Set up your family money agreement the right way in minutes at [bankofgaga.com](
     targetKeyword: 'how to forgive a family loan tax implications',
     intent: 'High Commercial / Regulatory Intent (Parents forgiving family loans seeking IRS compliance & zero tax surprises)',
     author: 'BankOfGaga',
-    status: 'Validated',
+    status: 'Published',
+    publishedAt: '2026-10-01T15:06:00Z',
     validationChecks: [
       {
         name: 'Word Count & Depth (SEO Long-Form)',

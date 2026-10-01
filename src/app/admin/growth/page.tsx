@@ -33,6 +33,7 @@ import { PortfolioGrowthMetrics, AppGrowthData, CreativeAngle } from '@/lib/grow
 import { StagedArticle } from '@/lib/growth-content';
 import { CommunityThread } from '@/lib/community-listener';
 import VisualCardGenerator from '@/components/growth/visual-card-generator';
+import ArticleReviewModal from '@/components/growth/article-review-modal';
 
 export default function GrowthHubDashboard() {
   const [metrics, setMetrics] = useState<PortfolioGrowthMetrics | null>(null);
@@ -283,6 +284,8 @@ export default function GrowthHubDashboard() {
     setTimeout(() => setCopiedField(null), 2000);
   }
 
+  const awaitingReviewCount = articles.filter((a) => a.status === 'Validated').length;
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 font-sans">
       {/* Top Bar Header */}
@@ -478,10 +481,16 @@ export default function GrowthHubDashboard() {
             }`}
           >
             <FileText className="w-4 h-4" />
-            <span>SEO & Blog Flywheel</span>
-            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-black/30 font-mono">
-              {articles.length}
-            </span>
+            <span>Content &amp; HITL Staging</span>
+            {awaitingReviewCount > 0 ? (
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-orange-500 text-slate-950 font-black animate-pulse shadow-sm">
+                {awaitingReviewCount} Review
+              </span>
+            ) : (
+              <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-black/30 font-mono">
+                {articles.length}
+              </span>
+            )}
           </button>
 
           <button
@@ -690,14 +699,14 @@ export default function GrowthHubDashboard() {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
                 <div>
                   <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                    <FileText className="w-5 h-5 text-teal-400" /> Module B: High-Intent SEO Staging & Publishing
+                    <FileText className="w-5 h-5 text-teal-400" /> Human-in-the-Loop Content Staging &amp; Review
                   </h3>
                   <p className="text-xs text-slate-400 mt-0.5">
-                    Stage, validate SEO criteria (word count, keywords, calculator links), and publish directly to Bank of Gaga repository.
+                    The agent drafts guides and visual assets. Click &ldquo;Preview &amp; Review Article&rdquo; to read the visual article, verify the tone, and approve 1-click publishing.
                   </p>
                 </div>
                 <div className="text-xs text-slate-400 font-mono bg-white/5 border border-white/10 px-3 py-1.5 rounded-xl">
-                  Target Dir: <span className="text-teal-300">loan-portal/content/blog/</span>
+                  Push target: <span className="text-teal-300">loan-portal/content/blog/</span>
                 </div>
               </div>
 
@@ -723,11 +732,11 @@ export default function GrowthHubDashboard() {
                                 art.status === 'Published'
                                   ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
                                   : art.status === 'Validated'
-                                  ? 'bg-blue-500/20 text-blue-300 border-blue-500/40'
+                                  ? 'bg-blue-500/20 text-blue-300 border-blue-500/40 animate-pulse'
                                   : 'bg-amber-500/20 text-amber-300 border-amber-500/40'
                               }`}
                             >
-                              {art.status}
+                              {art.status === 'Validated' ? '🟡 Awaiting Your Approval' : art.status}
                             </span>
                           </div>
                           <h4 className="text-base font-extrabold text-white mt-1">
@@ -746,9 +755,9 @@ export default function GrowthHubDashboard() {
                           <button
                             type="button"
                             onClick={() => setInspectingArticle(art)}
-                            className="text-xs font-bold text-slate-300 hover:text-white bg-white/10 hover:bg-white/15 px-3 py-1.5 rounded-xl transition-colors flex items-center gap-1.5"
+                            className="text-xs font-bold text-slate-200 hover:text-white bg-white/10 hover:bg-white/15 px-3 py-1.5 rounded-xl transition-colors flex items-center gap-1.5 border border-white/10 shadow-sm"
                           >
-                            <Eye className="w-3.5 h-3.5" /> Read Full Article
+                            <Eye className="w-3.5 h-3.5 text-teal-400" /> Preview &amp; Review Article
                           </button>
 
                           {art.status === 'Draft' && (
@@ -769,7 +778,7 @@ export default function GrowthHubDashboard() {
                               onClick={() => handlePublishContent(art.slug)}
                               className="text-xs font-black bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-3.5 py-1.5 rounded-xl transition-all shadow-md shadow-emerald-500/20 flex items-center gap-1.5"
                             >
-                              <Send className="w-3.5 h-3.5" /> Publish to Bank of Gaga
+                              <Send className="w-3.5 h-3.5" /> 1-Click Publish to BankOfGaga
                             </button>
                           )}
 
@@ -1197,105 +1206,15 @@ export default function GrowthHubDashboard() {
         </div>
       )}
 
-      {/* Inspect Staged Article Modal */}
+      {/* Human-in-the-Loop Article Review & Preview Modal */}
       {inspectingArticle && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="bg-slate-900 border border-white/15 rounded-3xl max-w-3xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 space-y-6 shadow-2xl">
-            <div className="flex items-start justify-between gap-4 border-b border-white/10 pb-4">
-              <div>
-                <span className="text-[10px] font-extrabold uppercase tracking-wider text-orange-400 bg-orange-950/70 border border-orange-800/60 px-2 py-0.5 rounded">
-                  Target Keyword: {inspectingArticle.targetKeyword}
-                </span>
-                <h3 className="text-xl font-black text-white mt-1">
-                  {inspectingArticle.title}
-                </h3>
-              </div>
-              <button
-                type="button"
-                onClick={() => setInspectingArticle(null)}
-                className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-white/5 transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            {/* Validation Checklist if present */}
-            {inspectingArticle.validationChecks && (
-              <div className="bg-slate-950/70 border border-white/10 rounded-2xl p-4 space-y-2">
-                <div className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
-                  <FileCheck className="w-4 h-4 text-teal-400" /> SEO Content Audit
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                  {inspectingArticle.validationChecks.map((check, i) => (
-                    <div key={i} className="flex items-start gap-1.5">
-                      <span className={check.passed ? 'text-emerald-400' : 'text-red-400'}>
-                        {check.passed ? '✓' : '✗'}
-                      </span>
-                      <span className="text-slate-300">
-                        <strong>{check.name}:</strong> {check.note}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Markdown Content Viewer */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                  Full Article Markdown
-                </label>
-                <button
-                  type="button"
-                  onClick={() => copyToClipboard(inspectingArticle.contentMarkdown, 'article')}
-                  className="text-xs font-bold text-slate-400 hover:text-white flex items-center gap-1"
-                >
-                  {copiedField === 'article' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                  {copiedField === 'article' ? 'Copied Markdown!' : 'Copy Markdown'}
-                </button>
-              </div>
-              <div className="bg-slate-950 p-4 rounded-2xl border border-white/10 text-xs font-mono text-slate-300 leading-relaxed whitespace-pre-wrap max-h-[400px] overflow-y-auto">
-                {inspectingArticle.contentMarkdown}
-              </div>
-            </div>
-
-            {/* Footer Buttons */}
-            <div className="flex items-center justify-between border-t border-white/10 pt-4">
-              <span className="text-xs text-slate-400">
-                Status: <strong className="text-white">{inspectingArticle.status}</strong>
-              </span>
-
-              <div className="flex items-center gap-2">
-                {inspectingArticle.status === 'Draft' && (
-                  <button
-                    type="button"
-                    onClick={() => handleValidateContent(inspectingArticle.slug)}
-                    className="bg-blue-500 hover:bg-blue-400 text-slate-950 font-bold text-xs px-4 py-2 rounded-xl transition-all"
-                  >
-                    Run SEO Audit
-                  </button>
-                )}
-                {inspectingArticle.status === 'Validated' && (
-                  <button
-                    type="button"
-                    onClick={() => handlePublishContent(inspectingArticle.slug)}
-                    className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs px-4 py-2 rounded-xl transition-all"
-                  >
-                    Publish to Bank of Gaga
-                  </button>
-                )}
-                <button
-                  type="button"
-                  onClick={() => setInspectingArticle(null)}
-                  className="bg-white/10 hover:bg-white/15 text-white font-bold text-xs px-4 py-2 rounded-xl transition-all"
-                >
-                  Close
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ArticleReviewModal
+          article={inspectingArticle}
+          onClose={() => setInspectingArticle(null)}
+          onPublish={handlePublishContent}
+          onValidate={handleValidateContent}
+          isLoading={contentLoadingId === inspectingArticle.slug}
+        />
       )}
 
       {/* Create New Angle Modal */}

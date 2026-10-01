@@ -157,6 +157,28 @@ Bank of Gaga automates the legal promissory note, monthly payment tracking, and 
     status: 'Validated',
     createdAt: '2026-09-18T10:00:00Z',
   },
+  {
+    id: 'angle-1.3',
+    app: 'bank-of-gaga',
+    title: 'Angle 1.3: Forgiving Family Debt Without the IRS Penalty Trap',
+    cohort: 'Generous Parents & Grandparents (Age 55–75)',
+    format: 'Educational Reel & Carousel',
+    hook3s: 'Want to forgive the loan you made to your adult kid? Do NOT just send a text saying "forget about it".',
+    bodyScript: `Most parents don't realize this: when you cancel a family loan, the IRS considers that unpaid balance a gift in the year you forgive it.
+    
+If you forgive a $50,000 loan in a single lump-sum, you blow right past the $18,000 annual gift exclusion and trigger mandatory IRS Form 709 gift tax filings.
+
+Even worse: if you don't document it properly, the IRS can classify it as "Cancellation of Debt" income—meaning your kid gets slapped with a surprise income tax bill!
+
+The legal playbook? Amortize the forgiveness over annual gift exclusion limits ($18k for single parents, $36k for married couples).
+
+BankOfGaga creates the formal documentation, logs the annual gift forgiveness, and gives both of you an audit-proof paper trail so family dinners stay completely drama-free.`,
+    headline: 'How to Legally Forgive a Family Loan (Without IRS Tax Surprises)',
+    cta: 'Learn the Annual Exclusion Playbook (14-Day Free Trial)',
+    visualSpecs: 'Frame 1: Mature parent smiling with coffee looking at tablet. Frame 2: Side-by-side comparison of $60,000 lump sum trap vs $18k/$36k annual exclusion strategy. Frame 3: BankOfGaga Mark Paid forgiveness ledger with clean zero balance.',
+    status: 'Validated',
+    createdAt: '2026-10-01T12:00:00Z',
+  },
 ];
 
 if (!globalStore.__growthAngles) {
@@ -312,6 +334,11 @@ const BANK_OF_GAGA_BLOG_CATALOG = [
     slug: 'family-loan-agreement-medicaid-lookback',
     title: 'Family Loans and the Medicaid 5-Year Look-Back: What You Must Know',
     targetKeyword: 'medicaid lookback family loan',
+  },
+  {
+    slug: 'how-to-forgive-a-family-loan-without-tax-penalties',
+    title: 'How to Forgive a Family Loan Without Triggering IRS Gift Tax Penalties',
+    targetKeyword: 'how to forgive a family loan tax implications',
   },
 ];
 

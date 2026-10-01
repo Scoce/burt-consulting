@@ -39,6 +39,23 @@ export interface BlogAttributionMetric {
   trackedUrl: string;
 }
 
+export interface AcquisitionMagnet {
+  id: string;
+  app: 'bank-of-gaga' | 'teach-weave' | 'teaching-sax' | 'truths-and-lies';
+  name: string;
+  badge: string;
+  type: string;
+  status: 'Live & Indexing' | 'In Development' | 'Planned';
+  url: string;
+  headline: string;
+  description: string;
+  features: string[];
+  primaryCtaText: string;
+  primaryCtaUrl: string;
+  utmShareUrl: string;
+  schemaTypes: string[];
+}
+
 export interface AppGrowthData {
   slug: string;
   name: string;
@@ -52,6 +69,7 @@ export interface AppGrowthData {
   isStripeLive: boolean;
   stripeProductName?: string;
   campaigns: GrowthCampaign[];
+  magnets: AcquisitionMagnet[];
   angles: CreativeAngle[];
   blogAttribution?: BlogAttributionMetric[];
 }
@@ -515,6 +533,117 @@ export async function getPortfolioGrowthMetrics(): Promise<PortfolioGrowthMetric
     },
   ];
 
+  const bankOfGagaMagnets: AcquisitionMagnet[] = [
+    {
+      id: 'bog-magnet-afr',
+      app: 'bank-of-gaga',
+      name: 'IRS Applicable Federal Rate (AFR) Calculator',
+      badge: 'High-Intent Organic Tool',
+      type: 'Tax Compliance & Loan Calculator',
+      status: 'Live & Indexing',
+      url: 'https://bankofgaga.com/afr-calculator',
+      headline: 'Calculates legal minimum IRS § 7872 interest rates to prevent surprise gift tax audits.',
+      description: 'Enables lenders and borrowers to enter principal, term, and compounding frequency to find the exact published monthly AFR rate. Pre-populates promissory note creation and funnels directly into trial onboarding.',
+      features: [
+        'Live monthly AFR rate lookup (Short, Mid, Long-Term)',
+        'Rate comparison vs commercial bank 7.5%+ APR',
+        'Structured JSON-LD SoftwareApplication & FAQPage schema',
+        '1-click transfer to legal Promissory Note generator',
+      ],
+      primaryCtaText: 'Open Live Calculator',
+      primaryCtaUrl: 'https://bankofgaga.com/afr-calculator',
+      utmShareUrl: 'https://bankofgaga.com/afr-calculator?utm_source=marketing_hub&utm_medium=acquisition_magnet&utm_campaign=afr_calc',
+      schemaTypes: ['SoftwareApplication', 'FAQPage'],
+    },
+    {
+      id: 'bog-magnet-promissory',
+      app: 'bank-of-gaga',
+      name: 'Legal Promissory Note Generator',
+      badge: 'Direct-Conversion Legal Tool',
+      type: 'Legal Document Generator',
+      status: 'Live & Indexing',
+      url: 'https://bankofgaga.com/promissory-note-generator',
+      headline: 'Generates audit-proof, state-compliant family loan agreements in 2 minutes.',
+      description: 'Turns informal oral loans into legally enforceable promissory notes with repayment schedules, default terms, and IRS gift exclusion protection. Direct gateway to trial activation.',
+      features: [
+        'Formal contract builder with digital signature blocks',
+        'Amortization schedule & interest ledger export',
+        'Annual gift tax exclusion ($18k/year) clause support',
+        'Downloadable PDF & automated payment tracking setup',
+      ],
+      primaryCtaText: 'Open Note Generator',
+      primaryCtaUrl: 'https://bankofgaga.com/promissory-note-generator',
+      utmShareUrl: 'https://bankofgaga.com/promissory-note-generator?utm_source=marketing_hub&utm_medium=acquisition_magnet&utm_campaign=promissory_note',
+      schemaTypes: ['SoftwareApplication', 'HowTo'],
+    },
+    {
+      id: 'bog-magnet-amortization',
+      app: 'bank-of-gaga',
+      name: 'Family Loan Amortization Calculator',
+      badge: 'Financial Modeling Tool',
+      type: 'Amortization & Savings Engine',
+      status: 'Live & Indexing',
+      url: 'https://bankofgaga.com/calculator',
+      headline: 'Visualizes principal vs. interest payoff schedules and family interest savings.',
+      description: 'Shows parents and adult children exact amortization tables, total interest retained in the family instead of paid to commercial banks, and early payoff acceleration.',
+      features: [
+        'Interactive monthly payment breakdown',
+        'Cumulative interest savings calculation vs commercial mortgages',
+        'Mobile-optimized responsive loan modeling',
+      ],
+      primaryCtaText: 'Open Amortization Tool',
+      primaryCtaUrl: 'https://bankofgaga.com/calculator',
+      utmShareUrl: 'https://bankofgaga.com/calculator?utm_source=marketing_hub&utm_medium=acquisition_magnet&utm_campaign=loan_amortization',
+      schemaTypes: ['SoftwareApplication'],
+    },
+  ];
+
+  const teachWeaveMagnets: AcquisitionMagnet[] = [
+    {
+      id: 'tw-magnet-fee-calc',
+      app: 'teach-weave',
+      name: 'TPT Platform Fee & Commission Calculator',
+      badge: 'Creator Profit Calculator',
+      type: 'Fee Comparison Utility',
+      status: 'In Development',
+      url: 'https://teachweave.com',
+      headline: 'Calculates teacher revenue lost to TeachersPayTeachers 20%–45% platform fees.',
+      description: 'Ranks for high-intent queries from digital curriculum creators looking to keep 100% of their earnings with their own independent lesson storefront.',
+      features: [
+        'Interactive TPT commission vs TeachWeave flat pricing comparison',
+        'Annual profit recovery calculator for digital lesson sellers',
+        'Storefront migration checklist & early beta access',
+      ],
+      primaryCtaText: 'Visit TeachWeave',
+      primaryCtaUrl: 'https://teachweave.com',
+      utmShareUrl: 'https://teachweave.com?utm_source=marketing_hub&utm_medium=acquisition_magnet&utm_campaign=tpt_fee_calc',
+      schemaTypes: ['SoftwareApplication'],
+    },
+  ];
+
+  const teachingSaxMagnets: AcquisitionMagnet[] = [
+    {
+      id: 'ts-magnet-fingering',
+      app: 'teaching-sax',
+      name: 'Interactive Saxophone Fingering Chart & Pitch Reference',
+      badge: 'Organic Student Utility',
+      type: 'Interactive Chart & Audio Player',
+      status: 'In Development',
+      url: 'https://teachingsax.com',
+      headline: 'Visual key chart with audio reference tones for Alto, Tenor, and Soprano saxophone.',
+      description: 'Captures high-volume organic search traffic from beginner and intermediate saxophone students, funneling them into private remote lesson trials.',
+      features: [
+        'Interactive visual key chart across full 2.5 octave range',
+        'Acoustic audio sample references for intonation practice',
+        'Direct booking CTA for private studio lessons',
+      ],
+      primaryCtaText: 'Visit TeachingSax',
+      primaryCtaUrl: 'https://teachingsax.com',
+      utmShareUrl: 'https://teachingsax.com?utm_source=marketing_hub&utm_medium=acquisition_magnet&utm_campaign=fingering_chart',
+      schemaTypes: ['SoftwareApplication', 'AudioObject'],
+    },
+  ];
+
   const bogAngles = getAllAngles('bank-of-gaga');
 
   let liveClicks: Record<string, number> = {};
@@ -570,6 +699,7 @@ export async function getPortfolioGrowthMetrics(): Promise<PortfolioGrowthMetric
       isStripeLive: stripeLive.isLive,
       stripeProductName: stripeLive.productName,
       campaigns: bankOfGagaCampaigns,
+      magnets: bankOfGagaMagnets,
       angles: bogAngles,
       blogAttribution: bogBlogAttribution,
     },
@@ -585,6 +715,7 @@ export async function getPortfolioGrowthMetrics(): Promise<PortfolioGrowthMetric
       visitorCount30d: 7150,
       isStripeLive: false,
       campaigns: teachWeaveCampaigns,
+      magnets: teachWeaveMagnets,
       angles: getAllAngles('teach-weave'),
     },
     {
@@ -599,6 +730,7 @@ export async function getPortfolioGrowthMetrics(): Promise<PortfolioGrowthMetric
       visitorCount30d: 1890,
       isStripeLive: false,
       campaigns: teachingSaxCampaigns,
+      magnets: teachingSaxMagnets,
       angles: getAllAngles('teaching-sax'),
     },
   ];

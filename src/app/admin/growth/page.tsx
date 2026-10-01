@@ -29,7 +29,7 @@ import {
   Sliders,
   Share2,
 } from 'lucide-react';
-import { PortfolioGrowthMetrics, AppGrowthData, CreativeAngle } from '@/lib/growth-telemetry';
+import { PortfolioGrowthMetrics, AppGrowthData, CreativeAngle, AcquisitionMagnet } from '@/lib/growth-telemetry';
 import { StagedArticle } from '@/lib/growth-content';
 import { CommunityThread } from '@/lib/community-listener';
 import VisualCardGenerator from '@/components/growth/visual-card-generator';
@@ -530,58 +530,137 @@ export default function GrowthHubDashboard() {
         {/* TAB 1: FUNNELS & OVERVIEW (Module A) */}
         {activeTab === 'overview' && activeApp && (
           <div className="space-y-6">
+            {/* LIVE ACQUISITION MAGNETS (FREE TOOLS & FUNNELS) */}
             <div className="bg-slate-900/60 border border-white/10 rounded-3xl p-6 sm:p-8 space-y-6">
-              <div className="border-b border-white/10 pb-4 flex items-center justify-between">
+              <div className="border-b border-white/10 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                   <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                    <Megaphone className="w-5 h-5 text-orange-400" /> Live Acquisition Magnets & Campaigns
+                    <Sparkles className="w-5 h-5 text-teal-400" /> Live Interactive Acquisition Magnets
                   </h3>
                   <p className="text-xs text-slate-400 mt-0.5">
-                    Live SEO interactive tools, calculators, and direct-response campaign allocations.
+                    High-intent, SEO-optimized public calculators and document generators designed to rank in Google and convert organic traffic into 14-day trials.
                   </p>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="text-xs text-slate-400 font-mono bg-white/5 border border-white/10 px-3 py-1.5 rounded-xl">
+                    {activeApp.magnets?.filter((m) => m.status === 'Live & Indexing').length || 0} Live in Production
+                  </span>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {activeApp.campaigns.map((camp) => (
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+                {(activeApp.magnets || []).map((magnet) => (
                   <div
-                    key={camp.id}
-                    className="bg-slate-950/60 border border-white/10 rounded-2xl p-5 space-y-3"
+                    key={magnet.id}
+                    className="bg-slate-950/70 border border-white/10 hover:border-teal-500/40 rounded-2xl p-5 flex flex-col justify-between transition-all group"
                   >
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded">
-                          {camp.channel}
+                    <div className="space-y-3.5">
+                      {/* Badge & Live Status */}
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-teal-400 bg-teal-950/60 border border-teal-800/60 px-2 py-0.5 rounded truncate">
+                          {magnet.badge}
                         </span>
-                        <h4 className="text-base font-bold text-white mt-1.5">{camp.name}</h4>
+                        <span
+                          className={`text-[11px] font-extrabold px-2.5 py-0.5 rounded-full border flex items-center gap-1.5 ${
+                            magnet.status === 'Live & Indexing'
+                              ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                              : 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                          }`}
+                        >
+                          {magnet.status === 'Live & Indexing' && (
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                          )}
+                          {magnet.status}
+                        </span>
                       </div>
-                      <span
-                        className={`text-xs font-bold px-2.5 py-1 rounded-full ${
-                          camp.status === 'Active'
-                            ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-                            : camp.status === 'Ready to Launch'
-                            ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
-                            : 'bg-slate-800 text-slate-400 border border-slate-700'
-                        }`}
-                      >
-                        {camp.status}
-                      </span>
+
+                      {/* Title & Target URL */}
+                      <div>
+                        <h4 className="text-base font-extrabold text-white group-hover:text-teal-300 transition-colors">
+                          {magnet.name}
+                        </h4>
+                        <div className="text-[11px] font-mono text-slate-400 hover:text-teal-400 transition-colors mt-0.5 flex items-center gap-1">
+                          <span>{magnet.url.replace(/^https?:\/\//, '')}</span>
+                        </div>
+                      </div>
+
+                      {/* Value Prop Headline */}
+                      <p className="text-xs font-semibold text-slate-200 bg-white/5 p-2.5 rounded-xl border border-white/5 leading-relaxed">
+                        {magnet.headline}
+                      </p>
+
+                      {/* Description */}
+                      <p className="text-xs text-slate-400 leading-relaxed">
+                        {magnet.description}
+                      </p>
+
+                      {/* Features Checklist */}
+                      <div className="space-y-1.5 pt-1">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
+                          Funnel Capabilities:
+                        </span>
+                        <div className="space-y-1">
+                          {magnet.features.map((feat, idx) => (
+                            <div key={idx} className="flex items-start gap-2 text-xs text-slate-300">
+                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                              <span className="leading-tight">{feat}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Schema Markup Badges */}
+                      {magnet.schemaTypes && magnet.schemaTypes.length > 0 && (
+                        <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-white/5">
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                            SEO Schema:
+                          </span>
+                          {magnet.schemaTypes.map((st) => (
+                            <span
+                              key={st}
+                              className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/5 border border-white/10 text-teal-300"
+                            >
+                              {st}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                     </div>
 
-                    <p className="text-xs text-slate-400 bg-white/5 p-3 rounded-xl border border-white/5 leading-relaxed">
-                      {camp.performanceNotes}
-                    </p>
-
-                    {camp.url && (
+                    {/* Interactive Action Buttons */}
+                    <div className="pt-5 mt-4 border-t border-white/10 flex flex-col sm:flex-row gap-2">
                       <a
-                        href={camp.url}
+                        href={magnet.url}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-1.5 text-xs font-bold text-teal-400 hover:text-teal-300 hover:underline pt-1"
+                        className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-black bg-teal-500 hover:bg-teal-400 text-slate-950 transition-all shadow-md shadow-teal-500/20"
                       >
-                        View Public Landing Page <ArrowUpRight className="w-3.5 h-3.5" />
+                        <span>{magnet.primaryCtaText}</span>
+                        <ExternalLink className="w-3.5 h-3.5" />
                       </a>
-                    )}
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          navigator.clipboard.writeText(magnet.utmShareUrl);
+                          setCopiedField(`magnet-${magnet.id}`);
+                          setTimeout(() => setCopiedField(null), 2000);
+                        }}
+                        className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/10 transition-colors"
+                      >
+                        {copiedField === `magnet-${magnet.id}` ? (
+                          <>
+                            <Check className="w-3.5 h-3.5 text-emerald-400" />
+                            <span className="text-emerald-300 font-bold">Copied!</span>
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="w-3.5 h-3.5" />
+                            <span>Copy UTM Link</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>

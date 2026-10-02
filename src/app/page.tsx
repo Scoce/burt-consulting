@@ -51,7 +51,7 @@ const projects = [
     desc: 'A two-truths-and-a-lie trivia game built with my 8-year-old son using Gemini. Features live Smartboard speed contests and an AI moderation filter for classroom meme slang.',
     icon: <Gamepad2 className="w-6 h-6 text-tech-violet" />,
     path: '/projects/truths-and-lies',
-    liveUrl: '#',
+    liveUrl: 'https://cohen-two-truths-and-a-lie.vercel.app',
     tech: ['Next.js 16', 'Gemini API', 'Serverless DB', 'Tailwind CSS']
   }
 ];

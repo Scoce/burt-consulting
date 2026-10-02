@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import ScreenshotShowcase from '@/components/ScreenshotShowcase';
-import { ArrowLeft, Cpu, Heart, BrainCircuit, Trophy, Gamepad2, CheckCircle } from 'lucide-react';
+import { ArrowLeft, Cpu, Heart, BrainCircuit, Trophy, Gamepad2, CheckCircle, ExternalLink } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Truths and Lies | Gemini AI Kids Game',
@@ -57,8 +57,16 @@ export default function TruthsAndLiesProject() {
           </p>
 
           <div className="flex flex-wrap items-center gap-4 pt-2">
-            <span className="px-6 py-3 rounded-xl bg-white/5 border border-white/10 text-slate-300 font-semibold flex items-center gap-2">
-              Status: Active Family Project <Heart className="w-4 h-4 text-red-500 fill-red-500" />
+            <a 
+              href="https://cohen-two-truths-and-a-lie.vercel.app" 
+              target="_blank" 
+              rel="noreferrer"
+              className="px-6 py-3 rounded-xl bg-gradient-to-r from-tech-violet to-purple-600 hover:from-tech-violet/90 hover:to-purple-600/90 text-white font-semibold shadow-md flex items-center gap-2 transition-all duration-300"
+            >
+              Play Live Game <ExternalLink className="w-4 h-4" />
+            </a>
+            <span className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/5 text-slate-400 text-xs font-semibold flex items-center gap-1.5">
+              Status: Active Family Project <Heart className="w-3.5 h-3.5 text-red-500 fill-red-500" />
             </span>
             <span className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/5 text-slate-400 text-xs font-semibold">
               Co-Creator: My 8-Year-Old Son
@@ -162,6 +170,26 @@ export default function TruthsAndLiesProject() {
                 </p>
               </div>
             </div>
+          </section>
+
+          {/* Play CTA Card */}
+          <section className="p-8 rounded-2xl bg-gradient-to-br from-tech-violet/15 via-white/5 to-transparent border border-tech-violet/30 flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div className="space-y-2 text-center sm:text-left">
+              <h3 className="text-xl font-bold text-white flex items-center justify-center sm:justify-start gap-2">
+                <Gamepad2 className="w-5 h-5 text-tech-violet" /> Ready to Play?
+              </h3>
+              <p className="text-sm text-slate-300 max-w-xl">
+                Test your instincts against AI-generated trivia across sports, history, pop culture, and science.
+              </p>
+            </div>
+            <a 
+              href="https://cohen-two-truths-and-a-lie.vercel.app" 
+              target="_blank" 
+              rel="noreferrer"
+              className="shrink-0 px-6 py-3 rounded-xl bg-gradient-to-r from-tech-violet to-purple-600 hover:from-tech-violet/90 hover:to-purple-600/90 text-white font-semibold shadow-md flex items-center gap-2 transition-all duration-300"
+            >
+              Play Live Game <ExternalLink className="w-4 h-4" />
+            </a>
           </section>
 
         </div>

@@ -58,7 +58,7 @@ export default function TruthsAndLiesProject() {
 
           <div className="flex flex-wrap items-center gap-4 pt-2">
             <a 
-              href="https://cohen-two-truths-and-a-lie.vercel.app" 
+              href="https://www.truthsandalie.com" 
               target="_blank" 
               rel="noreferrer"
               className="px-6 py-3 rounded-xl bg-gradient-to-r from-tech-violet to-purple-600 hover:from-tech-violet/90 hover:to-purple-600/90 text-white font-semibold shadow-md flex items-center gap-2 transition-all duration-300"
@@ -183,7 +183,7 @@ export default function TruthsAndLiesProject() {
               </p>
             </div>
             <a 
-              href="https://cohen-two-truths-and-a-lie.vercel.app" 
+              href="https://www.truthsandalie.com" 
               target="_blank" 
               rel="noreferrer"
               className="shrink-0 px-6 py-3 rounded-xl bg-gradient-to-r from-tech-violet to-purple-600 hover:from-tech-violet/90 hover:to-purple-600/90 text-white font-semibold shadow-md flex items-center gap-2 transition-all duration-300"

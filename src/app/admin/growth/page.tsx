@@ -685,50 +685,64 @@ export default function GrowthHubDashboard() {
                           </span>
                         </div>
 
-                        {/* GSC Search Analytics or Target Keywords */}
-                        {magnet.seo?.gscConnected && magnet.seo.impressions28d !== null ? (
+                        {/* GSC Search Analytics & Target Keywords */}
+                        {magnet.seo?.gscConnected && (
                           <div className="grid grid-cols-3 gap-1.5 pt-1 border-t border-white/5 text-center">
                             <div>
                               <div className="text-xs font-black text-white font-mono">
-                                {magnet.seo.impressions28d.toLocaleString()}
+                                {(magnet.seo.impressions28d ?? 0).toLocaleString()}
                               </div>
                               <div className="text-[9px] text-slate-400 uppercase">28d Impr</div>
                             </div>
                             <div>
                               <div className="text-xs font-black text-teal-300 font-mono">
-                                {magnet.seo.organicClicks28d?.toLocaleString() ?? 0}
+                                {(magnet.seo.organicClicks28d ?? 0).toLocaleString()}
                               </div>
                               <div className="text-[9px] text-slate-400 uppercase">GSC Clicks</div>
                             </div>
                             <div>
                               <div className="text-xs font-black text-orange-300 font-mono">
-                                #{magnet.seo.avgPosition ?? '—'}
+                                {magnet.seo.avgPosition ? `#${magnet.seo.avgPosition}` : '—'}
                               </div>
                               <div className="text-[9px] text-slate-400 uppercase">Avg Rank</div>
                             </div>
                           </div>
-                        ) : (
-                          <div className="space-y-1 pt-1 border-t border-white/5">
-                            <div className="flex items-center justify-between">
-                              <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400">
-                                Target Search Queries:
-                              </span>
-                              <span className="text-[9px] font-mono text-slate-500">
-                                GSC API: Ready
-                              </span>
-                            </div>
-                            <div className="flex flex-wrap gap-1">
-                              {(magnet.seo?.targetKeywords || magnet.targetKeywords || []).map((kw) => (
-                                <span
-                                  key={kw}
-                                  className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-black/40 border border-white/5 text-slate-300"
-                                >
-                                  &ldquo;{kw}&rdquo;
-                                </span>
-                              ))}
-                            </div>
-                          </div>
                         )}
+                        <div className="space-y-1 pt-1 border-t border-white/5">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400">
+                              {magnet.seo?.topRankingQueries && magnet.seo.topRankingQueries.length > 0
+                                ? 'Live GSC Queries:'
+                                : 'Target Search Queries:'}
+                            </span>
+                            <span
+                              className={`text-[9px] font-mono ${
+                                magnet.seo?.gscConnected ? 'text-emerald-400 font-semibold' : 'text-slate-500'
+                              }`}
+                            >
+                              {magnet.seo?.gscConnected ? '● GSC Live' : 'GSC API: Ready'}
+                            </span>
+                          </div>
+                          <div className="flex flex-wrap gap-1">
+                            {magnet.seo?.topRankingQueries && magnet.seo.topRankingQueries.length > 0
+                              ? magnet.seo.topRankingQueries.map((q) => (
+                                  <span
+                                    key={q.query}
+                                    className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-200"
+                                  >
+                                    &ldquo;{q.query}&rdquo; (#{q.position})
+                                  </span>
+                                ))
+                              : (magnet.seo?.targetKeywords || magnet.targetKeywords || []).map((kw) => (
+                                  <span
+                                    key={kw}
+                                    className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-black/40 border border-white/5 text-slate-300"
+                                  >
+                                    &ldquo;{kw}&rdquo;
+                                  </span>
+                                ))}
+                          </div>
+                        </div>
                       </div>
 
                       {/* Features Checklist */}

@@ -101,10 +101,13 @@ export interface PortfolioGrowthMetrics {
   apps: AppGrowthData[];
 }
 
-// In-memory store for creative angles (persists in runtime global across requests)
+// In-memory store for creative angles and cached telemetry (persists in runtime global across requests)
 const globalStore = global as typeof globalThis & {
   __growthAngles?: CreativeAngle[];
+  __stripeLiveCache?: { expiresAt: number; data: StripeLiveResult };
 };
+
+const STRIPE_CACHE_TTL_MS = 5 * 60 * 1000; // 5-minute memory cache to slash serverless CPU
 
 const INITIAL_ANGLES: CreativeAngle[] = [
   {
@@ -378,6 +381,10 @@ const BANK_OF_GAGA_BLOG_CATALOG = [
 ];
 
 async function fetchStripeLiveMetrics(): Promise<StripeLiveResult> {
+  if (globalStore.__stripeLiveCache && Date.now() < globalStore.__stripeLiveCache.expiresAt) {
+    return globalStore.__stripeLiveCache.data;
+  }
+
   const stripeKey = process.env.STRIPE_SECRET_KEY;
   if (!stripeKey) {
     return {
@@ -454,7 +461,7 @@ async function fetchStripeLiveMetrics(): Promise<StripeLiveResult> {
 
     const activeProd = prodData.data?.find((p: { active: boolean; name: string }) => p.active);
 
-    return {
+    const result: StripeLiveResult = {
       isLive: true,
       mrrCents,
       paidSubscribers,
@@ -462,6 +469,13 @@ async function fetchStripeLiveMetrics(): Promise<StripeLiveResult> {
       productName: activeProd?.name || 'BankOfGaga — The Gaga Plan',
       campaignAttribution,
     };
+
+    globalStore.__stripeLiveCache = {
+      expiresAt: Date.now() + STRIPE_CACHE_TTL_MS,
+      data: result,
+    };
+
+    return result;
   } catch (err) {
     console.error('[stripe-telemetry] Failed to fetch live data:', err);
     return {

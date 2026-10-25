@@ -199,10 +199,21 @@ function extractSchemaTypesFromHtml(html: string): string[] {
   return Array.from(found);
 }
 
+const seoGlobalCache = global as typeof globalThis & {
+  __seoProbeCache?: Record<string, { expiresAt: number; data: Record<string, MagnetSeoTelemetry> }>;
+};
+
+const SEO_PROBE_TTL_MS = 60 * 60 * 1000; // 1 hour memory cache to conserve serverless CPU
+
 export async function probeLiveSeoAndRanking(
   domain: string,
   magnets: Array<{ url: string; targetKeywords: string[]; fallbackSchemas: string[] }>
 ): Promise<Record<string, MagnetSeoTelemetry>> {
+  const cached = seoGlobalCache.__seoProbeCache?.[domain];
+  if (cached && Date.now() < cached.expiresAt) {
+    return cached.data;
+  }
+
   const results: Record<string, MagnetSeoTelemetry> = {};
   const nowIso = new Date().toISOString();
 
@@ -212,7 +223,7 @@ export async function probeLiveSeoAndRanking(
       try {
         const res = await fetch(`https://${domain}/sitemap.xml`, {
           headers: { 'User-Agent': 'BurtConsulting-SEOProbe/1.0' },
-          next: { revalidate: 300 },
+          next: { revalidate: 3600 },
         });
         if (!res.ok) return new Set();
         const xml = await res.text();
@@ -240,11 +251,11 @@ export async function probeLiveSeoAndRanking(
       const startMs = Date.now();
       try {
         const controller = new AbortController();
-        const timer = setTimeout(() => controller.abort(), 4500);
+        const timer = setTimeout(() => controller.abort(), 2500);
         const res = await fetch(mag.url, {
           headers: { 'User-Agent': 'BurtConsulting-SEOProbe/1.0' },
           signal: controller.signal,
-          next: { revalidate: 300 },
+          next: { revalidate: 3600 },
         });
         clearTimeout(timer);
 
@@ -296,6 +307,14 @@ export async function probeLiveSeoAndRanking(
       }
     })
   );
+
+  if (!seoGlobalCache.__seoProbeCache) {
+    seoGlobalCache.__seoProbeCache = {};
+  }
+  seoGlobalCache.__seoProbeCache[domain] = {
+    expiresAt: Date.now() + SEO_PROBE_TTL_MS,
+    data: results,
+  };
 
   return results;
 }

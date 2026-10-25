@@ -590,6 +590,147 @@ export default function GrowthHubDashboard() {
                         {magnet.description}
                       </p>
 
+                      {/* Live Funnel Telemetry Counters (3-Stage Conversion) */}
+                      <div className="bg-slate-900/90 border border-white/10 rounded-xl p-3 space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-teal-400 flex items-center gap-1.5">
+                            <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse" />
+                            Live Funnel Telemetry
+                          </span>
+                          <span className="text-[10px] font-mono text-slate-400">
+                            Conv: <strong className="text-white">{magnet.telemetry?.conversionRate ?? 0}%</strong>
+                          </span>
+                        </div>
+                        <div className="grid grid-cols-4 gap-1.5 text-center">
+                          <div className="bg-slate-950/80 border border-white/5 rounded-lg py-2 px-1">
+                            <div className="text-sm font-black text-white font-mono">
+                              {magnet.telemetry?.views ?? 0}
+                            </div>
+                            <div className="text-[9px] font-bold uppercase text-slate-400 mt-0.5">
+                              Visits
+                            </div>
+                          </div>
+                          <div className="bg-slate-950/80 border border-white/5 rounded-lg py-2 px-1">
+                            <div className="text-sm font-black text-teal-300 font-mono">
+                              {magnet.telemetry?.interactions ?? 0}
+                            </div>
+                            <div className="text-[9px] font-bold uppercase text-slate-400 mt-0.5">
+                              Uses
+                            </div>
+                          </div>
+                          <div className="bg-slate-950/80 border border-white/5 rounded-lg py-2 px-1">
+                            <div className="text-sm font-black text-orange-300 font-mono">
+                              {magnet.telemetry?.ctaClicks ?? 0}
+                            </div>
+                            <div className="text-[9px] font-bold uppercase text-slate-400 mt-0.5">
+                              CTA Clicks
+                            </div>
+                          </div>
+                          <div className="bg-slate-950/80 border border-white/5 rounded-lg py-2 px-1">
+                            <div className="text-sm font-black text-emerald-400 font-mono">
+                              {(magnet.telemetry?.trialSignups ?? 0) + (magnet.telemetry?.paidSubscribers ?? 0)}
+                            </div>
+                            <div className="text-[9px] font-bold uppercase text-slate-400 mt-0.5">
+                              Trials
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Automated Search Console & Live SEO Indexation Telemetry */}
+                      <div className="bg-slate-900/60 border border-white/10 rounded-xl p-3 space-y-2.5">
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1">
+                            <Activity className="w-3 h-3 text-orange-400" /> Search Console &amp; Index Health
+                          </span>
+                          {magnet.seo?.isLiveReachable ? (
+                            <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-1.5 py-0.5 rounded">
+                              HTTP {magnet.seo.httpStatus} · {magnet.seo.responseTimeMs}ms
+                            </span>
+                          ) : (
+                            <span className="text-[10px] font-mono text-amber-400 bg-amber-500/10 border border-amber-500/30 px-1.5 py-0.5 rounded">
+                              Probe Pending
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Automated Technical SEO Verification Pills */}
+                        <div className="flex flex-wrap gap-1.5">
+                          <span
+                            className={`text-[10px] font-bold px-2 py-0.5 rounded border ${
+                              magnet.seo?.inSitemap
+                                ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
+                                : 'bg-amber-500/10 border-amber-500/30 text-amber-300'
+                            }`}
+                          >
+                            {magnet.seo?.inSitemap ? '✓ Sitemap.xml' : '○ Not in Sitemap'}
+                          </span>
+                          <span
+                            className={`text-[10px] font-bold px-2 py-0.5 rounded border ${
+                              magnet.seo?.hasCanonical
+                                ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
+                                : 'bg-amber-500/10 border-amber-500/30 text-amber-300'
+                            }`}
+                          >
+                            {magnet.seo?.hasCanonical ? '✓ Canonical' : '○ No Canonical'}
+                          </span>
+                          <span
+                            className={`text-[10px] font-bold px-2 py-0.5 rounded border ${
+                              magnet.seo?.isIndexable
+                                ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
+                                : 'bg-slate-800 border-white/10 text-slate-400'
+                            }`}
+                          >
+                            {magnet.seo?.isIndexable ? '✓ Indexable' : '○ Unindexed'}
+                          </span>
+                        </div>
+
+                        {/* GSC Search Analytics or Target Keywords */}
+                        {magnet.seo?.gscConnected && magnet.seo.impressions28d !== null ? (
+                          <div className="grid grid-cols-3 gap-1.5 pt-1 border-t border-white/5 text-center">
+                            <div>
+                              <div className="text-xs font-black text-white font-mono">
+                                {magnet.seo.impressions28d.toLocaleString()}
+                              </div>
+                              <div className="text-[9px] text-slate-400 uppercase">28d Impr</div>
+                            </div>
+                            <div>
+                              <div className="text-xs font-black text-teal-300 font-mono">
+                                {magnet.seo.organicClicks28d?.toLocaleString() ?? 0}
+                              </div>
+                              <div className="text-[9px] text-slate-400 uppercase">GSC Clicks</div>
+                            </div>
+                            <div>
+                              <div className="text-xs font-black text-orange-300 font-mono">
+                                #{magnet.seo.avgPosition ?? '—'}
+                              </div>
+                              <div className="text-[9px] text-slate-400 uppercase">Avg Rank</div>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="space-y-1 pt-1 border-t border-white/5">
+                            <div className="flex items-center justify-between">
+                              <span className="text-[9px] font-bold uppercase tracking-wider text-slate-400">
+                                Target Search Queries:
+                              </span>
+                              <span className="text-[9px] font-mono text-slate-500">
+                                GSC API: Ready
+                              </span>
+                            </div>
+                            <div className="flex flex-wrap gap-1">
+                              {(magnet.seo?.targetKeywords || magnet.targetKeywords || []).map((kw) => (
+                                <span
+                                  key={kw}
+                                  className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-black/40 border border-white/5 text-slate-300"
+                                >
+                                  &ldquo;{kw}&rdquo;
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
                       {/* Features Checklist */}
                       <div className="space-y-1.5 pt-1">
                         <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
@@ -606,12 +747,12 @@ export default function GrowthHubDashboard() {
                       </div>
 
                       {/* Schema Markup Badges */}
-                      {magnet.schemaTypes && magnet.schemaTypes.length > 0 && (
+                      {(magnet.seo?.detectedSchemas || magnet.schemaTypes) && (
                         <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-white/5">
                           <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
-                            SEO Schema:
+                            Live JSON-LD:
                           </span>
-                          {magnet.schemaTypes.map((st) => (
+                          {(magnet.seo?.detectedSchemas || magnet.schemaTypes).map((st) => (
                             <span
                               key={st}
                               className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/5 border border-white/10 text-teal-300"

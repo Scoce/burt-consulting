@@ -1,3 +1,16 @@
+import { probeLiveSeoAndRanking, MagnetSeoTelemetry } from '@/lib/search-console';
+
+export type { MagnetSeoTelemetry };
+
+export interface MagnetFunnelTelemetry {
+  views: number;
+  interactions: number;
+  ctaClicks: number;
+  trialSignups: number;
+  paidSubscribers: number;
+  conversionRate: number;
+}
+
 export interface CreativeAngle {
   id: string;
   app: 'bank-of-gaga' | 'teach-weave' | 'teaching-sax' | 'truths-and-lies';
@@ -42,6 +55,7 @@ export interface BlogAttributionMetric {
 export interface AcquisitionMagnet {
   id: string;
   app: 'bank-of-gaga' | 'teach-weave' | 'teaching-sax' | 'truths-and-lies';
+  slugKey?: string;
   name: string;
   badge: string;
   type: string;
@@ -54,6 +68,9 @@ export interface AcquisitionMagnet {
   primaryCtaUrl: string;
   utmShareUrl: string;
   schemaTypes: string[];
+  targetKeywords?: string[];
+  telemetry?: MagnetFunnelTelemetry;
+  seo?: MagnetSeoTelemetry;
 }
 
 export interface AppGrowthData {
@@ -533,10 +550,11 @@ export async function getPortfolioGrowthMetrics(): Promise<PortfolioGrowthMetric
     },
   ];
 
-  const bankOfGagaMagnets: AcquisitionMagnet[] = [
+  const bankOfGagaMagnetsBase: AcquisitionMagnet[] = [
     {
       id: 'bog-magnet-afr',
       app: 'bank-of-gaga',
+      slugKey: 'afr-calculator',
       name: 'IRS Applicable Federal Rate (AFR) Calculator',
       badge: 'High-Intent Organic Tool',
       type: 'Tax Compliance & Loan Calculator',
@@ -554,10 +572,16 @@ export async function getPortfolioGrowthMetrics(): Promise<PortfolioGrowthMetric
       primaryCtaUrl: 'https://bankofgaga.com/afr-calculator',
       utmShareUrl: 'https://bankofgaga.com/afr-calculator?utm_source=marketing_hub&utm_medium=acquisition_magnet&utm_campaign=afr_calc',
       schemaTypes: ['SoftwareApplication', 'FAQPage'],
+      targetKeywords: [
+        'irs afr family loan calculator',
+        'minimum interest rate for family loan',
+        'irc 7872 imputed interest calculator',
+      ],
     },
     {
       id: 'bog-magnet-promissory',
       app: 'bank-of-gaga',
+      slugKey: 'promissory-note-generator',
       name: 'Legal Promissory Note Generator',
       badge: 'Direct-Conversion Legal Tool',
       type: 'Legal Document Generator',
@@ -575,10 +599,16 @@ export async function getPortfolioGrowthMetrics(): Promise<PortfolioGrowthMetric
       primaryCtaUrl: 'https://bankofgaga.com/promissory-note-generator',
       utmShareUrl: 'https://bankofgaga.com/promissory-note-generator?utm_source=marketing_hub&utm_medium=acquisition_magnet&utm_campaign=promissory_note',
       schemaTypes: ['SoftwareApplication', 'HowTo'],
+      targetKeywords: [
+        'free family loan promissory note generator',
+        'parent to child loan agreement template',
+        'printable family promissory note pdf',
+      ],
     },
     {
       id: 'bog-magnet-amortization',
       app: 'bank-of-gaga',
+      slugKey: 'calculator',
       name: 'Family Loan Amortization Calculator',
       badge: 'Financial Modeling Tool',
       type: 'Amortization & Savings Engine',
@@ -595,13 +625,19 @@ export async function getPortfolioGrowthMetrics(): Promise<PortfolioGrowthMetric
       primaryCtaUrl: 'https://bankofgaga.com/calculator',
       utmShareUrl: 'https://bankofgaga.com/calculator?utm_source=marketing_hub&utm_medium=acquisition_magnet&utm_campaign=loan_amortization',
       schemaTypes: ['SoftwareApplication'],
+      targetKeywords: [
+        'family loan amortization calculator',
+        'early loan payoff savings calculator',
+        'intra family mortgage schedule calculator',
+      ],
     },
   ];
 
-  const teachWeaveMagnets: AcquisitionMagnet[] = [
+  const teachWeaveMagnetsBase: AcquisitionMagnet[] = [
     {
       id: 'tw-magnet-fee-calc',
       app: 'teach-weave',
+      slugKey: 'tpt-fee-calculator',
       name: 'TPT Platform Fee & Commission Calculator',
       badge: 'Creator Profit Calculator',
       type: 'Fee Comparison Utility',
@@ -618,13 +654,19 @@ export async function getPortfolioGrowthMetrics(): Promise<PortfolioGrowthMetric
       primaryCtaUrl: 'https://teachweave.com',
       utmShareUrl: 'https://teachweave.com?utm_source=marketing_hub&utm_medium=acquisition_magnet&utm_campaign=tpt_fee_calc',
       schemaTypes: ['SoftwareApplication'],
+      targetKeywords: [
+        'teachers pay teachers fee calculator',
+        'tpt commission vs independent storefront',
+        'teachers pay teachers alternative',
+      ],
     },
   ];
 
-  const teachingSaxMagnets: AcquisitionMagnet[] = [
+  const teachingSaxMagnetsBase: AcquisitionMagnet[] = [
     {
       id: 'ts-magnet-fingering',
       app: 'teaching-sax',
+      slugKey: 'fingering-chart',
       name: 'Interactive Saxophone Fingering Chart & Pitch Reference',
       badge: 'Organic Student Utility',
       type: 'Interactive Chart & Audio Player',
@@ -641,12 +683,22 @@ export async function getPortfolioGrowthMetrics(): Promise<PortfolioGrowthMetric
       primaryCtaUrl: 'https://teachingsax.com',
       utmShareUrl: 'https://teachingsax.com?utm_source=marketing_hub&utm_medium=acquisition_magnet&utm_campaign=fingering_chart',
       schemaTypes: ['SoftwareApplication', 'AudioObject'],
+      targetKeywords: [
+        'interactive alto saxophone fingering chart',
+        'tenor sax altissimo fingering chart',
+        'online saxophone pitch reference tool',
+      ],
     },
   ];
 
   const bogAngles = getAllAngles('bank-of-gaga');
 
   let liveClicks: Record<string, number> = {};
+  const liveMagnetTelemetry: Record<
+    string,
+    { views: number; interactions: number; ctaClicks: number; trialSignups: number; paidSubscribers: number }
+  > = {};
+
   try {
     const telRes = await fetch('https://bankofgaga.com/api/telemetry/attribution', {
       headers: { 'User-Agent': 'BurtConsulting-GrowthHub/1.0' },
@@ -657,10 +709,84 @@ export async function getPortfolioGrowthMetrics(): Promise<PortfolioGrowthMetric
       for (const c of telData.campaigns || []) {
         liveClicks[c.slug] = c.clicks;
       }
+      for (const m of telData.magnets || []) {
+        liveMagnetTelemetry[m.slug] = {
+          views: Number(m.views || 0),
+          interactions: Number(m.interactions || 0),
+          ctaClicks: Number(m.ctaClicks || 0),
+          trialSignups: Number(m.trialSignups || 0),
+          paidSubscribers: Number(m.paidSubscribers || 0),
+        };
+      }
     }
   } catch {
     // Telemetry fetch failed gracefully
   }
+
+  // Run automated Search Console + Live Technical SEO probes in parallel
+  const [bogSeoMap, twSeoMap, tsSeoMap] = await Promise.all([
+    probeLiveSeoAndRanking(
+      'bankofgaga.com',
+      bankOfGagaMagnetsBase.map((m) => ({
+        url: m.url,
+        targetKeywords: m.targetKeywords || [],
+        fallbackSchemas: m.schemaTypes,
+      }))
+    ),
+    probeLiveSeoAndRanking(
+      'teachweave.com',
+      teachWeaveMagnetsBase.map((m) => ({
+        url: m.url,
+        targetKeywords: m.targetKeywords || [],
+        fallbackSchemas: m.schemaTypes,
+      }))
+    ),
+    probeLiveSeoAndRanking(
+      'teachingsax.com',
+      teachingSaxMagnetsBase.map((m) => ({
+        url: m.url,
+        targetKeywords: m.targetKeywords || [],
+        fallbackSchemas: m.schemaTypes,
+      }))
+    ),
+  ]);
+
+  const enrichMagnet = (
+    m: AcquisitionMagnet,
+    seoMap: Record<string, MagnetSeoTelemetry>
+  ): AcquisitionMagnet => {
+    const key = m.slugKey || '';
+    const dbStats = liveMagnetTelemetry[key];
+    const stripeStats = stripeLive.campaignAttribution?.[key];
+
+    const views = dbStats?.views || 0;
+    const interactions = dbStats?.interactions || 0;
+    const ctaClicks = dbStats?.ctaClicks || (key ? liveClicks[key] || 0 : 0);
+    const trialSignups = Math.max(dbStats?.trialSignups || 0, stripeStats?.activeTrials || 0);
+    const paidSubscribers = Math.max(dbStats?.paidSubscribers || 0, stripeStats?.paidSubscribers || 0);
+    const denominator = views > 0 ? views : ctaClicks;
+    const conversionRate =
+      denominator > 0
+        ? Math.round(((trialSignups + paidSubscribers || ctaClicks) / denominator) * 1000) / 10
+        : 0;
+
+    return {
+      ...m,
+      telemetry: {
+        views,
+        interactions,
+        ctaClicks,
+        trialSignups,
+        paidSubscribers,
+        conversionRate,
+      },
+      seo: seoMap[m.url],
+    };
+  };
+
+  const bankOfGagaMagnets = bankOfGagaMagnetsBase.map((m) => enrichMagnet(m, bogSeoMap));
+  const teachWeaveMagnets = teachWeaveMagnetsBase.map((m) => enrichMagnet(m, twSeoMap));
+  const teachingSaxMagnets = teachingSaxMagnetsBase.map((m) => enrichMagnet(m, tsSeoMap));
 
   const bogBlogAttribution: BlogAttributionMetric[] = BANK_OF_GAGA_BLOG_CATALOG.map((post) => {
     const stripeStats = stripeLive.campaignAttribution?.[post.slug];

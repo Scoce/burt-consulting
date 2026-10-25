@@ -681,8 +681,22 @@ export default function GrowthHubDashboard() {
                                 : 'bg-slate-800 border-white/10 text-slate-400'
                             }`}
                           >
-                            {magnet.seo?.isIndexable ? '✓ Indexable' : '○ Unindexed'}
+                            {magnet.seo?.isIndexable ? '✓ Indexable' : '○ Noindex'}
                           </span>
+                          {magnet.seo?.gscIndexVerdict && (
+                            <span
+                              title={magnet.seo.gscCoverageState || ''}
+                              className={`text-[10px] font-bold px-2 py-0.5 rounded border ${
+                                magnet.seo.gscIndexVerdict === 'PASS'
+                                  ? 'bg-teal-500/15 border-teal-500/40 text-teal-300'
+                                  : 'bg-orange-500/15 border-orange-500/40 text-orange-300'
+                              }`}
+                            >
+                              {magnet.seo.gscIndexVerdict === 'PASS'
+                                ? '✓ Google Indexed'
+                                : `⚠ ${magnet.seo.gscCoverageState || 'Crawl Pending'}`}
+                            </span>
+                          )}
                         </div>
 
                         {/* GSC Search Analytics & Target Keywords */}
@@ -692,7 +706,7 @@ export default function GrowthHubDashboard() {
                               <div className="text-xs font-black text-white font-mono">
                                 {(magnet.seo.impressions28d ?? 0).toLocaleString()}
                               </div>
-                              <div className="text-[9px] text-slate-400 uppercase">28d Impr</div>
+                              <div className="text-[9px] text-slate-400 uppercase">GSC Impr</div>
                             </div>
                             <div>
                               <div className="text-xs font-black text-teal-300 font-mono">

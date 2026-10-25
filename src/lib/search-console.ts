@@ -20,6 +20,9 @@ export interface MagnetSeoTelemetry {
   detectedSchemas: string[];
   targetKeywords: string[];
   gscConnected: boolean;
+  gscIndexVerdict?: 'PASS' | 'NEUTRAL' | 'FAIL' | null;
+  gscCoverageState?: string | null;
+  gscLastCrawlTime?: string | null;
   impressions28d: number | null;
   organicClicks28d: number | null;
   ctr28d: number | null;
@@ -39,7 +42,7 @@ async function getGoogleAccessToken(clientEmail: string, privateKey: string): Pr
     const header = { alg: 'RS256', typ: 'JWT' };
     const claimSet = {
       iss: clientEmail,
-      scope: 'https://www.googleapis.com/auth/webmasters.readonly',
+      scope: 'https://www.googleapis.com/auth/webmasters',
       aud: 'https://oauth2.googleapis.com/token',
       exp: now + 3600,
       iat: now,
@@ -74,7 +77,12 @@ async function getGoogleAccessToken(clientEmail: string, privateKey: string): Pr
 
 export async function fetchGscMetricsForDomain(
   domain: string
-): Promise<{ connected: boolean; pages: Record<string, GscPageMetric> }> {
+): Promise<{
+  connected: boolean;
+  siteUrl?: string;
+  token?: string;
+  pages: Record<string, GscPageMetric>;
+}> {
   const clientEmail = process.env.GSC_CLIENT_EMAIL;
   const privateKey = process.env.GSC_PRIVATE_KEY;
 
@@ -88,7 +96,8 @@ export async function fetchGscMetricsForDomain(
   }
 
   const endDate = new Date().toISOString().slice(0, 10);
-  const startDate = new Date(Date.now() - 28 * 86400 * 1000).toISOString().slice(0, 10);
+  // 180-day window so low-volume / seasonal pages still surface their real impressions & positions
+  const startDate = new Date(Date.now() - 180 * 86400 * 1000).toISOString().slice(0, 10);
 
   const siteCandidates = [`sc-domain:${domain}`, `https://${domain}/`];
 
@@ -159,13 +168,48 @@ export async function fetchGscMetricsForDomain(
         }
       }
 
-      return { connected: true, pages };
+      return { connected: true, siteUrl, token, pages };
     } catch {
       continue;
     }
   }
 
   return { connected: false, pages: {} };
+}
+
+async function inspectUrlInGsc(
+  token: string,
+  siteUrl: string,
+  inspectionUrl: string
+): Promise<{
+  verdict: 'PASS' | 'NEUTRAL' | 'FAIL' | null;
+  coverageState: string | null;
+  lastCrawlTime: string | null;
+}> {
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 3500);
+    const res = await fetch('https://searchconsole.googleapis.com/v1/urlInspection/index:inspect', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ inspectionUrl, siteUrl }),
+      signal: controller.signal,
+    });
+    clearTimeout(timer);
+    if (!res.ok) return { verdict: null, coverageState: null, lastCrawlTime: null };
+    const data = await res.json();
+    const idx = data.inspectionResult?.indexStatusResult;
+    return {
+      verdict: idx?.verdict || null,
+      coverageState: idx?.coverageState || null,
+      lastCrawlTime: idx?.lastCrawlTime || null,
+    };
+  } catch {
+    return { verdict: null, coverageState: null, lastCrawlTime: null };
+  }
 }
 
 function extractSchemaTypesFromHtml(html: string): string[] {
@@ -249,14 +293,22 @@ export async function probeLiveSeoAndRanking(
       const gscPage = gscResult.pages[mag.url] || gscResult.pages[cleanUrl];
 
       const startMs = Date.now();
+      const inspectionPromise =
+        gscResult.connected && gscResult.token && gscResult.siteUrl
+          ? inspectUrlInGsc(gscResult.token, gscResult.siteUrl, mag.url)
+          : Promise.resolve({ verdict: null, coverageState: null, lastCrawlTime: null });
+
       try {
         const controller = new AbortController();
         const timer = setTimeout(() => controller.abort(), 2500);
-        const res = await fetch(mag.url, {
-          headers: { 'User-Agent': 'BurtConsulting-SEOProbe/1.0' },
-          signal: controller.signal,
-          next: { revalidate: 3600 },
-        });
+        const [res, inspection] = await Promise.all([
+          fetch(mag.url, {
+            headers: { 'User-Agent': 'BurtConsulting-SEOProbe/1.0' },
+            signal: controller.signal,
+            next: { revalidate: 3600 },
+          }),
+          inspectionPromise,
+        ]);
         clearTimeout(timer);
 
         const elapsed = Date.now() - startMs;
@@ -278,6 +330,9 @@ export async function probeLiveSeoAndRanking(
           detectedSchemas: detectedSchemas.length > 0 ? detectedSchemas : mag.fallbackSchemas,
           targetKeywords: mag.targetKeywords,
           gscConnected: gscResult.connected,
+          gscIndexVerdict: inspection.verdict,
+          gscCoverageState: inspection.coverageState,
+          gscLastCrawlTime: inspection.lastCrawlTime,
           impressions28d: gscPage ? gscPage.impressions28d : (gscResult.connected ? 0 : null),
           organicClicks28d: gscPage ? gscPage.clicks28d : (gscResult.connected ? 0 : null),
           ctr28d: gscPage ? gscPage.ctr28d : (gscResult.connected ? 0 : null),
@@ -286,6 +341,7 @@ export async function probeLiveSeoAndRanking(
           lastCheckedAt: nowIso,
         };
       } catch {
+        const inspection = await inspectionPromise;
         results[mag.url] = {
           url: mag.url,
           isLiveReachable: false,
@@ -297,6 +353,9 @@ export async function probeLiveSeoAndRanking(
           detectedSchemas: mag.fallbackSchemas,
           targetKeywords: mag.targetKeywords,
           gscConnected: gscResult.connected,
+          gscIndexVerdict: inspection.verdict,
+          gscCoverageState: inspection.coverageState,
+          gscLastCrawlTime: inspection.lastCrawlTime,
           impressions28d: gscPage ? gscPage.impressions28d : (gscResult.connected ? 0 : null),
           organicClicks28d: gscPage ? gscPage.clicks28d : (gscResult.connected ? 0 : null),
           ctr28d: gscPage ? gscPage.ctr28d : (gscResult.connected ? 0 : null),
